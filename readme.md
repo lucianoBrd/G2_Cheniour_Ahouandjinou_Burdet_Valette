@@ -58,8 +58,8 @@ D'autre part de façon contrôlée, c'est à dire gérer via la voix, ou de mani
 	- Interagir avec utilisateur **Python**
 	- Afficher information / dashboard de l’API **HTML/CSS/JS**
 - Serveur WEB :
-- API / BDD **Symfony/PHP**
-- Dashboard / Contrôle pour navigateur **HTML/CSS/JS**
+	- API / BDD **Symfony/PHP**
+	- Dashboard / Contrôle pour navigateur **HTML/CSS/JS**
 - Serveur Global :
 	- Supervision globale **Python**
 	- MQTT
