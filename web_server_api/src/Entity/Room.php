@@ -9,7 +9,32 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *  itemOperations={
+ *     "get",
+ *     "patch",
+ *     "delete",
+ *     "put",
+ *     "get_by_label" = {
+ *       "method" = "GET",
+ *       "path" = "/room/{label}",
+ *       "controller" = RoomByLabel::class,
+ *       "read"=false,
+ *       "openapi_context" = {
+ *         "parameters" = {
+ *           {
+ *             "name" = "label",
+ *             "in" = "path",
+ *             "description" = "The label of your room",
+ *             "type" = "string",
+ *             "required" = true,
+ *             "example"= "label",
+ *           },
+ *         },
+ *       },
+ *     },
+ *   },
+ * )
  * @ORM\Entity(repositoryClass=RoomRepository::class)
  */
 class Room
@@ -22,7 +47,7 @@ class Room
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $label;
 
