@@ -2,14 +2,19 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\ActionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\ActionRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
- * @ApiResource()
+ * @ApiResource(
+ *  normalizationContext={"groups" = {"read"}},
+ *  denormalizationContext={"groups" = {"write"}}
+ * )
  * @ORM\Entity(repositoryClass=ActionRepository::class)
  */
 class Action
@@ -18,32 +23,38 @@ class Action
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read", "write"})
      */
     private $value;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"read"})
      */
     private $datetime;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups({"read", "write"})
      */
-    private $state;
+    private $state = false; // Not done by default
 
     /**
      * @ORM\ManyToMany(targetEntity=Element::class, mappedBy="actions")
+     * @Groups({"read", "write"})
      */
     private $elements;
 
     public function __construct()
     {
         $this->elements = new ArrayCollection();
+        $this->datetime = new \DateTime('now');
     }
 
     public function getId(): ?int
