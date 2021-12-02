@@ -105,5 +105,17 @@ if __name__ == "__main__":
             if heating_living_room.data['state'] != "ON" :
                 home.mqtt_client.publish(heating_living_room.topic, "ON")
         
+        # check humidity in living room
+        humidity_living_room = int(home.rooms['living_room'].elements['sensor_humidity_living_room'].data['humidity'])
+        
+        if humidity_living_room >= 0 and humidity_living_room < 25:
+            # switch offthe VMC
+            if vmc_living_room.data['state']  != "OFF" :
+                home.mqtt_client.publish(vmc_living_room.topic , "OFF")
+        if humidity_living_room >= 25 and humidity_living_room <= 100:
+            # powered the VMC
+            if vmc_living_room.data['state'] != "ON" :
+                home.mqtt_client.publish(vmc_living_room.topic , "ON")
+           
 #publish : client.publish("house/light","ON")
 #subscribe : client.subscribe("house/bulbs/bulb1")
