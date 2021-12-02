@@ -2,7 +2,7 @@ class Element:
     """
     Element class
     """
-    def __init__(self, name = 'elements_1', type = 'sensor') -> None:
+    def __init__(self, name = 'elements_1', type = 'sensor', data = {}) -> None:
         """
         Init the Element class 
 
@@ -22,3 +22,6 @@ class Element:
             raise ValueError(f'The type muste be "sensor" or "actuator" and not {type}')
 
         self.topic = ''
+        self.data = data
+
+        
