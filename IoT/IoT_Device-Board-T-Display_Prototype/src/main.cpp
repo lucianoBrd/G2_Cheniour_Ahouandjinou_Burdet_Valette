@@ -11,17 +11,17 @@ TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup.h
 
 void initDevice()
 {
-  tft.init();
-  tft.begin();
-  tft.setRotation(1);
-  tft.setTextSize(2);
-  // tft.fillScreen(TFT_BLACK);
-  tft.setCursor(80, 80);
-  tft.println("Hello");
-  tft.setCursor(80, 120);
-  tft.println("DomoTic");
-  tft.setCursor(80, 170);
-  tft.println("Ver1.00");
+  // tft.init();
+   tft.begin();
+  // tft.setRotation(1);
+  // tft.setTextSize(2);
+  // // tft.fillScreen(TFT_BLACK);
+  // tft.setCursor(80, 80);
+  // tft.println("Hello");
+  // tft.setCursor(80, 120);
+  // tft.println("DomoTic");
+  // tft.setCursor(80, 170);
+  // tft.println("Ver1.00");
 }
 
 
