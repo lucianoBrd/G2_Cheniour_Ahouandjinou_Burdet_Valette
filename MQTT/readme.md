@@ -1,5 +1,8 @@
 # MQTT Server Windows
-* Connaitre l'adresse IP de l'ordinateur windows qui sera le MQTT server :
+
+* Télécharger Mosquitto pour windows via le lien https://mosquitto.org/download/
+
+* Connaitre l'adresse IP de l'ordinateur windows qui sera le MQTT server. Pour cela dans un terminal (Powersheel ou CMD) exécuter la commande suivante :
   ```
   ipconfig
   ```
