@@ -27,8 +27,7 @@ class ActionsByLabelElement extends AbstractController
         $actions = $this->getDoctrine()
             ->getRepository(Action::class)
             ->findBy(
-                ['state' => false],
-                ['element' => $element],
+                ['state' => false, 'element' => $element],
                 ['datetime' => 'ASC']
             );
  
