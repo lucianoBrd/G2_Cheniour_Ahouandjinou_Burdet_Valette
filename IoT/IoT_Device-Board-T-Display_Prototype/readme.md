@@ -16,4 +16,10 @@
 ## Documentation
 - https://geekelectronick.com/esp32-customizing-partition-in-platformio/
 - https://docs.platformio.org/en/latest/projectconf/index.html
+
+WiFi 
 - https://learn.upesy.com/fr/programming/esp32/arduino-code/esp32_connect_wifi_AP.html#:~:text=L'ESP32%20poss%C3%A8de%202%20modes,ESP32%20peut%20acc%C3%A9der%20%C3%A0%20Internet.
+
+Mqtt
+ - https://randomnerdtutorials.com/esp32-mqtt-publish-subscribe-arduino-ide/
+ - https://techtutorialsx.com/2017/04/24/esp32-publishing-messages-to-mqtt-topic/

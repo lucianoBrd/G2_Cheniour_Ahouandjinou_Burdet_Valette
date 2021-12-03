@@ -12,14 +12,17 @@
 ///_____
 const char* ssid = "Redmi Note 7";
 const char* password = "dallez94";
+const char* mqttServer = "broker.hivemq.com";
+const int mqttPort = 1883;
+const char* mqttUser = "";
+const char* mqttPassword = "";
 
-
-///____
+///____ Appel classes
 TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup_Select.h
-//WiFiClient espClient;
-//PubSubClient client(espClient);
+WiFiClient espClient;
+PubSubClient mqttClient(espClient);
 ///____
-
+//Demarre l'ecran 
 void initScreen()
 {
   // tft.init();
@@ -57,26 +60,47 @@ void wifiDisconnected(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
        if (compteur_conn >= 5*CONNECTION_TIMEOUT){
          ESP.restart();
        }
-       delay(200);
+       delay(1000);
        WiFi.begin(ssid, password);
     }
 }
 
-
 // Se connecte à un réseau WiFI
+// Gestion WiFi par les event de la co
 void initWifiConnection(){
     WiFi.mode(WIFI_STA); // mode station
     WiFi.onEvent(wifiConnected,SYSTEM_EVENT_STA_CONNECTED); // si l'état de la co Wifi passe à connected, appel la fct wifiConnected
-    WiFi.onEvent(wifiGotIP,SYSTEM_EVENT_STA_GOT_IP);
+    WiFi.onEvent(wifiGotIP,SYSTEM_EVENT_STA_GOT_IP);        // // si la carte recoit une @IP appel la fct wifiGotIP
     WiFi.onEvent(wifiDisconnected,SYSTEM_EVENT_STA_DISCONNECTED);  // si l'état de la co Wifi passe à disconnected, appel la fct wifiDisconnected, permet de se reconnecter automatiquement
 
     WiFi.begin(ssid, password);
-
-    
-    
 }
 
-
+void initMqtt(){
+  while (WiFi.status() != WL_CONNECTED){}
+  
+  mqttClient.setServer(mqttServer, mqttPort);
+  while (!mqttClient.connected()) {
+    Serial.println("Connecting to MQTT...");
+  
+    if (mqttClient.connect("ESP32Client", mqttUser, mqttPassword )) {
+      Serial.println("connected");
+      tft.fillScreen(TFT_WHITE);
+      tft.setCursor(5, 90);
+      tft.println("Mqtt:OK");
+  
+      } else {
+  
+      Serial.print("failed with state ");
+      Serial.print(mqttClient.state());
+      tft.fillScreen(TFT_WHITE);
+      tft.setCursor(5, 90);
+      tft.println("Mqtt:KO");//mqttClient.state());
+      delay(2000);
+      }
+    }
+  
+}
 
 
 void setup() {
@@ -84,11 +108,18 @@ void setup() {
   delay(1000);
   initScreen();
   initWifiConnection();
+  initMqtt();
 
   }
 
 void loop() {
+  mqttClient.publish("esp/test", "Hello from ESP32");
+  delay(5000);
+  mqttClient.loop();
   // put your main code here, to run repeatedly:
 }
 
 
+/// note 
+/* il faudra peut-être changer l'adresse mac des cartes
+*/
