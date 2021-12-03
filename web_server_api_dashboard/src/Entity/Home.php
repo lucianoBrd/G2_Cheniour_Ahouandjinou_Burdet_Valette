@@ -13,7 +13,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ApiResource(
  *  normalizationContext={"groups" = {"home"}},
- *  denormalizationContext={"groups" = {"home"}}
+ *  denormalizationContext={"groups" = {"home"}},
  *  itemOperations={
  *     "get",
  *     "patch",
