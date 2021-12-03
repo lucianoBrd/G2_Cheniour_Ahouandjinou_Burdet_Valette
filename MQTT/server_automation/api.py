@@ -11,6 +11,7 @@ class API:
         """
         self.url= 'https://work.lucien-brd.com/api'
         self.header = {'accept': 'application/json', 'Content-Type' : 'application/json'}
+        self.header_patch = {'accept': 'application/json', 'Content-Type' : 'application/merge-patch+json'}
 
     def get_homes(self):
         """
@@ -481,7 +482,7 @@ class API:
         "rooms": rooms_list
             })
         
-        request = requests.put(f"{self.url}/homes", data=payload, header = self.header)
+        request = requests.put(f"{self.url}/homes", data=payload, header = self.header_patch)
 
         return request.status_code
 
@@ -501,17 +502,26 @@ class API:
         :returns: int -- The status code of the request post
         """
 
+        parent_home_id = self.get_home_id_by_name(parent_home_name)
+        elements_list_iri = []
+
+        for element in elements_list:
+            element_id = self.get_element_id_by_name(element)
+            elements_list_iri.append('/api/elements/' + str(element_id))
+        
         payload = json.dumps({
         "label": room_name,
-        "home": parent_home_name,
-        "elements": elements_list
+        "home": '/api/homes/' + str(parent_home_id),
+        "elements": elements_list_iri
             })
-        
-        request = requests.put(f"{self.url}/rooms", data=payload, header = self.header)
 
+        room_id = self.get_room_id_by_name(room_name)
+        
+        request = requests.patch(f"{self.url}/rooms/{room_id}", data=payload, headers = self.header_patch)
+        print(request.text)
         return request.status_code
 
-    def update_element(self, element_name = '', parent_room_name = ''):
+    def update_element(self, element_name = '', parent_room_name = '', type_name = ''):
         """
         Create an element
 
@@ -524,13 +534,20 @@ class API:
         :returns: int -- The status code of the request post
         """
 
+        parent_room_id = self.get_room_id_by_name(parent_room_name)
+        type_id = self.get_type_id_by_name(type_name)
+
         payload = json.dumps({
         "label": element_name,
-        "room": parent_room_name,
+        "room" : '/api/rooms/' + str(parent_room_id),
+        "type" : '/api/types/' + str(type_id)
             })
         
-        request = requests.put(f"{self.url}/elements", data=payload, headers = self.header)
+        request = requests.patch(f"{self.url}/elements", data=payload, headers = self.header_patch)
 
         return request.status_code
 
-print(API().create_action('oiqusfhgqudjfisqgjgfijqgs','capteur_1'))
+#####TO DO LIST
+#### FINIR UPDATE (actions, values, type etc...)
+#### TESTER TOUS LES UPDATES
+print(API().update_room('teeest', 'valette_home'))
