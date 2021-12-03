@@ -48,6 +48,7 @@ class Action
     /**
      * @ORM\ManyToOne(targetEntity=Element::class, inversedBy="actions")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"read", "write"})
      */
     private $element;
 
