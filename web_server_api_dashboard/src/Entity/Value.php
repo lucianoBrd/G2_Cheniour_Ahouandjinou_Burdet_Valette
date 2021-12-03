@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     "put",
  *     "get_by_label" = {
  *       "method" = "GET",
- *       "path" = "/value/{labelelement}",
+ *       "path" = "/value/last/{labelelement}",
  *       "controller" = ValueByLabelElement::class,
  *       "read"=false,
  *       "openapi_context" = {
