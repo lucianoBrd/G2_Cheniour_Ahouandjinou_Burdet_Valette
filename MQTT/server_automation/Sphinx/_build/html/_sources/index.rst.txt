@@ -20,12 +20,17 @@ Room
 .. automodule::  Room
    :members:
 
-Meraki Element
+Element
 ========================================
 
 .. automodule::  Element
    :members:
 
+Api
+========================================
+
+.. automodule::  Api
+   :members:
 
 Indices and tables
 **************************  

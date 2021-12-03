@@ -40,7 +40,8 @@
 <li><a class="reference internal" href="#">Server automation</a><ul>
 <li><a class="reference internal" href="#module-Home">Home</a></li>
 <li><a class="reference internal" href="#module-Room">Room</a></li>
-<li><a class="reference internal" href="#module-Element">Meraki Element</a></li>
+<li><a class="reference internal" href="#module-Element">Element</a></li>
+<li><a class="reference internal" href="#module-Api">Api</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
@@ -92,11 +93,509 @@
 
 </section>
 <section id="module-Element">
-<span id="meraki-element"></span><h2>Meraki Element<a class="headerlink" href="#module-Element" title="Permalink to this headline"></a></h2>
+<span id="element"></span><h2>Element<a class="headerlink" href="#module-Element" title="Permalink to this headline"></a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="Element.Element">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Element.</span></span><span class="sig-name descname"><span class="pre">Element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'elements_1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sensor'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Element.Element" title="Permalink to this definition"></a></dt>
 <dd><p>Element class</p>
+</dd></dl>
+
+</section>
+<section id="module-Api">
+<span id="api"></span><h2>Api<a class="headerlink" href="#module-Api" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="Api.API">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Api.</span></span><span class="sig-name descname"><span class="pre">API</span></span><a class="headerlink" href="#Api.API" title="Permalink to this definition"></a></dt>
+<dd><p>API class</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.create_element">
+<span class="sig-name descname"><span class="pre">create_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_room_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.create_element" title="Permalink to this definition"></a></dt>
+<dd><p>Create an element</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>element_name</strong> (<em>str</em>) – The name of the element</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>int – The status code of the request post</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.create_home">
+<span class="sig-name descname"><span class="pre">create_home</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">home_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rooms_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.create_home" title="Permalink to this definition"></a></dt>
+<dd><p>Create a home</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>home_name</strong> (<em>str</em>) – The name of the home</p></li>
+<li><p><strong>rooms_list</strong> (<em>list</em>) – The list of rooms in the home</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>int – The status code of the request post</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.create_room">
+<span class="sig-name descname"><span class="pre">create_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_home_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.create_room" title="Permalink to this definition"></a></dt>
+<dd><p>Create a room</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>room_name</strong> (<em>str</em>) – The name of the room</p></li>
+<li><p><strong>parent_home_name</strong> (<em>str</em>) – The name of the parent home</p></li>
+<li><p><strong>elements_list</strong> (<em>list</em>) – The list of elements in the room</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>int – The status code of the request post</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.create_type">
+<span class="sig-name descname"><span class="pre">create_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.create_type" title="Permalink to this definition"></a></dt>
+<dd><p>Create a type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>type_name</strong> (<em>str</em>) – The name of the type</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>int – The status code of the request post</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.create_value">
+<span class="sig-name descname"><span class="pre">create_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">element_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.create_value" title="Permalink to this definition"></a></dt>
+<dd><p>Create a value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>str</em><em> or </em><em>int</em>) – The value</p></li>
+<li><p><strong>element_name</strong> (<em>str</em>) – The element name of the value</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>int – The status code of the request post</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_action_by_id">
+<span class="sig-name descname"><span class="pre">get_action_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_action_by_id" title="Permalink to this definition"></a></dt>
+<dd><p>Get one action with it id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>action_id</strong> (<em>ID</em>) – The ID of the action</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json – The json of the action data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_actions">
+<span class="sig-name descname"><span class="pre">get_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_actions" title="Permalink to this definition"></a></dt>
+<dd><p>Get all actions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>json – The json of all actions data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_element_by_id">
+<span class="sig-name descname"><span class="pre">get_element_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_element_by_id" title="Permalink to this definition"></a></dt>
+<dd><p>Get one element with it id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>element_id</strong> (<em>ID</em>) – The ID of the element</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json – The json of the element data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_element_by_name">
+<span class="sig-name descname"><span class="pre">get_element_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_element_by_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get one element with it name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>element_name</strong> (<em>str</em>) – The name of the element</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json – The json of the element data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_element_id_by_name">
+<span class="sig-name descname"><span class="pre">get_element_id_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_element_id_by_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get element id by name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>element_name</strong> (<em>str</em>) – The name of the element</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>id – The ID of the element</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_element_name_by_id">
+<span class="sig-name descname"><span class="pre">get_element_name_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_element_name_by_id" title="Permalink to this definition"></a></dt>
+<dd><p>Get element name by id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>element_id</strong> (<em>int</em>) – The ID of the element</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>str – The name of the element</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_elements">
+<span class="sig-name descname"><span class="pre">get_elements</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_elements" title="Permalink to this definition"></a></dt>
+<dd><p>Get all elements</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>json – The json of all elements data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_home_by_id">
+<span class="sig-name descname"><span class="pre">get_home_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">home_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_home_by_id" title="Permalink to this definition"></a></dt>
+<dd><p>Get one home with it ID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>home_id</strong> (<em>int</em>) – The ID of the home</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json – The json of the home data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_home_by_name">
+<span class="sig-name descname"><span class="pre">get_home_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">home_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_home_by_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get one home with it name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>home_name</strong> (<em>str</em>) – The name of the home</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json – The json of the home data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_home_id_by_name">
+<span class="sig-name descname"><span class="pre">get_home_id_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">home_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_home_id_by_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get home id by name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>home_name</strong> (<em>str</em>) – The name of the home</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>id – The ID of the home</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_home_name_by_id">
+<span class="sig-name descname"><span class="pre">get_home_name_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">home_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_home_name_by_id" title="Permalink to this definition"></a></dt>
+<dd><p>Get home name by id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>home_id</strong> (<em>int</em>) – The ID of the home</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>str – The name of the home</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_homes">
+<span class="sig-name descname"><span class="pre">get_homes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_homes" title="Permalink to this definition"></a></dt>
+<dd><p>Get all homes</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>json – The json of all homes data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_last_value_by_element_name">
+<span class="sig-name descname"><span class="pre">get_last_value_by_element_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_last_value_by_element_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get the last value of an element (by name element name)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>element_name</strong> (<em>ID</em>) – The element name</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json – The json of the value data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_room_by_id">
+<span class="sig-name descname"><span class="pre">get_room_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_room_by_id" title="Permalink to this definition"></a></dt>
+<dd><p>Get one room with it ID</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>room_id</strong> (<em>int</em>) – The ID of the room</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json – The json of the room data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_room_by_name">
+<span class="sig-name descname"><span class="pre">get_room_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_room_by_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get one room with it name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>room_name</strong> (<em>str</em>) – The name of the room</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json – The json of the room data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_room_id_by_name">
+<span class="sig-name descname"><span class="pre">get_room_id_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_room_id_by_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get room id by name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>room_name</strong> – The name of the room</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>id – The ID of the room</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_room_name_by_id">
+<span class="sig-name descname"><span class="pre">get_room_name_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_room_name_by_id" title="Permalink to this definition"></a></dt>
+<dd><p>Get room name by id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>room_id</strong> (<em>int</em>) – The ID of the room</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>str – The name of the room</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_rooms">
+<span class="sig-name descname"><span class="pre">get_rooms</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_rooms" title="Permalink to this definition"></a></dt>
+<dd><p>Get all rooms</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>json – The json of all rooms data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_type_by_id">
+<span class="sig-name descname"><span class="pre">get_type_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_type_by_id" title="Permalink to this definition"></a></dt>
+<dd><p>Get one type with it id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>type_id</strong> (<em>int</em>) – The ID of the type</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json – The json of the type data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_type_by_name">
+<span class="sig-name descname"><span class="pre">get_type_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_type_by_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get one type with it name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>type_name</strong> (<em>str</em>) – The name of the type</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json – The json of the type data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_type_id_by_name">
+<span class="sig-name descname"><span class="pre">get_type_id_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_type_id_by_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get type id by name</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>type_name</strong> (<em>str</em>) – The name of the type</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>id – The ID of the type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_type_name_by_id">
+<span class="sig-name descname"><span class="pre">get_type_name_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_type_name_by_id" title="Permalink to this definition"></a></dt>
+<dd><p>Get type name by id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>type_id</strong> (<em>int</em>) – The ID of the type</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>str – The name of the type</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_types">
+<span class="sig-name descname"><span class="pre">get_types</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_types" title="Permalink to this definition"></a></dt>
+<dd><p>Get all types</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>json – The json of all types data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_unresolved_actions">
+<span class="sig-name descname"><span class="pre">get_unresolved_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_unresolved_actions" title="Permalink to this definition"></a></dt>
+<dd><p>Get all unresolved actions</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>json – The json of the actions data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_unresolved_actions_by_element_name">
+<span class="sig-name descname"><span class="pre">get_unresolved_actions_by_element_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_unresolved_actions_by_element_name" title="Permalink to this definition"></a></dt>
+<dd><p>Get all unresolved action of an element (by name element name)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>element_name</strong> (<em>ID</em>) – The name of the element</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json – The json of the actions data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_value_by_id">
+<span class="sig-name descname"><span class="pre">get_value_by_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_value_by_id" title="Permalink to this definition"></a></dt>
+<dd><p>Get one value with it id</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>value_id</strong> (<em>ID</em>) – The ID of the value</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>json – The json of the value data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.get_values">
+<span class="sig-name descname"><span class="pre">get_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.get_values" title="Permalink to this definition"></a></dt>
+<dd><p>Get all values</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>json – The json of all values data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.update_element">
+<span class="sig-name descname"><span class="pre">update_element</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">element_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_room_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.update_element" title="Permalink to this definition"></a></dt>
+<dd><p>Create an element</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>element_name</strong> (<em>str</em>) – The name of the element</p></li>
+<li><p><strong>parent_room_name</strong> (<em>str</em>) – The name of the parent room</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>int – The status code of the request post</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.update_home">
+<span class="sig-name descname"><span class="pre">update_home</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">home_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rooms_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.update_home" title="Permalink to this definition"></a></dt>
+<dd><p>Update a home</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>home_name</strong> (<em>str</em>) – The name of the home</p></li>
+<li><p><strong>rooms_list</strong> (<em>list</em>) – The list of rooms in the home</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>int – The status code of the request post</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Api.API.update_room">
+<span class="sig-name descname"><span class="pre">update_room</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">room_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_home_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elements_list</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#Api.API.update_room" title="Permalink to this definition"></a></dt>
+<dd><p>Create a room</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>room_name</strong> (<em>str</em>) – The name of the room</p></li>
+<li><p><strong>elements_list</strong> (<em>list</em>) – The list of elements in the room</p></li>
+<li><p><strong>parent_home_name</strong> (<em>str</em>) – The name of the parent home</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>int – The status code of the request post</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 </section>
