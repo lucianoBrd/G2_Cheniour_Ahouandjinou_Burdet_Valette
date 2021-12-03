@@ -116,6 +116,25 @@ void setup() {
   initScreen();
   initWifiConnection();
   initMqtt();
+// Config pins
+  pinMode(2, OUTPUT);
+  pinMode(12, OUTPUT);
+  digitalWrite(2, HIGH);
+
+  //Config PWM
+  int pwmChannel = 0;  // channel de O-15
+  int pwmFreq = 1000; 
+  int pwmResolution = 8;  // résolution de la largeur d’impulsion entre 1 et 16 bits
+  int pwmPin = 12;
+
+  // Configuration du canal 0 avec la fréquence et la résolution choisie
+  ledcSetup(pwmChannel, pwmFreq, pwmResolution);
+
+   // Assigne le canal PWM au pin 36
+  ledcAttachPin(pwmPin, pwmChannel);
+
+  // Créer la tension en sortie choisi
+  ledcWrite(pwmChannel, 25); //1.65 V
 
   }
 
@@ -123,10 +142,10 @@ void loop() {
   mqttClient.loop();
  
 
-  mqttClient.setKeepAlive(30);
+  mqttClient.setKeepAlive(60);
   
   if (!mqttClient.connected()){
-      //initMqtt();
+      initMqtt();
   }
    mqttClient.publish("esp/test", "Hello from ESP32");
   delay(5000);
@@ -138,4 +157,19 @@ void loop() {
 /* il faudra peut-être changer l'adresse mac des cartes
 http://www.hivemq.com/demos/websocket-client/
 https://www.hivemq.com/public-mqtt-broker/
+
+
+Def pins:
+
+#define TFT_MOSI            19
+#define TFT_SCLK            18
+#define TFT_CS              5
+#define TFT_DC              16
+#define TFT_RST             23
+
+#define TFT_BL          4 
+
+PWM : all pins sauf les pins GPIO36, GPIO39, GPIO34, GPIO35
+
+
 */
