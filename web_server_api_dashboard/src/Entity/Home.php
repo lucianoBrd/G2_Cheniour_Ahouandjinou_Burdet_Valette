@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\TypeRepository;
+use App\Repository\HomeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,15 +17,15 @@ use Doctrine\ORM\Mapping as ORM;
  *     "put",
  *     "get_by_label" = {
  *       "method" = "GET",
- *       "path" = "/type/{label}",
- *       "controller" = TypeByLabel::class,
+ *       "path" = "/home/{label}",
+ *       "controller" = HomeByLabel::class,
  *       "read"=false,
  *       "openapi_context" = {
  *         "parameters" = {
  *           {
  *             "name" = "label",
  *             "in" = "path",
- *             "description" = "The label of your type",
+ *             "description" = "The label of your home",
  *             "type" = "string",
  *             "required" = true,
  *             "example"= "label",
@@ -35,9 +35,9 @@ use Doctrine\ORM\Mapping as ORM;
  *     },
  *   },
  * )
- * @ORM\Entity(repositoryClass=TypeRepository::class)
+ * @ORM\Entity(repositoryClass=HomeRepository::class)
  */
-class Type
+class Home
 {
     /**
      * @ORM\Id
@@ -52,13 +52,18 @@ class Type
     private $label;
 
     /**
-     * @ORM\OneToMany(targetEntity=Element::class, mappedBy="type")
+     * @ORM\OneToMany(targetEntity=Room::class, mappedBy="home", orphanRemoval=true)
      */
-    private $elements;
+    private $rooms;
 
     public function __construct()
     {
-        $this->elements = new ArrayCollection();
+        $this->rooms = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->label;
     }
 
     public function getId(): ?int
@@ -79,29 +84,29 @@ class Type
     }
 
     /**
-     * @return Collection|Element[]
+     * @return Collection|Room[]
      */
-    public function getElements(): Collection
+    public function getRooms(): Collection
     {
-        return $this->elements;
+        return $this->rooms;
     }
 
-    public function addElement(Element $element): self
+    public function addRoom(Room $room): self
     {
-        if (!$this->elements->contains($element)) {
-            $this->elements[] = $element;
-            $element->setType($this);
+        if (!$this->rooms->contains($room)) {
+            $this->rooms[] = $room;
+            $room->setHome($this);
         }
 
         return $this;
     }
 
-    public function removeElement(Element $element): self
+    public function removeRoom(Room $room): self
     {
-        if ($this->elements->removeElement($element)) {
+        if ($this->rooms->removeElement($room)) {
             // set the owning side to null (unless already changed)
-            if ($element->getType() === $this) {
-                $element->setType(null);
+            if ($room->getHome() === $this) {
+                $room->setHome(null);
             }
         }
 
