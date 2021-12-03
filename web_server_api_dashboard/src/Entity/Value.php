@@ -18,7 +18,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     "patch",
  *     "delete",
  *     "put",
- *     "get_by_label" = {
+ *     "get_last_by_labelelement" = {
  *       "method" = "GET",
  *       "path" = "/value/last/{labelelement}",
  *       "controller" = ValueByLabelElement::class,

@@ -3,32 +3,18 @@
 namespace App\Controller;
 
 use App\Entity\Action;
-use App\Entity\Element;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[AsController]
-class ActionsByLabelElement extends AbstractController
+class ActionsUnresolved extends AbstractController
 {
-    public function __invoke(string $labelelement)
+    public function __invoke()
     {
-        $element = $this->getDoctrine()
-            ->getRepository(Element::class)
-            ->findOneBy(
-                ['label' => $labelelement],
-            );
- 
-        if (!$element) {
-            throw $this->createNotFoundException(
-                'No element found for this label'
-            );
-        }
-
         $actions = $this->getDoctrine()
             ->getRepository(Action::class)
             ->findBy(
                 ['state' => false],
-                ['element' => $element],
                 ['datetime' => 'ASC']
             );
  

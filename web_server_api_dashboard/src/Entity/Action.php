@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     "patch",
  *     "delete",
  *     "put",
- *     "get_by_label" = {
+ *     "get_unresolved_by_labelelement" = {
  *       "method" = "GET",
  *       "path" = "/actions/unresolved/{labelelement}",
  *       "controller" = ActionsByLabelElement::class,
@@ -37,6 +37,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *           },
  *         },
  *       },
+ *     },
+ *     "get_unresolved" = {
+ *       "method" = "GET",
+ *       "path" = "/actions/unresolved",
+ *       "controller" = ActionsUnresolved::class,
+ *       "read"=false,
  *     },
  *   },
  * )
