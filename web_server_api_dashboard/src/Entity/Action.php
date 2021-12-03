@@ -57,6 +57,11 @@ class Action
         $this->datetime = new \DateTime('now');
     }
 
+    public function __toString()
+    {
+        return $this->value;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

@@ -84,6 +84,11 @@ class Element
         $this->elementValues = new ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->label;
+    }
+
     public function getId(): ?int
     {
         return $this->id;

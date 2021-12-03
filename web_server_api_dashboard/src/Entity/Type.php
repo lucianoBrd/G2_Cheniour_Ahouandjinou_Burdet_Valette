@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\RoomRepository;
+use App\Repository\TypeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,15 +17,15 @@ use Doctrine\ORM\Mapping as ORM;
  *     "put",
  *     "get_by_label" = {
  *       "method" = "GET",
- *       "path" = "/room/{label}",
- *       "controller" = RoomByLabel::class,
+ *       "path" = "/type/{label}",
+ *       "controller" = TypeByLabel::class,
  *       "read"=false,
  *       "openapi_context" = {
  *         "parameters" = {
  *           {
  *             "name" = "label",
  *             "in" = "path",
- *             "description" = "The label of your room",
+ *             "description" = "The label of your type",
  *             "type" = "string",
  *             "required" = true,
  *             "example"= "label",
@@ -35,9 +35,9 @@ use Doctrine\ORM\Mapping as ORM;
  *     },
  *   },
  * )
- * @ORM\Entity(repositoryClass=RoomRepository::class)
+ * @ORM\Entity(repositoryClass=TypeRepository::class)
  */
-class Room
+class Type
 {
     /**
      * @ORM\Id
@@ -52,19 +52,18 @@ class Room
     private $label;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Home::class, inversedBy="rooms")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $home;
-
-    /**
-     * @ORM\OneToMany(targetEntity=Element::class, mappedBy="room", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Element::class, mappedBy="type")
      */
     private $elements;
 
     public function __construct()
     {
         $this->elements = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->label;
     }
 
     public function getId(): ?int
@@ -84,18 +83,6 @@ class Room
         return $this;
     }
 
-    public function getHome(): ?Home
-    {
-        return $this->home;
-    }
-
-    public function setHome(?Home $home): self
-    {
-        $this->home = $home;
-
-        return $this;
-    }
-
     /**
      * @return Collection|Element[]
      */
@@ -108,7 +95,7 @@ class Room
     {
         if (!$this->elements->contains($element)) {
             $this->elements[] = $element;
-            $element->setRoom($this);
+            $element->setType($this);
         }
 
         return $this;
@@ -118,8 +105,8 @@ class Room
     {
         if ($this->elements->removeElement($element)) {
             // set the owning side to null (unless already changed)
-            if ($element->getRoom() === $this) {
-                $element->setRoom(null);
+            if ($element->getType() === $this) {
+                $element->setType(null);
             }
         }
 

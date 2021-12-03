@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\HomeRepository;
+use App\Repository\RoomRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,15 +17,15 @@ use Doctrine\ORM\Mapping as ORM;
  *     "put",
  *     "get_by_label" = {
  *       "method" = "GET",
- *       "path" = "/home/{label}",
- *       "controller" = HomeByLabel::class,
+ *       "path" = "/room/{label}",
+ *       "controller" = RoomByLabel::class,
  *       "read"=false,
  *       "openapi_context" = {
  *         "parameters" = {
  *           {
  *             "name" = "label",
  *             "in" = "path",
- *             "description" = "The label of your home",
+ *             "description" = "The label of your room",
  *             "type" = "string",
  *             "required" = true,
  *             "example"= "label",
@@ -35,9 +35,9 @@ use Doctrine\ORM\Mapping as ORM;
  *     },
  *   },
  * )
- * @ORM\Entity(repositoryClass=HomeRepository::class)
+ * @ORM\Entity(repositoryClass=RoomRepository::class)
  */
-class Home
+class Room
 {
     /**
      * @ORM\Id
@@ -52,13 +52,24 @@ class Home
     private $label;
 
     /**
-     * @ORM\OneToMany(targetEntity=Room::class, mappedBy="home", orphanRemoval=true)
+     * @ORM\ManyToOne(targetEntity=Home::class, inversedBy="rooms")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $rooms;
+    private $home;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Element::class, mappedBy="room", orphanRemoval=true)
+     */
+    private $elements;
 
     public function __construct()
     {
-        $this->rooms = new ArrayCollection();
+        $this->elements = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->label;
     }
 
     public function getId(): ?int
@@ -78,30 +89,42 @@ class Home
         return $this;
     }
 
-    /**
-     * @return Collection|Room[]
-     */
-    public function getRooms(): Collection
+    public function getHome(): ?Home
     {
-        return $this->rooms;
+        return $this->home;
     }
 
-    public function addRoom(Room $room): self
+    public function setHome(?Home $home): self
     {
-        if (!$this->rooms->contains($room)) {
-            $this->rooms[] = $room;
-            $room->setHome($this);
+        $this->home = $home;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Element[]
+     */
+    public function getElements(): Collection
+    {
+        return $this->elements;
+    }
+
+    public function addElement(Element $element): self
+    {
+        if (!$this->elements->contains($element)) {
+            $this->elements[] = $element;
+            $element->setRoom($this);
         }
 
         return $this;
     }
 
-    public function removeRoom(Room $room): self
+    public function removeElement(Element $element): self
     {
-        if ($this->rooms->removeElement($room)) {
+        if ($this->elements->removeElement($element)) {
             // set the owning side to null (unless already changed)
-            if ($room->getHome() === $this) {
-                $room->setHome(null);
+            if ($element->getRoom() === $this) {
+                $element->setRoom(null);
             }
         }
 
