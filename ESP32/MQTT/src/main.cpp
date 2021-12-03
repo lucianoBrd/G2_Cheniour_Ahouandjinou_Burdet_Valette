@@ -1,114 +1,149 @@
 #include <Arduino.h>
-
 // For the screen
 #include <TFT_eSPI.h>
-
 // For wifi and mqtt
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <Wire.h>
 #include <SPI.h>
 
-#define BME_SCK 18
-#define BME_MISO 19
-#define BME_MOSI 23
-#define BME_CS 5
 
+#define CONNECTION_TIMEOUT 30
+///_____
+const char* ssid = "Domotique";
+const char* password = "Domotique";
+const char* mqttServer = "192.168.234.130";
+const int mqttPort = 1883;
+const char* mqttUser = "";
+const char* mqttPassword = "";
 
-
-// Global var
-const char *ssid = "Domotique";
-const char *password = "Domotique";
-//const char *ssid = "Luciano";
-//const char *password = "123456789";
-const char *mqtt_server = "broker.mqttdashboard.com";
-const char *mqtt_topic_temp = "topic/temp56";
-
-const int mqtt_port = 8000;
-
+///____ Appel classes
+TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup_Select.h
 WiFiClient espClient;
-PubSubClient client(espClient);
-
-void setup_wifi()
+PubSubClient mqttClient(espClient);
+///____
+//Demarre l'ecran 
+void initScreen()
 {
-    // We start by connecting to a WiFi network
+  // tft.init();
+  tft.begin();
+  tft.setRotation(0);
+  tft.setTextSize(2);
+  tft.fillScreen(TFT_BLACK);
+  tft.fillScreen(TFT_WHITE);
+  tft.setCursor(40, 40);
+  tft.println("Hello");
+  tft.setCursor(25, 100);
+  tft.println("DomoTic");
+  tft.setCursor(25, 200);
+  tft.println("Ver1.00");
+  sleep(1);
+}
 
-    if (WiFi.status() != WL_CONNECTED)
-    {
-        WiFi.begin(ssid, password);
-
-        while (WiFi.status() != WL_CONNECTED)
-        {
-          delay(500);
-
-        }
-        
-    }
-
+void wifiConnected(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
 
 }
 
-void callback(char *topic, byte *message, unsigned int length)
-{
+void wifiGotIP(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
+    tft.fillScreen(TFT_WHITE);
+    tft.setCursor(5, 40);
+    tft.println(WiFi.localIP());
+    delay(1000);
 }
 
-void reconnect()
-{
-    Serial.print("reconnect...");
-
-    // Loop until we're reconnected
-    while (!client.connected())
-    {
-        // Create a random client ID
-        String clientId = "ESP32Client-";
-        clientId += String(random(0xffff), HEX);
-
-        // Attempt to connect
-        if (client.connect(clientId.c_str()))
-        {
-            Serial.println("ok");
-        }
-        else
-        {
-            // Wait 5 seconds before retrying
-            delay(5000);
-        }
+void wifiDisconnected(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
+    int compteur_conn = 0;
+    WiFi.begin(ssid, password);
+    while(WiFi.status() != WL_CONNECTED){
+       tft.fillScreen(TFT_WHITE);
+       tft.setCursor(5, 40);
+       tft.println(".......");       
+       compteur_conn++;                         // redemarre la carte apres 30s, equivalent de 150 tentatives de connection
+       if (compteur_conn >= 5*CONNECTION_TIMEOUT){
+         ESP.restart();
+       }
+      WiFi.begin(ssid, password); 
+       
     }
 }
 
+// Se connecte à un réseau WiFI
+// Gestion WiFi par les event de la co
+void initWifiConnection(){
+    WiFi.mode(WIFI_STA); // mode station
+    WiFi.onEvent(wifiConnected,SYSTEM_EVENT_STA_CONNECTED); // si l'état de la co Wifi passe à connected, appel la fct wifiConnected
+    WiFi.onEvent(wifiGotIP,SYSTEM_EVENT_STA_GOT_IP);        // // si la carte recoit une @IP appel la fct wifiGotIP
+    WiFi.onEvent(wifiDisconnected,SYSTEM_EVENT_STA_DISCONNECTED);  // si l'état de la co Wifi passe à disconnected, appel la fct wifiDisconnected, permet de se reconnecter automatiquement
 
-void setup()
-{
-  // Monitor speed
-  Serial.begin(115200);
+    WiFi.begin(ssid, password);
+}
+
+void mqttCallback(char* topic, uint8_t* payload, unsigned int length){
+  Serial.print("Message arrived in topic: ");
+  Serial.println(topic);
+  Serial.print("Message:");
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)payload[i]);
+  }
+  Serial.println();
+  Serial.println("-----------------------");
+}
+
+void initMqtt(){
+  while (WiFi.status() != WL_CONNECTED){}
+  
+  mqttClient.setServer(mqttServer, mqttPort);
+  while (!mqttClient.connected()) {
+    //Serial.println("Connecting to MQTT...");
+  
+    if (mqttClient.connect("ESP32Client", mqttUser, mqttPassword )) {
+      //Serial.println("connected");
+      tft.fillScreen(TFT_WHITE);
+      tft.setCursor(5, 90);
+      tft.println("Mqtt:OK");
+      } else {
+  
+      Serial.print("failed with state ");
+      tft.fillScreen(TFT_WHITE);
+      tft.setCursor(5, 90);
+      tft.println("Mqtt:KO");//mqttClient.state());
+      delay(2000);
+      }
+    mqttClient.setCallback(mqttCallback);
+    bool a = mqttClient.subscribe("esp/recevoir",1);//subscribe to topic
+    if (a == true){Serial.println("Subscribed to topic");}
+    delay(200);
+    }
+  
+}
 
 
+void setup() {
+  Serial.begin(9600);
+  delay(1000);
+  initScreen();
+  initWifiConnection();
+  initMqtt();
 
-  // Initialise wifi
-  setup_wifi();
-  client.setServer(mqtt_server, mqtt_port);
-  client.setCallback(callback);
+  }
+
+void loop() {
+  mqttClient.loop();
+  
+
+  
+   if (!mqttClient.connected()){
+       initMqtt();
+  }
+
+   mqttClient.publish("esp/send", "que du salle");
+  delay(2000);
 
 }
 
-void loop()
-{
-  setup_wifi();
 
-  if (!client.connected())
-  {
-    reconnect();
-  }
-  client.loop();
-
-  if (WiFi.status() == WL_CONNECTED)
-  {
-    char c[10];
-    sprintf(c, "%.2f", 10);
-    client.publish(mqtt_topic_temp, c);
-    Serial.println("Sent temperature");
-  }
-
-
-
-}
+/// note 
+/* il faudra peut-être changer l'adresse mac des cartes
+http://www.hivemq.com/demos/websocket-client/
+https://www.hivemq.com/public-mqtt-broker/
+*/
