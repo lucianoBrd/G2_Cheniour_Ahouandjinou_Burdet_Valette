@@ -5,13 +5,38 @@ namespace App\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ValueRepository;
+use App\Controller\ValueByLabelElement;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
  *  normalizationContext={"groups" = {"value:read"}},
- *  denormalizationContext={"groups" = {"value:write"}}
+ *  denormalizationContext={"groups" = {"value:write"}},
+ *  itemOperations={
+ *     "get",
+ *     "patch",
+ *     "delete",
+ *     "put",
+ *     "get_by_label" = {
+ *       "method" = "GET",
+ *       "path" = "/value/{labelelement}",
+ *       "controller" = ValueByLabelElement::class,
+ *       "read"=false,
+ *       "openapi_context" = {
+ *         "parameters" = {
+ *           {
+ *             "name" = "labelelement",
+ *             "in" = "path",
+ *             "description" = "The label of the element of the value",
+ *             "type" = "string",
+ *             "required" = true,
+ *             "example"= "label",
+ *           },
+ *         },
+ *       },
+ *     },
+ *   },
  * )
  * @ORM\Entity(repositoryClass=ValueRepository::class)
  */
