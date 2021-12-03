@@ -1,4 +1,6 @@
-# Script server domotique automatisation
+# Script server domotique 
+
+## Installation
 
 ### Pré-requis
 - Installation de python : si vous n'avez pas python sur votre machine vous pouvez le télécharger via le lien https://www.python.org/downloads/
@@ -14,4 +16,10 @@
 ### Exécution du script
 
 Pour exécuter le script lancer la commande suivante : `py domotique_automatisation.py`.
+
+## Descriptif du script
+
+Ce script permet de gérer les différente entité de la maison (via un server MQTT) et de paramétrer des scénario entre elles. Par exemple, lorsque la température (capteur de température) descend en dessous d'un seuil on active le chauffage. 
+
+**Remarque** : Vous pouvez retrouver plus d'informations sur les différentes via la documention HTML suivante : [Documentation classes](Sphinx\_build\html\index.html)
 

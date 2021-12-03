@@ -1,12 +1,10 @@
 from Room import Room
-import paho.mqtt.client as mqtt
-
 
 class Home:
     """
     Home class
     """
-    def __init__(self, name = 'MyHome', rooms_list = [], mqtt_client=mqtt.Client()) -> None:
+    def __init__(self, name = 'MyHome', rooms_list = [], mqtt_client=object()) -> None:
         """
         Init the Home class 
 

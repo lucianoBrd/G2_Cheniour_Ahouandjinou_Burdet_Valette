@@ -77,7 +77,7 @@ if __name__ == "__main__":
     while True:
         time.sleep(0.5)
 
-        # check temperature in living room
+        #region check temperature in living room
         temperature_living_room = int(home.rooms['living_room'].elements['sensor_temperature_living_room'].data['temperature'])
         
         vmc_living_room = home.rooms['living_room'].elements['actuator_vmc_living_room']
@@ -104,8 +104,9 @@ if __name__ == "__main__":
             # powered the heating
             if heating_living_room.data['state'] != "ON" :
                 home.mqtt_client.publish(heating_living_room.topic, "ON")
-        
-        # check humidity in living room
+        #endregion
+
+        #region check humidity in living room
         humidity_living_room = int(home.rooms['living_room'].elements['sensor_humidity_living_room'].data['humidity'])
         
         if humidity_living_room >= 0 and humidity_living_room < 25:
@@ -116,6 +117,5 @@ if __name__ == "__main__":
             # powered the VMC
             if vmc_living_room.data['state'] != "ON" :
                 home.mqtt_client.publish(vmc_living_room.topic , "ON")
-           
-#publish : client.publish("house/light","ON")
-#subscribe : client.subscribe("house/bulbs/bulb1")
+        #endregion
+
