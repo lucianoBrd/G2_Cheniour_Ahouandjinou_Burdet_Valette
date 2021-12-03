@@ -3,6 +3,7 @@
         - Telecharger les librairies necessaire depuis le magasin Platformio
         - Rajouter dans le .ini "board_build.partitions = no_ota.csv" permet d'éviter l'erreur "ram overflowed"
         - Modifer le fichier "User_Setup_Select.h" et décommenter le "../Setup25_TTGO_T_Display.h"
+        - Commentez tout le fichier setup
         - Driver "ST7789_DRIVER" tft pour la Board T-Display
         
 
@@ -15,3 +16,4 @@
 ## Documentation
 - https://geekelectronick.com/esp32-customizing-partition-in-platformio/
 - https://docs.platformio.org/en/latest/projectconf/index.html
+- https://learn.upesy.com/fr/programming/esp32/arduino-code/esp32_connect_wifi_AP.html#:~:text=L'ESP32%20poss%C3%A8de%202%20modes,ESP32%20peut%20acc%C3%A9der%20%C3%A0%20Internet.
