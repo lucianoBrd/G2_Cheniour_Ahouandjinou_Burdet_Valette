@@ -2,6 +2,10 @@
 
 Notre projet permet de visualiser, faciliter et administrer différents éléments de sa maison : température, humidité, porte-volet, chauffage, VMC...
 
+Voici le lien de nottre application WEB (API + Dashboard) :
+- https://work.lucien-brd.com/
+
+
 # Schéma global
 
 ![Schema](schema.png)
