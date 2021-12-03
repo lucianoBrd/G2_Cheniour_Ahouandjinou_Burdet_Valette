@@ -23,7 +23,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     "put",
  *     "get_unresolved_by_labelelement" = {
  *       "method" = "GET",
- *       "path" = "/action/unresolved/{labelelement}",
+ *       "path" = "/actions/unresolved/{labelelement}",
  *       "controller" = ActionsByLabelElement::class,
  *       "read"=false,
  *       "openapi_context" = {
@@ -41,7 +41,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     },
  *     "get_unresolved" = {
  *       "method" = "GET",
- *       "path" = "/action/unresolved",
+ *       "path" = "/actions/unresolved",
  *       "controller" = ActionsUnresolved::class,
  *       "read"=false,
  *     },
