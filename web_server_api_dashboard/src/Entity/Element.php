@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\ElementRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Controller\ElementByLabel;
+use App\Repository\ElementRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ *  normalizationContext={"groups" = {"element"}},
+ *  denormalizationContext={"groups" = {"element"}},
  *  itemOperations={
  *     "get",
  *     "patch",
@@ -43,45 +47,52 @@ class Element
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"element"})
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=191, unique=true)
+     * @Groups({"element"})
      */
     private $label;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"element"})
      */
     private $battery;
 
     /**
      * @ORM\ManyToOne(targetEntity=Room::class, inversedBy="elements")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"element"})
      */
     private $room;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Action::class, inversedBy="elements")
-     */
-    private $actions;
-
-    /**
      * @ORM\OneToMany(targetEntity=Value::class, mappedBy="element", orphanRemoval=true)
+     * @Groups({"element"})
      */
     private $elementValues;
 
     /**
      * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="elements")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"element"})
      */
     private $type;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Action::class, mappedBy="element", orphanRemoval=true)
+     * @Groups({"element"})
+     */
+    private $actions;
+
     public function __construct()
     {
-        $this->actions = new ArrayCollection();
         $this->elementValues = new ArrayCollection();
+        $this->actions = new ArrayCollection();
     }
 
     public function __toString()
@@ -131,30 +142,6 @@ class Element
     }
 
     /**
-     * @return Collection|Action[]
-     */
-    public function getActions(): Collection
-    {
-        return $this->actions;
-    }
-
-    public function addAction(Action $action): self
-    {
-        if (!$this->actions->contains($action)) {
-            $this->actions[] = $action;
-        }
-
-        return $this;
-    }
-
-    public function removeAction(Action $action): self
-    {
-        $this->actions->removeElement($action);
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Value[]
      */
     public function getElementValues(): Collection
@@ -192,6 +179,36 @@ class Element
     public function setType(?Type $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Action[]
+     */
+    public function getActions(): Collection
+    {
+        return $this->actions;
+    }
+
+    public function addAction(Action $action): self
+    {
+        if (!$this->actions->contains($action)) {
+            $this->actions[] = $action;
+            $action->setElement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAction(Action $action): self
+    {
+        if ($this->actions->removeElement($action)) {
+            // set the owning side to null (unless already changed)
+            if ($action->getElement() === $this) {
+                $action->setElement(null);
+            }
+        }
 
         return $this;
     }

@@ -11,5 +11,5 @@ symfony server:stop
 Mettre en place la base de données :
 ```
 php bin/console doctrine:database:create
-php bin/console doctrine:migrations:migrate
+php bin/console doctrine:schema:update --force
 ```

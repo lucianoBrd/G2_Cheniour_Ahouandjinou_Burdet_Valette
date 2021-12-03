@@ -5,6 +5,8 @@ namespace App\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ActionRepository;
+use App\Controller\ActionsUnresolved;
+use App\Controller\ActionsByLabelElement;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,8 +14,38 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- *  normalizationContext={"groups" = {"read"}},
- *  denormalizationContext={"groups" = {"write"}}
+ *  normalizationContext={"groups" = {"action:read"}},
+ *  denormalizationContext={"groups" = {"action:write"}},
+ *  itemOperations={
+ *     "get",
+ *     "patch",
+ *     "delete",
+ *     "put",
+ *     "get_unresolved_by_labelelement" = {
+ *       "method" = "GET",
+ *       "path" = "/actions/unresolved/{labelelement}",
+ *       "controller" = ActionsByLabelElement::class,
+ *       "read"=false,
+ *       "openapi_context" = {
+ *         "parameters" = {
+ *           {
+ *             "name" = "labelelement",
+ *             "in" = "path",
+ *             "description" = "The label of the element of the actions",
+ *             "type" = "string",
+ *             "required" = true,
+ *             "example"= "label",
+ *           },
+ *         },
+ *       },
+ *     },
+ *     "get_unresolved" = {
+ *       "method" = "GET",
+ *       "path" = "/actions/get/unresolved",
+ *       "controller" = ActionsUnresolved::class,
+ *       "read"=false,
+ *     },
+ *   },
  * )
  * @ORM\Entity(repositoryClass=ActionRepository::class)
  */
@@ -23,37 +55,37 @@ class Action
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"read"})
+     * @Groups({"action:read"})
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     * @Groups({"read", "write"})
+     * @ORM\Column(type="string", length=191)
+     * @Groups({"action:read", "action:write"})
      */
     private $value;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"read"})
+     * @Groups({"action:read"})
      */
     private $datetime;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"read", "write"})
+     * @Groups({"action:read", "action:write"})
      */
     private $state = false; // Not done by default
 
     /**
-     * @ORM\ManyToMany(targetEntity=Element::class, mappedBy="actions")
-     * @Groups({"read", "write"})
+     * @ORM\ManyToOne(targetEntity=Element::class, inversedBy="actions")
+     * @ORM\JoinColumn(nullable=false)
+     * @Groups({"action:read", "action:write"})
      */
-    private $elements;
+    private $element;
 
     public function __construct()
     {
-        $this->elements = new ArrayCollection();
         $this->datetime = new \DateTime('now');
     }
 
@@ -103,29 +135,14 @@ class Action
         return $this;
     }
 
-    /**
-     * @return Collection|Element[]
-     */
-    public function getElements(): Collection
+    public function getElement(): ?Element
     {
-        return $this->elements;
+        return $this->element;
     }
 
-    public function addElement(Element $element): self
+    public function setElement(?Element $element): self
     {
-        if (!$this->elements->contains($element)) {
-            $this->elements[] = $element;
-            $element->addAction($this);
-        }
-
-        return $this;
-    }
-
-    public function removeElement(Element $element): self
-    {
-        if ($this->elements->removeElement($element)) {
-            $element->removeAction($this);
-        }
+        $this->element = $element;
 
         return $this;
     }

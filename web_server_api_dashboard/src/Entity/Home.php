@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use App\Repository\HomeRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Controller\HomeByLabel;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\HomeRepository;
+use Doctrine\Common\Collections\Collection;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ *  normalizationContext={"groups" = {"home"}},
+ *  denormalizationContext={"groups" = {"home"}},
  *  itemOperations={
  *     "get",
  *     "patch",
@@ -43,16 +47,19 @@ class Home
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"home"})
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255, unique=true)
+     * @ORM\Column(type="string", length=191, unique=true)
+     * @Groups({"home"})
      */
     private $label;
 
     /**
      * @ORM\OneToMany(targetEntity=Room::class, mappedBy="home", orphanRemoval=true)
+     * @Groups({"home"})
      */
     private $rooms;
 
