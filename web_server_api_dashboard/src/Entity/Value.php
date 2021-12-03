@@ -26,7 +26,7 @@ class Value
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=191)
      * @Groups({"read", "write"})
      */
     private $value;
