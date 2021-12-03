@@ -24,7 +24,7 @@ class ValueByLabelElement extends AbstractController
             );
         }
 
-        $value = $this->getDoctrine()
+        $values = $this->getDoctrine()
             ->getRepository(Value::class)
             ->findBy(
                 ['element' => $element],
@@ -32,12 +32,16 @@ class ValueByLabelElement extends AbstractController
                 1
             );
  
-        if (!$value) {
+        if (!$values) {
             throw $this->createNotFoundException(
                 'No value found for this element'
             );
         }
+
+        foreach ($values as $value) {
+            return $value;
+        }
  
-        return $value;
+        return null;
     }
 }
