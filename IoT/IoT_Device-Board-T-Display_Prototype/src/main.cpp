@@ -48,6 +48,7 @@ void wifiGotIP(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
     tft.fillScreen(TFT_WHITE);
     tft.setCursor(5, 40);
     tft.println(WiFi.localIP());
+    delay(1000);
 }
 
 void wifiDisconnected(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
@@ -60,8 +61,8 @@ void wifiDisconnected(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
        if (compteur_conn >= 5*CONNECTION_TIMEOUT){
          ESP.restart();
        }
-       delay(1000);
-       WiFi.begin(ssid, password);
+      
+       WiFi.begin(ssid, password); delay(200);
     }
 }
 
@@ -74,6 +75,10 @@ void initWifiConnection(){
     WiFi.onEvent(wifiDisconnected,SYSTEM_EVENT_STA_DISCONNECTED);  // si l'état de la co Wifi passe à disconnected, appel la fct wifiDisconnected, permet de se reconnecter automatiquement
 
     WiFi.begin(ssid, password);
+}
+
+void mqttCallback(char* valeur, uint8_t* var, unsigned int nb){
+
 }
 
 void initMqtt(){
@@ -98,6 +103,8 @@ void initMqtt(){
       tft.println("Mqtt:KO");//mqttClient.state());
       delay(2000);
       }
+    mqttClient.setCallback(mqttCallback);
+    
     }
   
 }
@@ -113,13 +120,22 @@ void setup() {
   }
 
 void loop() {
-  mqttClient.publish("esp/test", "Hello from ESP32");
-  delay(5000);
   mqttClient.loop();
-  // put your main code here, to run repeatedly:
+ 
+
+  mqttClient.setKeepAlive(30);
+  
+  if (!mqttClient.connected()){
+      //initMqtt();
+  }
+   mqttClient.publish("esp/test", "Hello from ESP32");
+  delay(5000);
+
 }
 
 
 /// note 
 /* il faudra peut-être changer l'adresse mac des cartes
+http://www.hivemq.com/demos/websocket-client/
+https://www.hivemq.com/public-mqtt-broker/
 */
