@@ -46,14 +46,13 @@ class Action
     private $state = false; // Not done by default
 
     /**
-     * @ORM\ManyToMany(targetEntity=Element::class, mappedBy="actions")
-     * @Groups({"read", "write"})
+     * @ORM\ManyToOne(targetEntity=Element::class, inversedBy="actions")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $elements;
+    private $element;
 
     public function __construct()
     {
-        $this->elements = new ArrayCollection();
         $this->datetime = new \DateTime('now');
     }
 
@@ -103,29 +102,14 @@ class Action
         return $this;
     }
 
-    /**
-     * @return Collection|Element[]
-     */
-    public function getElements(): Collection
+    public function getElement(): ?Element
     {
-        return $this->elements;
+        return $this->element;
     }
 
-    public function addElement(Element $element): self
+    public function setElement(?Element $element): self
     {
-        if (!$this->elements->contains($element)) {
-            $this->elements[] = $element;
-            $element->addAction($this);
-        }
-
-        return $this;
-    }
-
-    public function removeElement(Element $element): self
-    {
-        if ($this->elements->removeElement($element)) {
-            $element->removeAction($this);
-        }
+        $this->element = $element;
 
         return $this;
     }

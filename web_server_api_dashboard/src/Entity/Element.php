@@ -64,11 +64,6 @@ class Element
     private $room;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Action::class, inversedBy="elements")
-     */
-    private $actions;
-
-    /**
      * @ORM\OneToMany(targetEntity=Value::class, mappedBy="element", orphanRemoval=true)
      */
     private $elementValues;
@@ -79,10 +74,15 @@ class Element
      */
     private $type;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Action::class, mappedBy="element", orphanRemoval=true)
+     */
+    private $actions;
+
     public function __construct()
     {
-        $this->actions = new ArrayCollection();
         $this->elementValues = new ArrayCollection();
+        $this->actions = new ArrayCollection();
     }
 
     public function __toString()
@@ -132,30 +132,6 @@ class Element
     }
 
     /**
-     * @return Collection|Action[]
-     */
-    public function getActions(): Collection
-    {
-        return $this->actions;
-    }
-
-    public function addAction(Action $action): self
-    {
-        if (!$this->actions->contains($action)) {
-            $this->actions[] = $action;
-        }
-
-        return $this;
-    }
-
-    public function removeAction(Action $action): self
-    {
-        $this->actions->removeElement($action);
-
-        return $this;
-    }
-
-    /**
      * @return Collection|Value[]
      */
     public function getElementValues(): Collection
@@ -193,6 +169,36 @@ class Element
     public function setType(?Type $type): self
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Action[]
+     */
+    public function getActions(): Collection
+    {
+        return $this->actions;
+    }
+
+    public function addAction(Action $action): self
+    {
+        if (!$this->actions->contains($action)) {
+            $this->actions[] = $action;
+            $action->setElement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAction(Action $action): self
+    {
+        if ($this->actions->removeElement($action)) {
+            // set the owning side to null (unless already changed)
+            if ($action->getElement() === $this) {
+                $action->setElement(null);
+            }
+        }
 
         return $this;
     }
