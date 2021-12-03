@@ -10,8 +10,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- *  normalizationContext={"groups" = {"read"}},
- *  denormalizationContext={"groups" = {"write"}}
+ *  normalizationContext={"groups" = {"value:read"}},
+ *  denormalizationContext={"groups" = {"value:write"}}
  * )
  * @ORM\Entity(repositoryClass=ValueRepository::class)
  */
@@ -21,26 +21,26 @@ class Value
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"read"})
+     * @Groups({"value:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=191)
-     * @Groups({"read", "write"})
+     * @Groups({"value:read", "value:write"})
      */
     private $value;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"read"})
+     * @Groups({"value:read"})
      */
     private $datetime;
 
     /**
      * @ORM\ManyToOne(targetEntity=Element::class, inversedBy="elementValues")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"read", "write"})
+     * @Groups({"value:read", "value:write"})
      */
     private $element;
 

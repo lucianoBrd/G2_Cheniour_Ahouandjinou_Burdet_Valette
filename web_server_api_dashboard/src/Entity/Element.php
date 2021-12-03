@@ -8,9 +8,12 @@ use App\Repository\ElementRepository;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
+ *  normalizationContext={"groups" = {"element"}},
+ *  denormalizationContext={"groups" = {"element"}}
  *  itemOperations={
  *     "get",
  *     "patch",
@@ -44,38 +47,45 @@ class Element
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"element"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=191, unique=true)
+     * @Groups({"element"})
      */
     private $label;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Groups({"element"})
      */
     private $battery;
 
     /**
      * @ORM\ManyToOne(targetEntity=Room::class, inversedBy="elements")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"element"})
      */
     private $room;
 
     /**
      * @ORM\OneToMany(targetEntity=Value::class, mappedBy="element", orphanRemoval=true)
+     * @Groups({"element"})
      */
     private $elementValues;
 
     /**
      * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="elements")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"element"})
      */
     private $type;
 
     /**
      * @ORM\OneToMany(targetEntity=Action::class, mappedBy="element", orphanRemoval=true)
+     * @Groups({"element"})
      */
     private $actions;
 

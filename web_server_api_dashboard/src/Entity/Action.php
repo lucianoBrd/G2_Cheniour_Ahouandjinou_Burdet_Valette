@@ -12,8 +12,8 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- *  normalizationContext={"groups" = {"read"}},
- *  denormalizationContext={"groups" = {"write"}}
+ *  normalizationContext={"groups" = {"action:read"}},
+ *  denormalizationContext={"groups" = {"action:write"}}
  * )
  * @ORM\Entity(repositoryClass=ActionRepository::class)
  */
@@ -23,32 +23,32 @@ class Action
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"read"})
+     * @Groups({"action:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=191)
-     * @Groups({"read", "write"})
+     * @Groups({"action:read", "action:write"})
      */
     private $value;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"read"})
+     * @Groups({"action:read"})
      */
     private $datetime;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"read", "write"})
+     * @Groups({"action:read", "action:write"})
      */
     private $state = false; // Not done by default
 
     /**
      * @ORM\ManyToOne(targetEntity=Element::class, inversedBy="actions")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"read", "write"})
+     * @Groups({"action:read", "action:write"})
      */
     private $element;
 
