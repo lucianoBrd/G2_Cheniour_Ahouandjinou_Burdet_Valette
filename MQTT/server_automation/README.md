@@ -22,6 +22,6 @@ Pour exécuter le script lancer la commande suivante : `py domotique_automatisat
 Ce script permet de gérer les différente entité de la maison (via un server MQTT) et de paramétrer des scénario entre elles. Par exemple, lorsque la température (capteur de température) descend en dessous d'un seuil on active le chauffage. 
 
 **Remarque** : Vous pouvez retrouver plus d'informations sur les différentes via la documention HTML suivante : [documentation des classes](./Sphinx/_build/html/index.html)
-<a href="./Sphinx/_build/html/index.html" target="_top">Download Page</a>
+
 
 
