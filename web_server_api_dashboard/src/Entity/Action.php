@@ -41,7 +41,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     },
  *     "get_unresolved" = {
  *       "method" = "GET",
- *       "path" = "/actions/unresolved",
+ *       "path" = "/actions/get/unresolved",
  *       "controller" = ActionsUnresolved::class,
  *       "read"=false,
  *     },
