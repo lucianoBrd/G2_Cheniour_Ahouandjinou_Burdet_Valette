@@ -27,3 +27,6 @@ Mqtt
  - https://randomnerdtutorials.com/esp32-mqtt-publish-subscribe-arduino-ide/
  - https://techtutorialsx.com/2017/04/24/esp32-publishing-messages-to-mqtt-topic/
  - https://mosquitto.org/man/mosquitto_sub-1.html
+
+Build
+- https://docs.platformio.org/en/latest/projectconf/section_env_build.html#src-filter

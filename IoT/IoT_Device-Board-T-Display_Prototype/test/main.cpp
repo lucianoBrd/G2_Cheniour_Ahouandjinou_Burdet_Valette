@@ -228,19 +228,3 @@ GestionWiFi::~GestionWiFi()
 {
 }
 
-class GUI
-{
-private:
-  /* data */
-public:
-  GUI(/* args */);
-  ~GUI();
-};
-
-GUI::GUI(/* args */)
-{
-}
-
-GUI::~GUI()
-{
-}
