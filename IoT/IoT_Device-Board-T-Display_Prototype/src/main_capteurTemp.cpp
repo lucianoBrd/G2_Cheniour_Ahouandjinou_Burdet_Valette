@@ -7,8 +7,12 @@
 #include <DHT.h>
 
 #define CONNECTION_TIMEOUT 10
-#define DHTPIN 2         // broche DATA du capteur est reliee 
 #define DHTTYPE DHT11     // Definit le type de capteur utilise
+
+#define DHTPIN 2         // broche DATA du capteur est reliee 
+#define pinLed 12     // pin pour le boutton
+#define pinBouton 27     // pin pour le boutton
+
 ///_____
 const char* ssid = "SFR_DDA8";    //"Redmi Note 7"; // 
 const char* password = "3vsk72pjpz5fkd69umkz";  // dallez94
@@ -18,6 +22,16 @@ const char* mqttUser = "";
 const char* mqttPassword = "";
 
 const char* temp = "";
+String valTemp;
+
+int etat = 0; //  
+int pwmChannel = 0;  // channel de O-15
+int pwmFreq = 0; 
+int pwmResolution = 8;  //
+
+
+
+
 ///____ Appel classes
 TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup_Select.h
 WiFiClient espClient;
@@ -87,14 +101,12 @@ void mqttCallback(char* valeur, uint8_t* var, unsigned int nb){
 }
 
 void initMqtt(){
-  while (WiFi.status() != WL_CONNECTED){}
+ // while (WiFi.status() != WL_CONNECTED){}
   
   mqttClient.setServer(mqttServer, mqttPort);
   while (!mqttClient.connected()) {
-    Serial.println("Connecting to MQTT...");
-  
+      
     if (mqttClient.connect("ESP32Client", mqttUser, mqttPassword )) {
-      Serial.println("connected");
       tft.fillScreen(TFT_WHITE);
       tft.setCursor(5, 90);
       tft.println("Mqtt:OK");
@@ -114,59 +126,100 @@ void initMqtt(){
   
 }
 
+void GestionBouton(){
+  // la pin 4 correspond à la backlight
+  if (digitalRead(4)!=LOW){
+    digitalWrite(4,LOW);
+  }
+  else{
+    digitalWrite(4,HIGH);
+  }
+  
+ 
+}
+
 
 void setup() {
+  // Init peripheriques
   Serial.begin(115200);
   delay(1000);
   initScreen();
   initWifiConnection();
   initMqtt();
 // Config pins
-  pinMode(2, OUTPUT);
+ 
   pinMode(12, OUTPUT);
+  pinMode(pinBouton,INPUT);
   
-  digitalWrite(2, HIGH);
-
-  //Config PWM
-  int pwmChannel = 0;  // channel de O-15
-  int pwmFreq = 1000; 
-  int pwmResolution = 8;  // résolution de la largeur d’impulsion entre 1 et 16 bits
-  int pwmPin = 12;
 
   // Configuration du canal 0 avec la fréquence et la résolution choisie
   ledcSetup(pwmChannel, pwmFreq, pwmResolution);
-
-   // Assigne le canal PWM au pin 36
-  ledcAttachPin(pwmPin, pwmChannel);
+   // Assigne le canal PWM au pin 12
+  ledcAttachPin(pinLed, pwmChannel);
 
   // Créer la tension en sortie choisi
 //  ledcWrite(pwmChannel, 25); //1.65 V
 
-  mqttClient.loop();
-  mqttClient.setKeepAlive(300);
-  mqttClient.setSocketTimeout(300);
-
+  mqttClient.loop(); 
 
   dht.begin();
+  attachInterrupt(pinBouton, GestionBouton, RISING);
   }
 
 void loop() {
  
   
   if (!mqttClient.connected()){
-      initMqtt();
+          etat = 0;
+  //     initMqtt();
+   }
+   else{
+     etat = 1;
+   }
+
+  switch (etat)
+  {
+  case 0:               // si ét
+    if(pwmFreq!=1){
+      pwmFreq = 1;
+      ledcDetachPin(pinLed);
+      ledcSetup(pwmChannel, pwmFreq, pwmResolution);
+      ledcAttachPin(pinLed, pwmChannel);
+      ledcWrite(pwmChannel, 100);
+    }
+
+    if (WiFi.status() != WL_CONNECTED){
+      WiFi.reconnect();
+    }
+    initMqtt();
+    break;
+
+  case 1:
+    float str =  dht.readTemperature();
+    
+    tft.fillScreen(TFT_WHITE);
+    tft.setCursor(5, 90);
+    tft.println(str);//mqttClient.state());
+//    valTemp = "".concat(str);
+  // char* tp = valTemp.toCharArray();
+      mqttClient.publish("esp/test", "Hello from ESP32");
+  // mqttClient.publish("esp/temp",valTemp );
+    delay(5000);
+
+    if (pwmFreq!=2){
+      pwmFreq = 2;
+      ledcDetachPin(pinLed);
+      ledcSetup(pwmChannel, pwmFreq, pwmResolution);
+      ledcAttachPin(pinLed, pwmChannel);
+      ledcWrite(pwmChannel, 100);
+    }   
+    break;
+      
+  default:
+    break;
   }
    
-  float str =  dht.readTemperature();
-  String valTemp = "";
-  tft.fillScreen(TFT_WHITE);
-  tft.setCursor(5, 90);
-  tft.println(str);//mqttClient.state());
-  valTemp = valTemp.concat(str);
-// char* tp = valTemp.toCharArray();
-    mqttClient.publish("esp/test", "Hello from ESP32");
- // mqttClient.publish("esp/temp",valTemp );
-  delay(5000);
+  
 
 }
 
@@ -185,10 +238,11 @@ Def pins:
 #define TFT_BL          4 
 
 PWM : all pins sauf les pins GPIO36, GPIO39, GPIO34, GPIO35
-12 --> moteur
+12 --> led
 
 GPIO : 
-2 --> led
+2 --> capteur
+12 --> bouton
 
 
 */

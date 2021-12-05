@@ -12,6 +12,9 @@
         - git branche nomBranche
         - git checkout nomFiles : remets les/le fichier(s) nomFiles dans l'état du dépôt
 
+## Mosquitto .conf
+        - allow_anonymous true
+        - listener 1883
 
 ## Documentation
 - https://geekelectronick.com/esp32-customizing-partition-in-platformio/
@@ -23,3 +26,4 @@ WiFi
 Mqtt
  - https://randomnerdtutorials.com/esp32-mqtt-publish-subscribe-arduino-ide/
  - https://techtutorialsx.com/2017/04/24/esp32-publishing-messages-to-mqtt-topic/
+ - https://mosquitto.org/man/mosquitto_sub-1.html
