@@ -39,8 +39,8 @@ class DeployController extends AbstractController
 
         $i++;
         /* Update db */
-        $output[$i]['command'] = 'doctrine:schema:update';
-        $output[$i]['result'] = $this->do_command($kernel, 'doctrine:schema:update');
+        $output[$i]['command'] = 'doctrine:schema:update --force';
+        $output[$i]['result'] = $this->do_command($kernel, 'doctrine:schema:update --force');
 
         return $this->json([
             $output
