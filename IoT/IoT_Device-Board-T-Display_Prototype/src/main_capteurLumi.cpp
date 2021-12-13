@@ -4,37 +4,31 @@
 #include <PubSubClient.h>
 #include <Wire.h>
 #include <SPI.h>
-#include <DHT.h>
+
 
 #define CONNECTION_TIMEOUT 10
-#define DHTTYPE DHT11        // Definit le type de capteur utilise
-
-#define DHTPIN 2           // pin pour la broche DATA du capteur 
-#define pinLed 12         // pin pour le boutton
 #define pinBouton 27     // pin pour le boutton
+#define pinLed 12         // pin pour la LED
+#define pinPhotoresistance 32
 
 ///_____
 const char* ssid = "SFR_DDA8";                   //"Redmi Note 7"; // 
 const char* password = "3vsk72pjpz5fkd69umkz";  // dallez94
 const char* mqttServer = "192.168.1.89";       //"broker.hivemq.com";//IPAddress my_IPAddress(192,168,43,222);
 const int mqttPort = 1883;
-const char* mqttUser = "";
+const char* mqttUser = "module_lumi01";
 const char* mqttPassword = "";
 
-int etat = 0;               //  variable representant l'etat du capteur
+int etat = -1;
 int pwmChannel = 0;         // channel de O-15 disponibles
 double pwmFreq = 0;         // frequence pwm
 int pwmResolution = 16;     //8-16 bits possibles
-
-float mesure_temp = 0;
-float mesure_hum = 0;
-
+int intensiteLum = -1;
 
 ///____ Appel classes
 TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup_Select.h
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
-DHT dht(DHTPIN, DHTTYPE);  // Declare un objet de type DHT// Il faut passer en parametre du constructeur // de l'objet la broche et le type de capteur
 
 ///____
 //Demarre l'ecran 
@@ -147,18 +141,13 @@ void setup() {
   initWifiConnection();
 
 // Config pins
-  pinMode(12, OUTPUT);
-  pinMode(pinBouton,INPUT_PULLDOWN);
-  
-
-  
+  pinMode(pinPhotoresistance,INPUT);
   ledcSetup(pwmChannel, pwmFreq, pwmResolution);  // Configuration du canal 0 avec la fréquence et la résolution choisie
-   
   ledcAttachPin(pinLed, pwmChannel);        // assigne le canal PWM au pin 
-
-  dht.begin();
+  pinMode(pinBouton,INPUT_PULLDOWN);
   attachInterrupt(pinBouton, gestionBouton, FALLING); // attache une interruption sur le bouton, front descendant, appel gestionBouton
-  }
+//   
+}
 
 void loop() {
 
@@ -188,17 +177,14 @@ void loop() {
     break;
 
   case 1:
-    mesure_temp = dht.readTemperature();
-    mesure_hum = dht.readHumidity();
-    
+  
     tft.fillScreen(TFT_WHITE);
     tft.setCursor(5, 90);
-    tft.println(mesure_temp);           //mqttClient.state());
+    tft.println();           //mqttClient.state());
     tft.setCursor(50, 150);
     tft.println(etat);
 
     mqttClient.publish("esp/test", "Hello from ESP32");
-    mqtt_publish_float("esp/temp",mesure_temp);       // publication de la temperature sur le topic
   //  mqtt_publish_float("esp/hum",mesure_hum);
     
     if (pwmFreq!=0.1){
@@ -206,10 +192,15 @@ void loop() {
       ledcDetachPin(pinLed);
       ledcSetup(pwmChannel, pwmFreq, pwmResolution);
       ledcAttachPin(pinLed, pwmChannel);
-      ledcWrite(pwmChannel, 10);
+      ledcWrite(pwmChannel, 50);
     }  
     
-     delay(5000);
+     delay(2000);
+     intensiteLum = analogRead(pinPhotoresistance);
+     tft.fillScreen(TFT_WHITE);
+     tft.setCursor(5, 90);
+     tft.println(intensiteLum);    
+     delay(2000);
     break;
       
   default:  

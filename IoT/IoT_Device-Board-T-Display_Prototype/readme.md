@@ -30,3 +30,7 @@ Mqtt
 
 Build
 - https://docs.platformio.org/en/latest/projectconf/section_env_build.html#src-filter
+
+Pins
+ - https://jensd.dk/edu/doc/esp32/ttgo-t.html
+ - https://jensd.dk/edu/doc/esp32/ttgo-t-pins.jpg
