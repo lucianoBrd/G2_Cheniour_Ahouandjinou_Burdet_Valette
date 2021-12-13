@@ -78,7 +78,7 @@ class Element
 
     /**
      * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="elements")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      * @Groups({"element"})
      */
     private $type;
