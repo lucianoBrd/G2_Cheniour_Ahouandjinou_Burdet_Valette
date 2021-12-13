@@ -5,11 +5,7 @@ class API:
     """
     API class
     """
-<<<<<<< HEAD
-    def __init__(self) -> None:
-=======
     def __init__(self):
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
         """
         Init the API class
         """
@@ -23,11 +19,7 @@ class API:
 
         :returns: json -- The json of all homes data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/homes", headers = self.header).json()
-=======
         return requests.get(self.url + "/homes", headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
     
     def get_home_by_name(self, home_name = ''):
         """
@@ -38,11 +30,7 @@ class API:
 
         :returns: json -- The json of the home data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/home/{home_name}", headers = self.header).json()
-=======
         return requests.get(self.url + "/home/" + home_name, headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
     
     def get_home_by_id(self, home_id = 0):
         """
@@ -53,11 +41,7 @@ class API:
 
         :returns: json -- The json of the home data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/homes/{home_id}", headers = self.header).json()
-=======
         return requests.get(self.url + "/homes/ " + str(home_id), headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
     
     def get_home_name_by_id(self, home_id = 0):
         """
@@ -97,11 +81,7 @@ class API:
 
         :returns: json -- The json of all rooms data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/rooms", headers = self.header).json()
-=======
         return requests.get(self.url + "/rooms", headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
     
     def get_room_by_name(self, room_name = ''):
         """
@@ -112,11 +92,7 @@ class API:
 
         :returns: json -- The json of the room data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/room/{room_name}", headers = self.header).json()
-=======
         return requests.get(self.url + "/room/" + room_name, headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
     
     def get_room_by_id(self, room_id = 0):
         """
@@ -127,11 +103,7 @@ class API:
 
         :returns: json -- The json of the room data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/rooms/{room_id}", headers = self.header).json()
-=======
         return requests.get(self.url + "/rooms/" + str(room_id), headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
     
     def get_room_name_by_id(self, room_id = 0):
         """
@@ -171,11 +143,7 @@ class API:
 
         :returns: json -- The json of all elements data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/elements", headers = self.header).json()
-=======
         return requests.get(self.url + "/elements", headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
     
     def get_element_by_name(self, element_name = ''):
         """
@@ -186,11 +154,7 @@ class API:
 
         :returns: json -- The json of the element data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/element/{element_name}", headers = self.header).json()
-=======
         return requests.get(self.url + "/element/" + element_name, headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
 
     def get_element_by_id(self, element_id = 0):
         """
@@ -201,11 +165,7 @@ class API:
 
         :returns: json -- The json of the element data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/elements/{element_id}", headers = self.header).json()
-=======
         return requests.get(self.url + "/elements/" + str(element_id), headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
     
     def get_element_name_by_id(self, element_id = 0):
         """
@@ -245,11 +205,7 @@ class API:
 
         :returns: json -- The json of all types data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/types", headers = self.header).json()
-=======
         return requests.get(self.url + "/types", headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
     
     def get_type_by_name(self, type_name = ''):
         """
@@ -260,11 +216,7 @@ class API:
 
         :returns: json -- The json of the type data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/type/{type_name}", headers = self.header).json()
-=======
         return requests.get(self.url + "/type/" + type_name, headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
 
     def get_type_by_id(self, type_id = 0):
         """
@@ -275,11 +227,7 @@ class API:
 
         :returns: json -- The json of the type data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/types/{type_id}", headers = self.header).json()
-=======
         return requests.get(self.url + "/types/" + str(type_id), headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
     
     def get_type_name_by_id(self, type_id = 0):
         """
@@ -319,11 +267,7 @@ class API:
 
         :returns: json -- The json of all values data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/values", headers = self.header).json()
-=======
         return requests.get(self.url + "/values", headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
     
     def get_value_by_id(self, value_id = 0):
         """
@@ -334,11 +278,7 @@ class API:
 
         :returns: json -- The json of the value data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/values/{value_id}", headers = self.header).json()
-=======
         return requests.get(self.url + "/values/" + str(value_id), headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
 
     def get_last_value_by_element_name(self, element_name = ''):
         """
@@ -349,11 +289,7 @@ class API:
 
         :returns: json -- The json of the value data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/value/last/{element_name}", headers = self.header).json()
-=======
         return requests.get(self.url + "/value/last/" + element_name, headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
     
     def get_actions(self):
         """
@@ -361,11 +297,7 @@ class API:
 
         :returns: json -- The json of all actions data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/actions", headers = self.header).json()
-=======
         return requests.get(self.url + "/actions", headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
     
     def get_action_by_id(self, action_id = 0):
         """
@@ -376,11 +308,7 @@ class API:
 
         :returns: json -- The json of the action data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/actions/{action_id}", headers = self.header).json()
-=======
         return requests.get(self.url + "/actions/" + str(action_id), headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
 
     def get_unresolved_actions_by_element_name(self, element_name = ''):
         """
@@ -391,11 +319,7 @@ class API:
 
         :returns: json -- The json of the actions data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/actions/unresolved/{element_name}", headers = self.header).json()
-=======
         return requests.get(self.url + "/actions/unresolved/" + element_name, headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
     
     def get_unresolved_actions(self):
         """
@@ -403,11 +327,7 @@ class API:
 
         :returns: json -- The json of the actions data
         """
-<<<<<<< HEAD
-        return requests.get(f"{self.url}/actions/get/unresolved", headers = self.header).json()
-=======
         return requests.get(self.url + "/actions/get/unresolved", headers = self.header).json()
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
     
     def create_home(self, home_name = '', rooms_list= []):
         """
@@ -427,11 +347,7 @@ class API:
         "rooms": rooms_list 
             })
 
-<<<<<<< HEAD
-        request = requests.post(f"{self.url}/homes", data=payload, headers = self.header)
-=======
         request = requests.post(self.url + "/homes", data=payload, headers = self.header)
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
 
         return request.status_code
 
@@ -459,11 +375,7 @@ class API:
         "elements": elements_list
             })
                 
-<<<<<<< HEAD
-        request = requests.post(f"{self.url}/rooms", data=payload, headers = self.header)
-=======
         request = requests.post(self.url + "/rooms", data=payload, headers = self.header)
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
 
         return request.status_code
 
@@ -486,11 +398,7 @@ class API:
         "type" : '/api/types/' + str(type_id)
             })
         
-<<<<<<< HEAD
-        request = requests.post(f"{self.url}/elements", data=payload, headers = self.header)
-=======
         request = requests.post(self.url + "/elements", data=payload, headers = self.header)
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
 
         return request.status_code
     
@@ -506,11 +414,7 @@ class API:
 
         payload = json.dumps({"label": type_name})
         
-<<<<<<< HEAD
-        request = requests.post(f"{self.url}/types", data=payload, headers = self.header)
-=======
         request = requests.post(self.url + "/types", data=payload, headers = self.header)
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
 
         return request.status_code
     
@@ -533,11 +437,7 @@ class API:
             "element" : '/api/elements/' + str(element_id)
         })
         
-<<<<<<< HEAD
-        request = requests.post(f"{self.url}/values", data=payload, headers = self.header)
-=======
         request = requests.post(self.url + "/values", data=payload, headers = self.header)
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
 
         return request.status_code
     
@@ -560,11 +460,7 @@ class API:
             "element" : '/api/elements/' + str(element_id)
         })
         
-<<<<<<< HEAD
-        request = requests.post(f"{self.url}/actions", data=payload, headers = self.header)
-=======
         request = requests.post(self.url + "/actions", data=payload, headers = self.header)
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
 
         return request.status_code
     
@@ -598,11 +494,7 @@ class API:
 
         payload = json.dumps(payload)
 
-<<<<<<< HEAD
-        request = requests.put(f"{self.url}/homes/{home_id}", data=payload, headers = self.header)
-=======
         request = requests.put(self.url + "/homes/" + str(home_id), data=payload, headers = self.header)
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
 
         return request.status_code
 
@@ -643,11 +535,7 @@ class API:
 
         payload = json.dumps(payload)
 
-<<<<<<< HEAD
-        request = requests.put(f"{self.url}/rooms/{room_id}", data=payload, headers = self.header)
-=======
         request = requests.put(self.url + "/rooms/" + str(room_id), data=payload, headers = self.header)
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
 
         return request.status_code
 
@@ -691,11 +579,7 @@ class API:
         
         payload = json.dumps(payload)
 
-<<<<<<< HEAD
-        request = requests.put(f"{self.url}/elements/{element_id}", data=payload, headers = self.header)
-=======
         request = requests.put(self.url + "/elements/" + str(element_id), data=payload, headers = self.header)
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
         
         return request.status_code
     
@@ -730,11 +614,7 @@ class API:
 
         payload = json.dumps(payload)
 
-<<<<<<< HEAD
-        request = requests.put(f"{self.url}/types/{type_id}", data=payload, headers = self.header)
-=======
         request = requests.put(self.url + "/types/" + str(type_id), data=payload, headers = self.header)
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
 
         return request.status_code
 
@@ -768,18 +648,6 @@ class API:
 
         payload = json.dumps(payload)
         
-<<<<<<< HEAD
-        request = requests.put(f"{self.url}/actions/{action_id}", data=payload, headers = self.header)
-
-        return request.status_code
-    
-
-#####TO DO LIST
-#### FINIR UPDATE (actions, values, type etc...)
-#### TESTER TOUS LES UPDATES
-print(API().update_action(action_id=6, value='string', state= True))
-=======
         request = requests.put(self.url + "/actions/" + str(action_id), data=payload, headers = self.header)
 
         return request.status_code
->>>>>>> e42b17f559bac8bc213efa4b0012b9959ce7e47f
