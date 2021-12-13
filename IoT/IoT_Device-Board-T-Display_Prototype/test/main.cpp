@@ -138,7 +138,7 @@ void setup() {
 
    // Assigne le canal PWM au pin 36
   ledcAttachPin(pwmPin, pwmChannel);
-
+ 
   // Créer la tension en sortie choisi
 //  ledcWrite(pwmChannel, 25); //1.65 V
 
@@ -199,9 +199,6 @@ private:
   /* data */
   const char* ssid;
   const char* password;
-
-  
-
 
 public:
   GestionWiFi(const char* ssid, const char* password);

@@ -14,12 +14,13 @@
 #define pinBouton 27     // pin pour le boutton
 
 ///_____
-const char* ssid = "SFR_DDA8";                   //"Redmi Note 7"; // 
-const char* password = "3vsk72pjpz5fkd69umkz";  // dallez94
-const char* mqttServer = "192.168.1.89";       //"broker.hivemq.com";//IPAddress my_IPAddress(192,168,43,222);
+const char* ssid = "Redmi Note 7";                 //"SFR_DDA8"; // 
+const char* password = "dallez94"; //"3vsk72pjpz5fkd69umkz"; 
+const char* mqttServer = "192.168.43.222";       //"broker.hivemq.com";//IPAddress my_IPAddress(192,168,43,222);
 const int mqttPort = 1883;
 const char* mqttUser = "";
 const char* mqttPassword = "";
+const char* idCapteur = "Temp - Hum";
 
 int etat = -1;               //  variable representant l'etat du capteur
 int pwmChannel = 0;         // channel de O-15 disponibles
@@ -29,6 +30,8 @@ int pwmResolution = 16;     //8-16 bits possibles
 float mesure_temp = 0;
 float mesure_hum = 0;
 
+char* etatWifi = "";
+char* etatMqtt = "";
 
 ///____ Appel classes
 TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup_Select.h
@@ -139,6 +142,39 @@ void mqtt_publish_float(String topic, float t){
   mqttClient.publish(top,t_char);
 }
 
+void GestionIHM(float temp, float hum){
+  tft.fillScreen(TFT_WHITE);
+  tft.setCursor(5, 20);
+  tft.println(idCapteur);           //mqttClient.state());
+  tft.setCursor(5, 50);
+  tft.println("__________");
+
+
+  tft.setCursor(5, 100);
+  tft.println("Temp : ");
+  tft.setCursor(70, 100);
+  tft.println(mesure_temp);
+
+  tft.setCursor(5, 140);
+  tft.println("Hum : ");
+  tft.setCursor(70, 140);
+  tft.println(mesure_hum);
+
+  tft.setCursor(5, 190);
+  tft.println("WiFi : ");
+  tft.setCursor(100, 190);
+  tft.println(etatWifi);
+
+  tft.setCursor(5, 220);
+  tft.println("Mqtt : ");
+  tft.setCursor(100, 220);
+  tft.println(etatMqtt);
+  
+
+
+
+}
+
 void setup() {
   // Init peripheriques
   Serial.begin(115200);
@@ -154,14 +190,16 @@ void setup() {
    
   ledcAttachPin(pinLed, pwmChannel);        // assigne le canal PWM au pin 
 
-  dht.begin();
+  dht.begin();                              // demare le capteur dht11 
   attachInterrupt(pinBouton, gestionBouton, FALLING); // attache une interruption sur le bouton, front descendant, appel gestionBouton
   }
 
 void loop() {
-
-  if (!mqttClient.connected()){etat = 0;}       // si le client mqtt est déconnecté
-  else{etat = 1;}
+  
+  if (!mqttClient.connected()){etat = 0;etatMqtt = "KO";}       // si le client mqtt est déconnecté
+  else{etat = 1;etatMqtt = "OK";}
+  if (WiFi.status() != WL_CONNECTED){etatWifi = "KO";}
+  else{etatWifi = "OK";}
 
   switch (etat)
   {
@@ -182,23 +220,33 @@ void loop() {
       if (WiFi.status() != WL_CONNECTED){         // Contrôle status connection Wifi, reconnection si déconnecté
         WiFi.reconnect();
       }
+      GestionIHM(0,0);
       initMqtt();                                 // tentative de (re)connection du client mqtt au brooker
+
     break;
 
   case 1:
     mesure_temp = dht.readTemperature();
     mesure_hum = dht.readHumidity();
     
-    tft.fillScreen(TFT_WHITE);
-    tft.setCursor(5, 90);
-    tft.println(mesure_temp);           //mqttClient.state());
-    tft.setCursor(50, 150);
-    tft.println(etat);
+    // tft.fillScreen(TFT_WHITE);
+    // tft.setCursor(5, 90);
+    // tft.println(mesure_temp);           //mqttClient.state());
+    // tft.setCursor(50, 150);
+    // tft.println(etat);
 
     mqttClient.publish("esp/test", "Hello from ESP32");
-    mqtt_publish_float("esp/temp",mesure_temp);       // publication de la temperature sur le topic
-  //  mqtt_publish_float("esp/hum",mesure_hum);
-    
+    if (mesure_temp != NULL){
+    mqtt_publish_float("home/living_room/sensor_temperature/temperature",mesure_temp);       // publication de la temperature sur le topic
+    }
+    if (mesure_hum != NULL){
+    mqtt_publish_float("home/living_room/sensor_humidity/humidity",mesure_hum);
+    }
+
+    GestionIHM(mesure_temp,mesure_hum);
+
+
+
     if (pwmFreq!=0.1){
       pwmFreq =0.1;
       ledcDetachPin(pinLed);
@@ -207,7 +255,7 @@ void loop() {
       ledcWrite(pwmChannel, 10);
     }  
     
-     delay(5000);
+    delay(5000);
     break;
       
   default:  
