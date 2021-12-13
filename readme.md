@@ -2,6 +2,10 @@
 
 Notre projet permet de visualiser, faciliter et administrer différents éléments de sa maison : température, humidité, porte-volet, chauffage, VMC...
 
+Voici le lien de nottre application WEB (API + Dashboard) :
+- https://work.lucien-brd.com/
+
+
 # Schéma global
 
 ![Schema](schema.png)
@@ -84,3 +88,11 @@ D'autre part de façon contrôlée, c'est à dire gérer via la voix, ou de mani
 - Porte
 - Prise
 - Luminosité
+
+# Liste des topic mqtt
+- home/living_room/sensor_temperature/temperature
+- home/living_room/sensor_humidity/humidity
+- home/living_room/actuator_vmc/state
+- home/living_room/actuator_entry_door/state
+- home/living_room/actuator_shutter/state
+- home/living_room/actuator_heating/state
