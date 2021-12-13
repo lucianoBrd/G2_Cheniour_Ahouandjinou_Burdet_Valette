@@ -464,9 +464,12 @@ class API:
 
         return request.status_code
     
-    def update_home(self, home_name = '', rooms_list = []):
+    def update_home(self, home_id = 0, home_name = '', rooms_list = []):
         """
         Update a home
+
+        :param home_id: The ID of the home
+        :type home_id: int
 
         :param home_name: The name of the home
         :type home_name: str
@@ -474,7 +477,7 @@ class API:
         :param rooms_list: The list of rooms in the home
         :type rooms_list: list 
 
-        :returns: int -- The status code of the request post
+        :returns: int -- The status code of the request put
         """
 
         payload = json.dumps({
@@ -482,13 +485,16 @@ class API:
         "rooms": rooms_list
             })
         
-        request = requests.put(f"{self.url}/homes", data=payload, header = self.header_patch)
+        request = requests.put(f"{self.url}/homes/{home_id}", data=payload, headers = self.header)
 
         return request.status_code
 
-    def update_room(self, room_name = '', parent_home_name = '', elements_list = []):
+    def update_room(self, room_id = 0, room_name = '', parent_home_name = '', elements_list = []):
         """
-        Create a room
+        Update a room
+
+        :param room_id: The ID of the room
+        :type room_id: int
 
         :param room_name: The name of the room
         :type room_name: str
@@ -499,7 +505,7 @@ class API:
         :param parent_home_name: The name of the parent home
         :type parent_home_name: str
 
-        :returns: int -- The status code of the request post
+        :returns: int -- The status code of the request put
         """
 
         parent_home_id = self.get_home_id_by_name(parent_home_name)
@@ -514,16 +520,17 @@ class API:
         "home": '/api/homes/' + str(parent_home_id),
         "elements": elements_list_iri
             })
-
-        room_id = self.get_room_id_by_name(room_name)
         
-        request = requests.patch(f"{self.url}/rooms/{room_id}", data=payload, headers = self.header_patch)
+        request = requests.put(f"{self.url}/rooms/{room_id}", data=payload, headers = self.header)
         print(request.text)
         return request.status_code
 
-    def update_element(self, element_name = '', parent_room_name = '', type_name = ''):
+    def update_element(self, element_id = 0, element_name = '', parent_room_name = '', type_name = '', actions_id = [], values_id = 0):
         """
-        Create an element
+        Update an element
+
+        :param element_id: The ID of the element
+        :type element_id: int
 
         :param element_name: The name of the element
         :type element_name: str
@@ -531,7 +538,13 @@ class API:
         :param parent_room_name: The name of the parent room
         :type parent_room_name: str
 
-        :returns: int -- The status code of the request post
+        :param actions_id: The list of actions 
+        :type actons_id: list
+
+        :param values_id: The list of values
+        :type values_id : list
+
+        :returns: int -- The status code of the request put
         """
 
         parent_room_id = self.get_room_id_by_name(parent_room_name)
@@ -540,14 +553,105 @@ class API:
         payload = json.dumps({
         "label": element_name,
         "room" : '/api/rooms/' + str(parent_room_id),
-        "type" : '/api/types/' + str(type_id)
+        "type" : '/api/types/' + str(type_id),
+        "actions":["/api/actions/" + str(action) for action in actions_id],
+        "elementValues":["/api/values/" + str(value) for value in values_id]
             })
         
-        request = requests.patch(f"{self.url}/elements", data=payload, headers = self.header_patch)
+        request = requests.put(f"{self.url}/elements/{element_id}", data=payload, headers = self.header)
 
         return request.status_code
+    
+    
+    def update_type(self, type_id = 0, type_name = '', elements_list = []):
+        """
+        Update a type
+
+        :param type_id: The ID of the type
+        :type type_id: int
+
+        :param type_name: The name of the type
+        :type type_name: str
+
+        :param elements_list: The list of elements in the room
+        :type elements_list: list 
+
+        :returns: int -- The status code of the request put
+        """
+
+        elements_list_iri = []
+
+        for element in elements_list:
+            element_id = self.get_element_id_by_name(element)
+            elements_list_iri.append('/api/elements/' + str(element_id))
+
+        payload = json.dumps({
+            "label": type_name,
+            "elements" : elements_list
+            })
+        
+        request = requests.put(f"{self.url}/types/{type_id}", data=payload, headers = self.header)
+
+        return request.status_code
+    
+    def update_value(self, value_id = 0, value = '', element_name = ''):
+        """
+        Update a value
+
+        :param value_id: The ID of the value
+        :type value_id: int
+
+        :param value: The value
+        :type value: str or int
+
+        :param element_name: The element name of the value
+        :type element_name: str
+
+        :returns: int -- The status code of the request put
+        """
+        element_id = self.get_element_id_by_name(element_name)
+
+        payload = json.dumps({
+            "value": str(value),
+            "element" : '/api/elements/' + str(element_id)
+        })
+        
+        request = requests.put(f"{self.url}/values/{value_id}", data=payload, headers = self.header)
+
+        return request.status_code
+    
+    def update_action(self, action_id = 0, value = '', element_name = '', state = False):
+        """
+        Update an action
+
+        :param action_id: The ID of the action
+        :type action_id: int
+
+        :param value: The value
+        :type value: str or int
+
+        :param element_name: The element name of the value
+        :type element_name: str
+
+        :param state: The state of the action
+        :type state: bool
+
+        :returns: int -- The status code of the request put
+        """
+        element_id = self.get_element_id_by_name(element_name)
+
+        payload = json.dumps({
+            "value": str(value),
+            "element" : '/api/elements/' + str(element_id),
+            "state": state
+        })
+        
+        request = requests.put(f"{self.url}/actions/{action_id}", data=payload, headers = self.header)
+
+        return request.status_code
+    
 
 #####TO DO LIST
 #### FINIR UPDATE (actions, values, type etc...)
 #### TESTER TOUS LES UPDATES
-print(API().update_room('teeest', 'valette_home'))
+print(API().update_home(1, 'j"adore la bite et le café'))

@@ -4,7 +4,7 @@ from Home import Home
 from Room import Room
 from Element import Element
 
-BROKER_ADDRESS = '127.0.0.1'
+BROKER_ADDRESS = '192.168.43.222'
 TOPIC_DICT = {}
 home = Home()
 
@@ -15,10 +15,6 @@ def on_message(client, userdata, message):
     element.data[data_name] = str(message.payload.decode("utf-8"))
     print(element.name,element.data)
 
-    # print("message received " ,str(message.payload.decode("utf-8")))
-    # print("message topic=",message.topic)
-    # print("message qos=",message.qos)
-    # print("message retain flag=",message.retain)
 
 def init_mqtt_connection():
     # Init MQTT Client
@@ -27,12 +23,6 @@ def init_mqtt_connection():
     client.on_message=on_message #callback function
     client.loop_start() 
 
-    # print("Subscribing to topic","house/bulbs/bulb1")
-    # client.subscribe("house/bulbs/bulb1")
-    # print("Publishing message to topic","house/bulbs/bulb1")
-    # client.publish("house/bulbs/bulb1","OFF")
-    #time.sleep(4) # wait
-    #client.loop_stop() #stop the loop
     return client
 
 def init_my_home(mqtt_client):
@@ -78,7 +68,7 @@ if __name__ == "__main__":
         time.sleep(0.5)
 
         #region check temperature in living room
-        temperature_living_room = int(home.rooms['living_room'].elements['sensor_temperature_living_room'].data['temperature'])
+        temperature_living_room = float(home.rooms['living_room'].elements['sensor_temperature_living_room'].data['temperature'])
         
         vmc_living_room = home.rooms['living_room'].elements['actuator_vmc_living_room']
         heating_living_room = home.rooms['living_room'].elements['actuator_heating_living_room']
@@ -107,7 +97,7 @@ if __name__ == "__main__":
         #endregion
 
         #region check humidity in living room
-        humidity_living_room = int(home.rooms['living_room'].elements['sensor_humidity_living_room'].data['humidity'])
+        humidity_living_room = float(home.rooms['living_room'].elements['sensor_humidity_living_room'].data['humidity'])
         
         if humidity_living_room >= 0 and humidity_living_room < 25:
             # switch offthe VMC
