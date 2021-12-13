@@ -117,8 +117,14 @@ void mqttCallback(char* topic, uint8_t* payload, unsigned int length){
   Serial.println();
   Serial.println("-----------------------");
   //Serial.print((char)payload[0]);
-   if( (char)payload[0] == '0'){motorGestion(0);}
-   else if ((char)payload[0] == '1'){motorGestion(1);}
+   if( (char)payload[0] == '0'){
+     motorGestion(0);
+     mqttClient.publish("esp/send", "OFF RECEIVED");
+     }
+   else if ((char)payload[0] == '1'){
+     motorGestion(1);
+     mqttClient.publish("esp/send", "ON RECEIVED");
+     }
 
 }
 
@@ -164,16 +170,16 @@ void setup() {
   }
 
 void loop() {
-  mqttClient.loop();
   
+  mqttClient.loop();
 
   
    if (!mqttClient.connected()){
        initMqtt();
   }
-
-  //mqttClient.publish("esp/send", "que du salle");
-  delay(2000);
+  //mqttClient.publish("esp/send", "La rue");
+  
+  //delay(2000);
 
 }
 
