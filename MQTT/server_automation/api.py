@@ -557,7 +557,7 @@ class API:
         :type actons_id: list
 
         :param values_id: The list of values
-        :type values_id : list
+        :type values_id: list
 
         :returns: int -- The status code of the request put
         """
@@ -650,7 +650,7 @@ class API:
         payload = json.dumps(payload)
         
         request = requests.put(f"{self.url}/actions/{action_id}", data=payload, headers = self.header)
-        
+
         return request.status_code
     
 
