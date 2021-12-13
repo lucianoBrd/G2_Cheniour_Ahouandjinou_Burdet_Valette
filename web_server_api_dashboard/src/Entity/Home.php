@@ -58,7 +58,7 @@ class Home
     private $label;
 
     /**
-     * @ORM\OneToMany(targetEntity=Room::class, mappedBy="home", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Room::class, mappedBy="home")
      * @Groups({"home"})
      */
     private $rooms;

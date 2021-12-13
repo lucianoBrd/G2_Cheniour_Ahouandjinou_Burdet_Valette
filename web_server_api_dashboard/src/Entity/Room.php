@@ -59,7 +59,7 @@ class Room
 
     /**
      * @ORM\ManyToOne(targetEntity=Home::class, inversedBy="rooms")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      * @Groups({"room"})
      */
     private $home;
