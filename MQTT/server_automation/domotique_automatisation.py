@@ -29,7 +29,7 @@ def init_my_home(mqtt_client):
     
     #living room
         #sensor
-    sensor_temperature_living_room = Element('sensor_temperature_living_room', 'sensor', {"temperature":20}) #temperature in degrès Celcius
+    sensor_temperature_living_room = Element('sensor_temperature_living_room', 'sensor', {"temperature":0}) #temperature in degrès Celcius
     sensor_humidity_living_room = Element('sensor_humidity_living_room', 'sensor', {"humidity":0}) #percentage of humidity
         #actuator
     actuator_vmc_living_room = Element('actuator_vmc_living_room', 'actuator', {"state": "OFF"}) #state OFF or ON
