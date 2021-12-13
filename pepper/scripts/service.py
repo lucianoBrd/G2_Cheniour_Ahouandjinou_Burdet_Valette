@@ -16,17 +16,18 @@ class APIModule:
         self.memory = self.session.service("ALMemory")
 
         self.api = API()
+        self.get_home()
 
 
     def get_home(self):
-        label = "home"
+        label = "aikel_home"
 
         home = self.api.get_home_by_name(label)
 
-        print(home)
+        print home
 
         main_info = home["label"]
-        print("main_info: %s" % main_info)
+        print "main_info: %s" % main_info
 
         return main_info
 
