@@ -58,8 +58,38 @@ void initScreen()
   sleep(1);
 }
 
-void wifiConnected(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
+void GestionIHM(float temp, float hum){
+  tft.fillScreen(TFT_WHITE);
+  tft.setCursor(5, 20);
+  tft.println(idCapteur);           //mqttClient.state());
+  tft.setCursor(5, 50);
+  tft.println("__________");
 
+
+  tft.setCursor(5, 100);
+  tft.println("Tem : ");
+  tft.setCursor(70, 100);
+  tft.println(mesure_temp);
+
+  tft.setCursor(5, 140);
+  tft.println("Hum : ");
+  tft.setCursor(70, 140);
+  tft.println(mesure_hum);
+
+  tft.setCursor(5, 190);
+  tft.println("WiFi : ");
+  tft.setCursor(100, 190);
+  tft.println(etatWifi);
+
+  tft.setCursor(5, 220);
+  tft.println("Mqtt : ");
+  tft.setCursor(100, 220);
+  tft.println(etatMqtt);
+
+}
+
+void wifiConnected(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
+  etatWifi = "OK";
 }
 
 void wifiGotIP(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
@@ -67,14 +97,13 @@ void wifiGotIP(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
     tft.setCursor(5, 40);
     tft.println(WiFi.localIP());
     delay(1000);
+    etatWifi = "OK";
 }
 
 void wifiDisconnected(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
+    etatWifi = "KO";
     int compteur_conn = 0;
-    while(WiFi.status() != WL_CONNECTED){
-       tft.fillScreen(TFT_WHITE);
-       tft.setCursor(5, 40);
-       tft.println(".......");       
+    while(WiFi.status() != WL_CONNECTED){  
        compteur_conn++;                         // redemarre la carte apres 30s, equivalent de 150 tentatives de connection
        if (compteur_conn >= 5*CONNECTION_TIMEOUT){
          ESP.restart();
@@ -106,21 +135,13 @@ void initMqtt(){
   while (!mqttClient.connected()) {
       
     if (mqttClient.connect("ESP32Client", mqttUser, mqttPassword )) {
-      tft.fillScreen(TFT_WHITE);
-      tft.setCursor(5, 90);
-      tft.println("Mqtt:OK");
-  
-      } else {
-  
-      Serial.print("failed with state ");
-      Serial.print(mqttClient.state());
-      tft.fillScreen(TFT_WHITE);
-      tft.setCursor(5, 90);
-      tft.println("Mqtt:KO");//mqttClient.state());
+      etatMqtt = "OK";  
+      } else {  
+      etatMqtt = "KO";
       delay(2000);
       }
     mqttClient.setCallback(mqttCallback);
-    
+    GestionIHM(0,0);
     }
     mqttClient.loop(); 
   
@@ -142,44 +163,14 @@ void mqtt_publish_float(String topic, float t){
   mqttClient.publish(top,t_char);
 }
 
-void GestionIHM(float temp, float hum){
-  tft.fillScreen(TFT_WHITE);
-  tft.setCursor(5, 20);
-  tft.println(idCapteur);           //mqttClient.state());
-  tft.setCursor(5, 50);
-  tft.println("__________");
 
-
-  tft.setCursor(5, 100);
-  tft.println("Temp : ");
-  tft.setCursor(70, 100);
-  tft.println(mesure_temp);
-
-  tft.setCursor(5, 140);
-  tft.println("Hum : ");
-  tft.setCursor(70, 140);
-  tft.println(mesure_hum);
-
-  tft.setCursor(5, 190);
-  tft.println("WiFi : ");
-  tft.setCursor(100, 190);
-  tft.println(etatWifi);
-
-  tft.setCursor(5, 220);
-  tft.println("Mqtt : ");
-  tft.setCursor(100, 220);
-  tft.println(etatMqtt);
-  
-
-
-
-}
 
 void setup() {
   // Init peripheriques
   Serial.begin(115200);
   delay(1000);
   initScreen();
+  GestionIHM(0,0);
   initWifiConnection();
 
 // Config pins
@@ -187,9 +178,7 @@ void setup() {
   pinMode(pinBouton,INPUT_PULLDOWN);
     
   ledcSetup(pwmChannel, pwmFreq, pwmResolution);  // Configuration du canal 0 avec la fréquence et la résolution choisie
-   
   ledcAttachPin(pinLed, pwmChannel);        // assigne le canal PWM au pin 
-
   dht.begin();                              // demare le capteur dht11 
   attachInterrupt(pinBouton, gestionBouton, FALLING); // attache une interruption sur le bouton, front descendant, appel gestionBouton
   }
@@ -204,11 +193,6 @@ void loop() {
   switch (etat)
   {
     case 0:               // si état=0, client mqtt est déconnecté
-      
-      tft.fillScreen(TFT_WHITE);
-      tft.setCursor(50, 150);
-      tft.println(etat);
-
       if(pwmFreq!=5){                   // Gestion led, entre en mode "Tentative de (re)connection", cligonte rapidement
         pwmFreq = 5;
         ledcDetachPin(pinLed);
@@ -229,12 +213,6 @@ void loop() {
     mesure_temp = dht.readTemperature();
     mesure_hum = dht.readHumidity();
     
-    // tft.fillScreen(TFT_WHITE);
-    // tft.setCursor(5, 90);
-    // tft.println(mesure_temp);           //mqttClient.state());
-    // tft.setCursor(50, 150);
-    // tft.println(etat);
-
     mqttClient.publish("esp/test", "Hello from ESP32");
     if (mesure_temp != NULL){
     mqtt_publish_float("home/living_room/sensor_temperature/temperature",mesure_temp);       // publication de la temperature sur le topic
@@ -244,8 +222,6 @@ void loop() {
     }
 
     GestionIHM(mesure_temp,mesure_hum);
-
-
 
     if (pwmFreq!=0.1){
       pwmFreq =0.1;
