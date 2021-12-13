@@ -65,7 +65,7 @@ class Room
     private $home;
 
     /**
-     * @ORM\OneToMany(targetEntity=Element::class, mappedBy="room", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Element::class, mappedBy="room")
      * @Groups({"room"})
      */
     private $elements;

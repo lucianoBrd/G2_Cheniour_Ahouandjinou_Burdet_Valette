@@ -65,7 +65,7 @@ class Element
 
     /**
      * @ORM\ManyToOne(targetEntity=Room::class, inversedBy="elements")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      * @Groups({"element"})
      */
     private $room;
