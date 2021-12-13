@@ -7,6 +7,7 @@
 # http://134.214.50.49/apps/domotique/
 
 import qi
+from decouple import config
 from api import API
 
 class APIModule:
@@ -20,17 +21,37 @@ class APIModule:
 
 
     def get_home(self):
-        label = "aikel_home"
+        label = config("HOME_NAME")
 
         home = self.api.get_home_by_name(label)
 
-        print home
+        print home 
 
-        main_info = home["label"]
-        print "main_info: %s" % main_info
+        #if not home["label"] is None:
+        #    label = home["label"]
 
-        return main_info
+        return home
 
+    def get_room(self, room_name):
+        room = self.api.get_room_by_name(room_name)
+
+        print room
+
+        return room
+
+    def get_value(self, element_name):
+        value = self.api.get_last_value_by_element_name(element_name)
+
+        print value
+
+        return value
+
+    def create_action(self, value, element_name):
+        status_code = self.api.create_action(value, element_name)
+
+        print status_code
+
+        return status_code
 
 def main():
     app = qi.Application(url="tcp://134.214.51.44:9559")
