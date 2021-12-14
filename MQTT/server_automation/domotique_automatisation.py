@@ -3,6 +3,7 @@ import time
 from Home import Home
 from Room import Room
 from Element import Element
+from decouple import config
 
 BROKER_ADDRESS = '192.168.43.222'
 TOPIC_DICT = {}
@@ -44,8 +45,8 @@ def init_my_home(mqtt_client):
         #actuator
     
 
-    rooms_list = [Room('living_room', living_room_elements_list), Room('bed_room_1', [])]
-    home = Home('home', rooms_list, mqtt_client)
+    rooms_list = [Room(config("ROOM_NAME_1"), living_room_elements_list), Room(config("ROOM_NAME_2"), [])]
+    home = Home(config("HOME_NAME"), rooms_list, mqtt_client)
 
     # Creation of the topic
     home_topic = f'{home.name}/'
