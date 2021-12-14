@@ -1,13 +1,4 @@
 topic: ~home()
 language: frf
 
-# Defining extra concepts out of words or group of words
-#concept:(hello) [hello hi hey "good morning" greetings]
-
-# Catching inputs and triggering outputs
-#u:(e:onStart) $onStopped=1
-
-# Replying to speech
-#u:(~hello) ~hello
-
 u:(e:onStart) $Home/Label=$Home $Home $onStopped=1

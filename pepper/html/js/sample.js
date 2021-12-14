@@ -6,7 +6,9 @@
         ALMemory.subscriber("Home/Label").done(function(subscriber) {
 
             subscriber.signal.connect(function(data) {
-                $('.home').html(data);
+                const myJSON = jQuery.parseJSON(data)
+                
+                $('.home').html(myJSON.label);
             });
         });
 

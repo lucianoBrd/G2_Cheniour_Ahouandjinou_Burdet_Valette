@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<package version="0.0.0" uuid="cheniour_burdet">
+<package version="0.0.0" uuid="domotique">
  <names>
-  <name lang="en_US">cheniour_burdet</name>
+  <name lang="en_US">domotique</name>
  </names>
  <supportedLanguages>
   <language>fr_FR</language>

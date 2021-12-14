@@ -12,11 +12,10 @@
         <File name="index" src="html/index.html" />
         <File name="jquery-1.11.2.min" src="html/jquery-1.11.2.min.js" />
         <File name="sample" src="html/js/sample.js" />
-        <File name="music_all" src="sounds/music_all.ogg" />
         <File name="api_joke" src="scripts/api.py" />
-        <File name="aou" src="sounds/aou.ogg" />
-        <File name="quoi" src="sounds/quoi.ogg" />
         <File name="readme" src="readme.md" />
+        <File name="api" src="scripts/api.pyc" />
+        <File name="service" src="scripts/service.py" />
     </Resources>
     <Topics>
         <Topic name="stop_frf" src="stop/stop_frf.top" topicName="stop" language="fr_FR" />

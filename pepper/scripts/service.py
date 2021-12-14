@@ -5,8 +5,10 @@
 # export PYTHONPATH=${PYTHONPATH}:/softwares/INFO/Pepper/pynaoqi-python2.7-2.5.5.5-linux64/lib/python2.7/site-packages
 # run with python2 scripts/api.py
 # http://134.214.50.49/apps/domotique/
+# qicli call ALTabletService._openSettings
 
 import qi
+import json
 from decouple import config
 from api import API
 
@@ -25,12 +27,12 @@ class APIModule:
 
         home = self.api.get_home_by_name(label)
 
-        print home 
+        print json.dumps(home) 
 
         #if not home["label"] is None:
         #    label = home["label"]
 
-        return home
+        return json.dumps(home)
 
     def get_room(self, room_name):
         room = self.api.get_room_by_name(room_name)
@@ -54,7 +56,7 @@ class APIModule:
         return status_code
 
 def main():
-    app = qi.Application(url="tcp://134.214.51.44:9559")
+    app = qi.Application(url="tcp://134.214.51.43:9559")
     app.start()
 
     s = app.session
