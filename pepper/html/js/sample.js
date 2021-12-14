@@ -11,6 +11,17 @@
                 if (home.label !== 'undefined') {
                     $('.home').html(home.label);
                 }
+
+                if (home.rooms !== 'undefined') {
+                    var rooms = '';
+                    $.each(home.rooms, function(key,room) {
+                        if (room.label !== 'undefined') {
+                            rooms += '<hr><div><p>' + room.label + '</p></div><hr>';
+                        }
+                    });
+
+                    $('.rooms').html(rooms);
+                }
             });
         });
 
