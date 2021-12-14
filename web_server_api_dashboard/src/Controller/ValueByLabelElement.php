@@ -32,11 +32,11 @@ class ValueByLabelElement extends AbstractController
                 1
             );
  
-        if (!$values) {
+        /*if (!$values) {
             throw $this->createNotFoundException(
                 'No value found for this element'
             );
-        }
+        }*/
 
         foreach ($values as $value) {
             return $value;
