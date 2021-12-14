@@ -106,11 +106,11 @@ class API:
         """
         return requests.get(self.url + "/rooms/" + str(room_id), headers = self.header).json()
 
-    def get_room_by_iri(self, room_iri = 0):
+    def get_room_by_iri(self, room_iri = ''):
         """
         Get one room with it IRI 
 
-        :param room_iri: The IRI of the room
+        :param room_iri: The IRI of the room, exemple /api/rooms/1
         :type room_iri: str
 
         :returns: json -- The json of the room data
@@ -179,11 +179,11 @@ class API:
         """
         return requests.get(self.url + "/elements/" + str(element_id), headers = self.header).json()
 
-    def get_element_by_iri(self, element_iri = 0):
+    def get_element_by_iri(self, element_iri = ''):
         """
         Get one element with it IRI 
 
-        :param element_iri: The IRI of the element
+        :param element_iri: The IRI of the element, exemple /api/elements/1
         :type element_iri: str
 
         :returns: json -- The json of the element data
@@ -251,6 +251,23 @@ class API:
         :returns: json -- The json of the type data
         """
         return requests.get(self.url + "/types/" + str(type_id), headers = self.header).json()
+
+    def get_type_by_iri(self, type_iri = ''):
+        """
+        Get one type with it iri 
+
+        :param type_iri: The IRI of the type, exemple /api/types/1
+        :type type_iri: str
+
+        :returns: json -- The json of the type data
+        """
+
+        request = requests.get(self.url_strict + str(type_iri), headers = self.header)
+        
+        if request.status_code == 200:
+            return request.json()
+
+        return None
     
     def get_type_name_by_id(self, type_id = 0):
         """

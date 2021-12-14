@@ -38,6 +38,13 @@ class APIModule:
 
                     for e in room["elements"]:
                         element = self.api.get_element_by_iri(e)
+
+                        if element["label"] != None :
+                            element["elementValue"] = self.api.get_last_value_by_element_name(element["label"])
+
+                        if element["type"] != None :
+                            element["type"] = self.api.get_type_by_iri(element["type"])
+
                         elements.append(element)
 
                     room["elements"] = elements
