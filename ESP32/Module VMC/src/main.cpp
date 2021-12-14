@@ -16,7 +16,10 @@ const char* mqttServer = "192.168.43.222";
 const int mqttPort = 1883;
 const char* mqttUser = "";
 const char* mqttPassword = "";
-
+const char* idCapteur = "VMC";
+char* Etat_VMC = "";
+char* etatWifi = "";
+char* etatMqtt = "";
 //Config PWM
 int pwmChannel = 0;  // channel de O-15
 int pwmFreq = 1000; 
@@ -68,9 +71,32 @@ void initScreen()
   tft.println("Ver1.00");
   sleep(1);
 }
+void GestionIHM(){
+  tft.fillScreen(TFT_WHITE);
+  tft.setCursor(50, 20);
+  tft.println(idCapteur);           //mqttClient.state());
+  tft.setCursor(5, 50);
+  tft.println("__________");
 
+
+  tft.setCursor(5, 100);
+  tft.println("VMC : ");
+  tft.setCursor(70, 100);
+  tft.println(Etat_VMC);
+
+  tft.setCursor(5, 190);
+  tft.println("WiFi : ");
+  tft.setCursor(100, 190);
+  tft.println(etatWifi);
+
+  tft.setCursor(5, 220);
+  tft.println("Mqtt : ");
+  tft.setCursor(100, 220);
+  tft.println(etatMqtt);
+
+}
 void wifiConnected(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
-
+etatWifi = "OK";
 }
 
 void wifiGotIP(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
@@ -82,11 +108,10 @@ void wifiGotIP(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
 
 void wifiDisconnected(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
     int compteur_conn = 0;
+    etatWifi = "KO";
+    GestionIHM();
     WiFi.begin(ssid, password);
-    while(WiFi.status() != WL_CONNECTED){
-       tft.fillScreen(TFT_WHITE);
-       tft.setCursor(5, 40);
-       tft.println(".......");       
+    while(WiFi.status() != WL_CONNECTED){     
        compteur_conn++;                         // redemarre la carte apres 30s, equivalent de 150 tentatives de connection
        if (compteur_conn >= 5*CONNECTION_TIMEOUT){
          ESP.restart();
@@ -118,12 +143,16 @@ void mqttCallback(char* topic, uint8_t* payload, unsigned int length){
   Serial.println("-----------------------");
   //Serial.print((char)payload[0]);
    if( (char)payload[0] == '0'){
+     Etat_VMC = "OFF";
      motorGestion(0);
      mqttClient.publish("esp/send", "OFF RECEIVED");
+     GestionIHM();
      }
    else if ((char)payload[0] == '1'){
+     Etat_VMC = "ON";
      motorGestion(1);
      mqttClient.publish("esp/send", "ON RECEIVED");
+     GestionIHM();
      }
 
 }
@@ -136,16 +165,14 @@ void initMqtt(){
     //Serial.println("Connecting to MQTT...");
   
     if (mqttClient.connect("ESP32Client", mqttUser, mqttPassword )) {
-      //Serial.println("connected");
-      tft.fillScreen(TFT_WHITE);
-      tft.setCursor(5, 90);
-      tft.println("Mqtt:OK");
+      Serial.println("connected");
+      etatMqtt = "OK";
+      GestionIHM();
       } else {
   
       Serial.print("failed with state ");
-      tft.fillScreen(TFT_WHITE);
-      tft.setCursor(5, 90);
-      tft.println("Mqtt:KO");//mqttClient.state());
+      etatMqtt = "KO";
+      GestionIHM();
       delay(2000);
       }
     mqttClient.setCallback(mqttCallback);
@@ -163,7 +190,7 @@ void setup() {
   initWifiConnection();
   initMqtt();
   initPWM();
-
+  GestionIHM();
   
 
 
