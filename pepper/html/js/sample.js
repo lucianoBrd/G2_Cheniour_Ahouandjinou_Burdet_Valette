@@ -85,7 +85,7 @@
                 }
 
                 $('.home').html(html);
-                $('.choice_home').html('<button class="btn_reset_home" type="button"">Choisir un autre home</button>');
+                $('.choice_home').html('<button class="btn_reset_home" type="button"">Choisir un autre home</button><small>(ou dire reset)</small>');
             });
         });
 
@@ -97,9 +97,18 @@
         });
     }
 
+    function say(value) {
+        session.service('ALTextToSpeech').done(function (tts) {
+            tts.say(value);
+        });
+    }
+
     $(document).on('click', '.btn_choice_home', function () {
         var home_name = $(this).data('id');
+        var label = $(this).html();
+        
         raise('ChoiceHome', home_name);
+        //say(label);
     });
 
     $(document).on('click', '.btn_reset_home', function () {

@@ -10,6 +10,7 @@
         <Dialog name="home_list" src="home_list/home_list.dlg" />
         <Dialog name="choice_home" src="choice_home/choice_home.dlg" />
         <Dialog name="reset_home" src="reset_home/reset_home.dlg" />
+        <Dialog name="label_home" src="label_home/label_home.dlg" />
     </Dialogs>
     <Resources>
         <File name="index" src="html/index.html" />
@@ -26,6 +27,7 @@
         <Topic name="home_list_frf" src="home_list/home_list_frf.top" topicName="home_list" language="fr_FR" />
         <Topic name="choice_home_frf" src="choice_home/choice_home_frf.top" topicName="choice_home" language="fr_FR" />
         <Topic name="reset_home_frf" src="reset_home/reset_home_frf.top" topicName="reset_home" language="fr_FR" />
+        <Topic name="label_home_frf" src="label_home/label_home_frf.top" topicName="label_home" language="fr_FR" />
     </Topics>
     <IgnoredPaths />
     <Translations auto-fill="fr_FR">

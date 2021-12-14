@@ -20,6 +20,15 @@ class APIModule:
 
         self.api = API()
 
+    def get_label_home_by_id(self, home_id):
+        
+        home = self.api.get_home_by_id(home_id)
+
+        if "label" in home :
+            return home["label"]
+
+        return 'Inconnu'
+
     def get_home_by_id(self, home_id):
         
         home = self.api.get_home_by_id(home_id)
