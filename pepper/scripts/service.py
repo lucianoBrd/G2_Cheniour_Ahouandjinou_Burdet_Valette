@@ -19,30 +19,27 @@ class APIModule:
         self.memory = self.session.service("ALMemory")
 
         self.api = API()
-        self.get_home()
 
-
-    def get_home(self):
-        label = config("HOME_NAME")
-
-        home = self.api.get_home_by_name(label)
+    def get_home_by_id(self, home_id):
         
-        if home["rooms"] != None :
+        home = self.api.get_home_by_id(home_id)
+        
+        if "rooms" in home :
             rooms = []
 
             for r in home["rooms"]:
                 room = self.api.get_room_by_iri(r)
 
-                if room["elements"] != None :
+                if "elements" in room :
                     elements = []
 
                     for e in room["elements"]:
                         element = self.api.get_element_by_iri(e)
 
-                        if element["label"] != None :
+                        if "label" in element :
                             element["elementValue"] = self.api.get_last_value_by_element_name(element["label"])
 
-                        if element["type"] != None :
+                        if "type" in element :
                             element["type"] = self.api.get_type_by_iri(element["type"])
 
                         elements.append(element)
@@ -57,19 +54,12 @@ class APIModule:
 
         return json.dumps(home)
 
-    def get_room(self, room_name):
-        room = self.api.get_room_by_name(room_name)
+    def get_homes(self):
+        homes = self.api.get_homes()
 
-        print room
+        print json.dumps(homes)
 
-        return room
-
-    def get_value(self, element_name):
-        value = self.api.get_last_value_by_element_name(element_name)
-
-        print value
-
-        return value
+        return json.dumps(homes)
 
     def create_action(self, value, element_name):
         status_code = self.api.create_action(value, element_name)
