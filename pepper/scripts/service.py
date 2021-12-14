@@ -32,6 +32,16 @@ class APIModule:
 
             for r in home["rooms"]:
                 room = self.api.get_room_by_iri(r)
+
+                if room["elements"] != None :
+                    elements = []
+
+                    for e in room["elements"]:
+                        element = self.api.get_element_by_iri(e)
+                        elements.append(element)
+
+                    room["elements"] = elements
+                
                 rooms.append(room)
 
             home["rooms"] = rooms

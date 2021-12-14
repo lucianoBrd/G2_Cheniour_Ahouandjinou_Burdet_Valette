@@ -178,6 +178,17 @@ class API:
         :returns: json -- The json of the element data
         """
         return requests.get(self.url + "/elements/" + str(element_id), headers = self.header).json()
+
+    def get_element_by_iri(self, element_iri = 0):
+        """
+        Get one element with it IRI 
+
+        :param element_iri: The IRI of the element
+        :type element_iri: str
+
+        :returns: json -- The json of the element data
+        """
+        return requests.get(self.url_strict + str(element_iri), headers = self.header).json()
     
     def get_element_name_by_id(self, element_id = 0):
         """
