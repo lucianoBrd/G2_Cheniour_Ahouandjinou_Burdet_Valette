@@ -47,6 +47,7 @@ class APIModule:
 
                         if "label" in element :
                             element["elementValue"] = self.api.get_last_value_by_element_name(element["label"])
+                            element["action"] = self.api.get_last_action_by_element_name(element["label"])
 
                         if "type" in element :
                             element["type"] = self.api.get_type_by_iri(element["type"])

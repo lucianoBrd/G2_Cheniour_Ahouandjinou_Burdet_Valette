@@ -67,8 +67,27 @@
                                     elements += '<p>Value: ' + element.elementValue.value + ' le ' + dateTime + '</p>';
                                 }
                                 if (element.type !== 'undefined' && element.type.label !== null) {
-                                    elements += '<p>Type: ' + element.type.label + '</p>';
+                                    var type = element.type.label;
+                                    var action = null;
+                                    var state = null;
+
+                                    elements += '<p>Type: ' + type + '</p>';
+
+                                    elements += '<div>Action: ';
+                                    if (element.action !== 'undefined' && element.action.value !== 'undefined' && element.action.state !== 'undefined') {
+                                        action = element.action.value;                   
+                                        state = element.action.state;                   
+                                    }
+
+                                    if (type === 'sensor') {
+                                        elements += '<input type="text" value="">';
+                                    } else if (type === 'actuator') {
+
+                                    }
+
+                                    elements += '</div>';
                                 }
+                                
                                 elements += '</li>';
                             });
                             elements += '</ul>';
