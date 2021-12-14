@@ -26,11 +26,17 @@ class APIModule:
         label = config("HOME_NAME")
 
         home = self.api.get_home_by_name(label)
+        
+        if home["rooms"] != None :
+            rooms = []
+
+            for r in home["rooms"]:
+                room = self.api.get_room_by_iri(r)
+                rooms.append(room)
+
+            home["rooms"] = rooms
 
         print json.dumps(home) 
-
-        #if not home["label"] is None:
-        #    label = home["label"]
 
         return json.dumps(home)
 

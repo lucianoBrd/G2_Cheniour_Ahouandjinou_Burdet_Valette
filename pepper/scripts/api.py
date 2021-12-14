@@ -10,6 +10,7 @@ class API:
         Init the API class
         """
         self.url= 'https://work.lucien-brd.com/api'
+        self.url_strict= 'https://work.lucien-brd.com'
         self.header = {'accept': 'application/json', 'Content-Type' : 'application/json'}
         self.header_patch = {'accept': 'application/json', 'Content-Type' : 'application/merge-patch+json'}
 
@@ -104,6 +105,17 @@ class API:
         :returns: json -- The json of the room data
         """
         return requests.get(self.url + "/rooms/" + str(room_id), headers = self.header).json()
+
+    def get_room_by_iri(self, room_iri = 0):
+        """
+        Get one room with it IRI 
+
+        :param room_iri: The IRI of the room
+        :type room_iri: str
+
+        :returns: json -- The json of the room data
+        """
+        return requests.get(self.url_strict + str(room_iri), headers = self.header).json()
     
     def get_room_name_by_id(self, room_id = 0):
         """
