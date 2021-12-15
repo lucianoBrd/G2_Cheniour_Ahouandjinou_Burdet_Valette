@@ -71,8 +71,12 @@ class APIModule:
 
         return json.dumps(homes)
 
-    def create_action(self, value, element_name):
-        status_code = self.api.create_action(value, element_name)
+    def create_action(self, parameter):
+        parameter = parameter.json()
+        status_code = 404
+
+        if "elementName" in parameter and "value" in parameter :
+            status_code = self.api.create_action(parameter["value"], parameter["elementName"])
 
         print status_code
 

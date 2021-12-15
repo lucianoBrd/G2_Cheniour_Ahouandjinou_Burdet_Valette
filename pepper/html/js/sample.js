@@ -66,7 +66,7 @@
 
                                     elements += '<p>Value: ' + element.elementValue.value + ' le ' + dateTime + '</p>';
                                 }
-                                if (element.type !== 'undefined' && element.type.label !== null) {
+                                if (element.type !== 'undefined' && element.type.label !== null && element.elementValue !== 'undefined') {
                                     var type = element.type.label;
                                     var action = null;
                                     var state = null;
@@ -75,19 +75,25 @@
 
                                     elements += '<div>Action: ';
                                     if (element.action !== 'undefined' && element.action.value !== 'undefined' && element.action.state !== 'undefined') {
-                                        action = element.action.value;                   
-                                        state = element.action.state;                   
+                                        action = element.action.value;
+                                        state = element.action.state;
                                     }
 
                                     if (type === 'sensor') {
-                                        elements += '<input type="text" value="">';
+                                        if (state) {
+                                            elements += '<label for="' + room.id + '-' + element.id + '">' + state + '</label>';
+                                        }
+                                        elements += '<input class="input_change_action" id="' + room.id + '-' + element.id + '" data-element="' + element.label + '" type="text" ' + (action ? ('value="' + action + '">') : '>');
                                     } else if (type === 'actuator') {
-
+                                        if (state) {
+                                            elements += '<label for="' + room.id + '-' + element.id + '">' + state + '</label>';
+                                        }
+                                        elements += '<select class="input_change_action" id="' + room.id + '-' + element.id + ' data-element="' + element.label + '""><option ' + ((action && action === 'ON') ? 'selected' : '') + ' value="ON">ON</option><option ' + ((action && action === 'OFF') ? 'selected' : '') + ' value="OFF">OFF</option>';
                                     }
 
                                     elements += '</div>';
                                 }
-                                
+
                                 elements += '</li>';
                             });
                             elements += '</ul>';
@@ -123,11 +129,20 @@
     }
 
     $(document).on('click', '.btn_choice_home', function () {
-        var home_name = $(this).data('id');
+        var home_id = $(this).data('id');
         var label = $(this).html();
-        
-        raise('ChoiceHome', home_name);
+
+        raise('ChoiceHome', home_id);
         //say(label);
+    });
+
+    $(document).on('change', '.input_change_action', function () {
+        var element_name = $(this).data('element');
+        var value = $(this).val();
+
+        var parameter = '{"elementName": "' + element_name + '", "value": "' + value + '"}';
+
+        raise('CreateAction', parameter);
     });
 
     $(document).on('click', '.btn_reset_home', function () {
