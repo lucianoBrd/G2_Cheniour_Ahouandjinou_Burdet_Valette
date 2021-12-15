@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\ActionRepository;
 use App\Controller\ActionsUnresolved;
+use App\Controller\ActionByLabelElement;
 use App\Controller\ActionsByLabelElement;
 use Doctrine\Common\Collections\Collection;
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -32,6 +33,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *             "name" = "labelelement",
  *             "in" = "path",
  *             "description" = "The label of the element of the actions",
+ *             "type" = "string",
+ *             "required" = true,
+ *             "example"= "label",
+ *           },
+ *         },
+ *       },
+ *     },
+ *     "get_last_by_labelelement" = {
+ *       "method" = "GET",
+ *       "path" = "/action/last/{labelelement}",
+ *       "controller" = ActionByLabelElement::class,
+ *       "read"=false,
+ *       "openapi_context" = {
+ *         "parameters" = {
+ *           {
+ *             "name" = "labelelement",
+ *             "in" = "path",
+ *             "description" = "The label of the element of the action",
  *             "type" = "string",
  *             "required" = true,
  *             "example"= "label",

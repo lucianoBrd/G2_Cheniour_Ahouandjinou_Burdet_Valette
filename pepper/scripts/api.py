@@ -1,7 +1,7 @@
 import requests
 import json
 
-class Api:
+class API:
     """
     API class
     """
@@ -359,12 +359,7 @@ class Api:
 
         :returns: json -- The json of the actions data
         """
-        request = requests.get(self.url + "/actions/unresolved/" + element_name, headers = self.header).json()
-        
-        if request['title'] != 'An error occurred':
-            return request
-        else :
-            return [] 
+        return requests.get(self.url + "/actions/unresolved/" + element_name, headers = self.header).json()
     
     def get_unresolved_actions(self):
         """
@@ -441,12 +436,6 @@ class Api:
 
         :param element_name: The name of the element
         :type element_name: str
-
-        :param parent_room_name: The name of the room parent
-        :type parent_room_name: str
-
-        :param type_name: The type of the element
-        :type type_name: str
 
         :returns: int -- The status code of the request post
         """

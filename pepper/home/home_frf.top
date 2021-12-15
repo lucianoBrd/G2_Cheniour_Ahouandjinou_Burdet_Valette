@@ -1,0 +1,4 @@
+topic: ~home()
+language: frf
+
+u:(e:onStart) $JsonHome=$Home $onStopped=1

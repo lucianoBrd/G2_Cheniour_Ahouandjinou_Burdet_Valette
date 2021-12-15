@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Value;
+use App\Entity\Action;
 use App\Entity\Element;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[AsController]
-class ValueByLabelElement extends AbstractController
+class ActionByLabelElement extends AbstractController
 {
     public function __invoke(string $labelelement)
     {
@@ -24,8 +24,8 @@ class ValueByLabelElement extends AbstractController
             );
         }
 
-        $values = $this->getDoctrine()
-            ->getRepository(Value::class)
+        $actions = $this->getDoctrine()
+            ->getRepository(Action::class)
             ->findBy(
                 ['element' => $element],
                 ['datetime' => 'DESC'],
@@ -38,8 +38,8 @@ class ValueByLabelElement extends AbstractController
             );
         }*/
 
-        foreach ($values as $value) {
-            return $value;
+        foreach ($actions as $action) {
+            return $action;
         }
  
         return null;

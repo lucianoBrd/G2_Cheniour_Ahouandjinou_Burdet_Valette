@@ -1,0 +1,4 @@
+topic: ~label_home()
+language: frf
+
+u:(e:onStart) $LabelHome Un instant s'il vous plait $onStopped=1

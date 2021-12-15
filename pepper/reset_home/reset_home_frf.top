@@ -1,0 +1,4 @@
+topic: ~reset_home()
+language: frf
+
+u:([Reset e:ResetHome]) $IdHome=-1 $onStopped=1
