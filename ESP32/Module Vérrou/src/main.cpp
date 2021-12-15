@@ -146,13 +146,13 @@ void mqttCallback(char* topic, uint8_t* payload, unsigned int length){
    if( (char)payload[0] == '0'){
      Etat_lock = "CLOSE";
      motorGestion(0);
-     mqttClient.publish("esp/send", "CLOSE RECEIVED");
+     mqttClient.publish("home/living_room/actuator_entry_door/state/acquittement", "OFF RECEIVED");
      GestionIHM();
      }
    else if ((char)payload[0] == '1'){
      Etat_lock = "OPEN";
      motorGestion(1);
-     mqttClient.publish("esp/send", "OPEN RECEIVED");
+     mqttClient.publish("home/living_room/actuator_entry_door/state/acquittement", "ON RECEIVED");
      GestionIHM();
      }
 
@@ -165,7 +165,7 @@ void initMqtt(){
   while (!mqttClient.connected()) {
     //Serial.println("Connecting to MQTT...");
   
-    if (mqttClient.connect("ESP32Client", mqttUser, mqttPassword )) {
+    if (mqttClient.connect(idCapteur, mqttUser, mqttPassword )) {
       Serial.println("connected");
       etatMqtt = "OK";
       GestionIHM();
@@ -177,7 +177,7 @@ void initMqtt(){
       delay(2000);
       }
     mqttClient.setCallback(mqttCallback);
-    bool a = mqttClient.subscribe("esp/rec",1);//subscribe to topic
+    bool a = mqttClient.subscribe("home/living_room/actuator_entry_door/state",1);//subscribe to topic
     if (a == true){Serial.println("Subscribed to topic");}
     delay(200);
     }
