@@ -56,7 +56,7 @@
                             <div class="card-header">Action</div>
                             <div class="card-body">
                                 <h4 class="card-title">Action</h4>
-                                {% if state != null %}
+                                {% if value != null %}
                                 <p class="card-text">Etat: {{ state ? 'DONE' : 'DOING' }}</p>
                                 {% endif %}
                                 <form action="{{ path('create_action', { 'id': element.id }) }}" method="POST">
