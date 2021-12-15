@@ -3,7 +3,7 @@ import time
 from Home import Home
 from Room import Room
 from Element import Element
-from api import API
+from Api import Api
 from decouple import config
 
 
@@ -109,7 +109,7 @@ def get_element_obj(home_obj, room_name, element_name):
 if __name__ == "__main__":
     #mqtt_client = init_mqtt_connection()
     #home = init_my_home(mqtt_client)
-    web_api = API()
+    web_api = Api()
     home = init_my_home(mqtt.Client("test"), web_api)
     
 

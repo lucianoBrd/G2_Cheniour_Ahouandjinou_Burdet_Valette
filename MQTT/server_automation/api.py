@@ -1,7 +1,7 @@
 import requests
 import json
 
-class API:
+class Api:
     """
     API class
     """
