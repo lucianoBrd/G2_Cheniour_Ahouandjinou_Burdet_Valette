@@ -66,7 +66,7 @@
 
                                     elements += '<p>Value: ' + element.elementValue.value + ' le ' + dateTime + '</p>';
                                 }
-                                if (element.type !== 'undefined' && element.type.label !== null && element.elementValue !== 'undefined') {
+                                if (element.type !== 'undefined' && element.type.label !== null && element.label !== 'undefined') {
                                     var type = element.type.label;
                                     var action = null;
                                     var state = null;
@@ -74,19 +74,19 @@
                                     elements += '<p>Type: ' + type + '</p>';
 
                                     elements += '<div>Action: ';
-                                    if (element.action !== 'undefined' && element.action.value !== 'undefined' && element.action.state !== 'undefined') {
+                                    if (element.action !== 'undefined' && element.action !== null && element.action.value !== 'undefined' && element.action.state !== 'undefined') {
                                         action = element.action.value;
                                         state = element.action.state;
                                     }
 
                                     if (type === 'sensor') {
                                         if (state) {
-                                            elements += '<label for="' + room.id + '-' + element.id + '">' + state + '</label>';
+                                            elements += '<label for="' + room.id + '-' + element.id + '">Etat: ' + (state ? 'Done' : 'DOING') + '</label>';
                                         }
                                         elements += '<input class="input_change_action" id="' + room.id + '-' + element.id + '" data-element="' + element.label + '" type="text" ' + (action ? ('value="' + action + '">') : '>');
                                     } else if (type === 'actuator') {
                                         if (state) {
-                                            elements += '<label for="' + room.id + '-' + element.id + '">' + state + '</label>';
+                                            elements += '<label for="' + room.id + '-' + element.id + '">Etat: ' + (state ? 'Done' : 'DOING') + '</label>';
                                         }
                                         elements += '<select class="input_change_action" id="' + room.id + '-' + element.id + ' data-element="' + element.label + '""><option ' + ((action && action === 'ON') ? 'selected' : '') + ' value="ON">ON</option><option ' + ((action && action === 'OFF') ? 'selected' : '') + ' value="OFF">OFF</option>';
                                     }

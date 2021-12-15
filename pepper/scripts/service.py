@@ -3,7 +3,7 @@
 
 # ssh nao@pepper01
 # export PYTHONPATH=${PYTHONPATH}:/softwares/INFO/Pepper/pynaoqi-python2.7-2.5.5.5-linux64/lib/python2.7/site-packages
-# run with python2 scripts/api.py
+# run with python2 scripts/service.py
 # http://134.214.50.49/apps/domotique/
 # qicli call ALTabletService._openSettings
 
