@@ -79,16 +79,21 @@
                                         state = element.action.state;
                                     }
 
+                                    if ((type === 'sensor' || type === 'actuator') && state !== null) {
+                                        elements += '<label for="' + room.id + '-' + element.id + '">Etat: ' + (state ? 'Done' : 'DOING') + '</label>';
+                                    }
+
+                                    var found = false;
                                     if (type === 'sensor') {
-                                        if (state !== null) {
-                                            elements += '<label for="' + room.id + '-' + element.id + '">Etat: ' + (state ? 'Done' : 'DOING') + '</label>';
-                                        }
+                                        found = true;
                                         elements += '<input class="input_change_action" id="' + room.id + '-' + element.id + '" data-element="' + element.label + '" type="number" ' + (action ? ('value="' + action + '">') : '>');
                                     } else if (type === 'actuator') {
-                                        if (state !== null) {
-                                            elements += '<label for="' + room.id + '-' + element.id + '">Etat: ' + (state ? 'Done' : 'DOING') + '</label>';
-                                        }
+                                        found = true;
                                         elements += '<select class="input_change_action" id="' + room.id + '-' + element.id + '" data-element="' + element.label + '"><option value="">Choisir</option><option ' + ((action && action === 'ON') ? 'selected' : '') + ' value="ON">ON</option><option ' + ((action && action === 'OFF') ? 'selected' : '') + ' value="OFF">OFF</option></select>';
+                                    }
+
+                                    if (found) {
+                                        elements += '<button data-input="' + room.id + '-' + element.id + '" class="button_change_action" type="button" class="btn btn-primary">Valider</button>';
                                     }
 
                                     elements += '</div>';
@@ -136,9 +141,10 @@
         //say(label);
     });
 
-    $(document).on('change', '.input_change_action', function () {
-        var element_name = $(this).data('element');
-        var value = $(this).val();
+    $(document).on('click', '.button_change_action', function () {
+        var input = $('#' + $(this).data('input'));
+        var element_name = $(input).data('element');
+        var value = $(input).val();
 
         var parameter = '{"elementName": "' + element_name + '", "value": "' + value + '"}';
 

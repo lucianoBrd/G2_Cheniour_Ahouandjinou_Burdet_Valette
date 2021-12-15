@@ -20,6 +20,7 @@
         <File name="api_joke" src="scripts/api.py" />
         <File name="readme" src="readme.md" />
         <File name="service" src="scripts/service.py" />
+        <File name="api" src="scripts/api.pyc" />
     </Resources>
     <Topics>
         <Topic name="stop_frf" src="stop/stop_frf.top" topicName="stop" language="fr_FR" />

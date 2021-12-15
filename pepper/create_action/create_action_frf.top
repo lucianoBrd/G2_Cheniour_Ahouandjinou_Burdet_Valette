@@ -1,4 +1,4 @@
 topic: ~create_action()
 language: frf
 
-u:([e:CreateAction]) $Parameter=$CreateAction $onStopped=1
+u:([e:CreateAction]) $Parameter=$CreateAction Création de l'action. $onStopped=1
