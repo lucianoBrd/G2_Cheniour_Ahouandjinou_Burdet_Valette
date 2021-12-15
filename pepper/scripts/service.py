@@ -60,14 +60,14 @@ class APIModule:
 
             home["rooms"] = rooms
 
-        print json.dumps(home) 
+        #print json.dumps(home) 
 
         return json.dumps(home)
 
     def get_homes(self):
         homes = self.api.get_homes()
 
-        print json.dumps(homes)
+        #print json.dumps(homes)
 
         return json.dumps(homes)
 
@@ -78,7 +78,7 @@ class APIModule:
         if "elementName" in parameter and "value" in parameter :
             status_code = self.api.create_action(parameter["value"], parameter["elementName"])
 
-        print status_code
+        #print status_code
 
         return status_code
 
