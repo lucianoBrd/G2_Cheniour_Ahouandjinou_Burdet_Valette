@@ -1,0 +1,81 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Dashboard{% endblock %}
+{% block page_actions %}{% endblock %}
+
+{% block main %}
+{% for home in homes %}
+<div class="card border-primary mb-3">
+    <div class="card-header">{{ home.label }}</div>
+    <div class="card-body">
+        <h4 class="card-title">Home: {{ home.label }}</h4>
+        <p class="card-text">Liste des Rooms</p>
+        {% for room in home.rooms %}
+        <div class="card border-primary mb-3">
+            <div class="card-header">{{ room.label }}</div>
+            <div class="card-body">
+                <h4 class="card-title">Room: {{ room.label }}</h4>
+                <p class="card-text">Liste des elements</p>
+                {% for element in room.elements %}
+                <div class="card text-white bg-dark mb-3">
+                    <div class="card-header">{{ element.label }}</div>
+                    <div class="card-body">
+                        <h4 class="card-title text-white">Element: {{ element.label }}</h4>
+
+                        {% set break = false %}
+                        {% for value in element.elementValues|sort((a, b) => b.datetime <=> a.datetime) %}
+                        {% if not break %}
+                        {% set break = true %}
+                        <p class="card-text">Value: {{ value.value }} le {{ value.datetime|date('d/m/Y H:i:s') }}</p>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if element.type %}
+                        <p class="card-text">Type: {{element.type.label}}</p>
+
+                        {% set break = false %}
+                        {% set value = null %}
+                        {% set state = null %}
+                        {% for action in element.actions|sort((a, b) => b.datetime <=> a.datetime) %}
+                        {% if not break %}
+                        {% set break = true %}
+                        {% set value = action.value %}
+                        {% set state = action.state %}
+                        {% endif %}
+                        {% endfor %}
+                        <div class="card bg-light mb-3 text-black" style="max-width: 20rem;">
+                            <div class="card-header">Action</div>
+                            <div class="card-body">
+                                <h4 class="card-title">Action</h4>
+                                <p class="card-text">Etat: {{ state != null ? 'DONE' : 'DOING' }}</p>
+                                <form action="{{ path('create_action', { 'id': element.id }) }}" method="POST">
+                                    {% if element.type.label == 'sensor' %}
+                                    <div class="form-group">
+                                        <label class="col-form-label mt-4" for="{{ room.id }}-{{ element.id }}">Valeur</label>
+                                        <input name="action" type="number" class="form-control"  id="{{ room.id }}-{{ element.id }}" value="{{ value }}">
+                                    </div>
+                                    {% elseif element.type.label == 'actuator' %}
+                                    <div class="form-group">
+                                        <label for="{{ room.id }}-{{ element.id }}" class="form-label mt-4">Valeur</label>
+                                        <select name="action" class="form-select" id="{{ room.id }}-{{ element.id }}">
+                                          <option value="">Choisir</option>
+                                          <option {% if value != null and value == 'ON' %}selected{% endif %} value="ON">ON</option>
+                                          <option {% if value != null and value == 'OFF' %}selected{% endif %} value="OFF">OFF</option>
+                                        </select>
+                                      </div>
+                                    {% endif %}
+                                    <button type="submit" class="btn btn-primary">Valider</button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

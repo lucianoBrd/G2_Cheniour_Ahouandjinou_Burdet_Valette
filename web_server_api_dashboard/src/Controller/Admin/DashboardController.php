@@ -9,6 +9,7 @@ use App\Entity\Value;
 use App\Entity\Action;
 use App\Entity\Element;
 use App\Controller\Admin\RoomCrudController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -22,7 +23,48 @@ class DashboardController extends AbstractDashboardController
      */
     public function index(): Response
     {
-        return parent::index();
+        $homes = $this->getDoctrine()
+            ->getRepository(Home::class)
+            ->findBy(
+                [],
+                ['label' => 'ASC'],
+            );
+        return $this->render('admin/dashboard.html.twig', [
+            'homes' => $homes,
+        ]);
+    }
+
+    /**
+     * @Route("/create-action/{id}", name="create_action")
+     */
+    public function createAction($id, Request $request): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $element = $this->getDoctrine()
+            ->getRepository(Element::class)
+            ->findOneBy(
+                ['id' => $id]
+            );
+
+        if (!$element) {
+            throw $this->createNotFoundException(
+                'No element found for this label'
+            );
+        }
+
+        $value = $request->request->get('action');
+
+        if ($value) {
+            $action = new Action();
+            $action->setValue($value)
+                    ->setElement($element);
+            
+            $entityManager->persist($action);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('dashboard');
     }
 
     public function configureDashboard(): Dashboard
@@ -42,5 +84,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Type', 'fa fa-spell-check', Type::class);
         yield MenuItem::linkToCrud('Value', 'fa fa-sort-numeric-up-alt', Value::class);
         yield MenuItem::linkToUrl('API', 'fa fa-road', '/api');
+        yield MenuItem::linkToUrl('Doc', 'fa fa-file-alt', '/doc/');
     }
 }
