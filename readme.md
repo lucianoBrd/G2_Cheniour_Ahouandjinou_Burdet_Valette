@@ -97,3 +97,4 @@ D'autre part de façon contrôlée, c'est à dire gérer via la voix, ou de mani
 - home/living_room/actuator_entry_door/state
 - home/living_room/actuator_shutter/state
 - home/living_room/actuator_heating/state
+- home/security/entry_code
