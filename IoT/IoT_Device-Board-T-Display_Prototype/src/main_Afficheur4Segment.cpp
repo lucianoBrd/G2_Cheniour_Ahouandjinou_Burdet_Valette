@@ -6,40 +6,38 @@
 #include <SPI.h>
 
 #define CONNECTION_TIMEOUT 10
-
+// Pins utilisés sur la carte
 #define pinDigit_1 32   // selection digit, actif l'état bas
 #define pinDigit_2 25
 #define pinDigit_3 33
-#define pinDigit_4 39
+#define pinDigit_4 26//39
 
 #define pinSegmentA 27     // segment à allumer, actif à l'état haut
-#define pinSegmentB 36
-#define pinSegmentC 37
+#define pinSegmentB 15  //36
+#define pinSegmentC 2   //37
 #define pinSegmentD 12
 #define pinSegmentE 13
-#define pinSegmentF 26
+#define pinSegmentF 36// 26
 #define pinSegmentG 38 
 
-#define pinBtn 2
-#define pin 15
+#define pinBtnIncrementerChiffre 37               // bouton permettant d'incrementer la valeur d'un digit (7 segment)
+#define pinBtnDigitSuivant 39                    // bouton permettant de passer au digit suivant
  
 ///_____
-const char* ssid = "Redmi Note 7";                 //"SFR_DDA8"; // 
-const char* password = "dallez94"; //"3vsk72pjpz5fkd69umkz"; 
-const char* mqttServer = "192.168.43.222";       //"broker.hivemq.com";//IPAddress my_IPAddress(192,168,43,222);
-const int mqttPort = 1883;
+const char* ssid = "Redmi Note 7";               // identifiant réseau           //"SFR_DDA8"; // 
+const char* password = "dallez94";               // mot de passe réseau          //"3vsk72pjpz5fkd69umkz"; 
+const char* mqttServer = "192.168.43.222";       // addresse IP du brooker Mqtt
+const int mqttPort = 1883;                       // port de connection mqtt
 const char* mqttUser = "";
 const char* mqttPassword = "";
-const char* idCapteur = "Digicode";
+const char* idCapteur = "Digicode";              // identifiant du module 
 
-int etat = -1;               //  variable representant l'etat du capteur
-int pwmChannel = 0;         // channel de O-15 disponibles
-double pwmFreq = 0;         // frequence pwm
-int pwmResolution = 16;     //8-16 bits possibles
+int etat = -1;                                   // variable representant l'etat du capteur
+int digitActuel = 1;                             // on demarre positionné sur le digit 1
+int valeur7segment[] = {0,0,0,0};
 
-
-char* etatWifi = "";
-char* etatMqtt = "";
+char* etatWifi = "";                             // paramètre permettant de récuperer l'état de connection Wifi
+char* etatMqtt = "";                             // paramètre permettant de récuperer l'état de connection MQTT
 
 ///____ Appel classes
 TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup_Select.h
@@ -164,6 +162,189 @@ void mqtt_publish_float(String topic, float t){
   mqttClient.publish(top,t_char);
 }
 
+void selectDigit (int digit){
+ switch (digit)
+ {
+  case 1:
+        digitalWrite(pinDigit_1,LOW);
+        digitalWrite(pinDigit_2,HIGH);
+        digitalWrite(pinDigit_3,HIGH);
+        digitalWrite(pinDigit_4,HIGH);
+         break;
+  case 2:
+        digitalWrite(pinDigit_1,HIGH);
+        digitalWrite(pinDigit_2,LOW);
+        digitalWrite(pinDigit_3,HIGH);
+        digitalWrite(pinDigit_4,HIGH);
+         break;
+  case 3:
+        digitalWrite(pinDigit_1,HIGH);
+        digitalWrite(pinDigit_2,HIGH);
+        digitalWrite(pinDigit_3,LOW);
+        digitalWrite(pinDigit_4,HIGH);
+         break;
+  case 4:
+        digitalWrite(pinDigit_1,HIGH);
+        digitalWrite(pinDigit_2,HIGH);
+        digitalWrite(pinDigit_3,HIGH);
+        digitalWrite(pinDigit_4,LOW);
+         break;
+ 
+ default:
+         break;
+ }
+
+}
+
+void chiffre(int chiffre){
+        switch (chiffre)
+        {
+        case 0:
+                digitalWrite(pinSegmentA,HIGH);
+                digitalWrite(pinSegmentB,HIGH);
+                digitalWrite(pinSegmentC,HIGH);
+                digitalWrite(pinSegmentD,HIGH);
+                digitalWrite(pinSegmentE,HIGH);
+                digitalWrite(pinSegmentF,HIGH);
+                digitalWrite(pinSegmentG,LOW);
+                break;
+                
+        case 1:
+                digitalWrite(pinSegmentA,LOW);
+                digitalWrite(pinSegmentB,HIGH);
+                digitalWrite(pinSegmentC,HIGH);
+                digitalWrite(pinSegmentD,LOW);
+                digitalWrite(pinSegmentE,LOW);
+                digitalWrite(pinSegmentF,LOW);
+                digitalWrite(pinSegmentG,LOW);
+                break;
+        case 2:
+                digitalWrite(pinSegmentA,HIGH);
+                digitalWrite(pinSegmentB,HIGH);
+                digitalWrite(pinSegmentC,LOW);
+                digitalWrite(pinSegmentD,HIGH);
+                digitalWrite(pinSegmentE,HIGH);
+                digitalWrite(pinSegmentF,LOW);
+                digitalWrite(pinSegmentG,HIGH);
+                break;
+        case 3:
+                digitalWrite(pinSegmentA,HIGH);
+                digitalWrite(pinSegmentB,HIGH);
+                digitalWrite(pinSegmentC,HIGH);
+                digitalWrite(pinSegmentD,HIGH);
+                digitalWrite(pinSegmentE,LOW);
+                digitalWrite(pinSegmentF,LOW);
+                digitalWrite(pinSegmentG,HIGH);
+                break;
+        case 4:
+                digitalWrite(pinSegmentA,LOW);
+                digitalWrite(pinSegmentB,HIGH);
+                digitalWrite(pinSegmentC,HIGH);
+                digitalWrite(pinSegmentD,LOW);
+                digitalWrite(pinSegmentE,LOW);
+                digitalWrite(pinSegmentF,HIGH);
+                digitalWrite(pinSegmentG,HIGH);
+                break;
+        case 5:
+                digitalWrite(pinSegmentA,HIGH);
+                digitalWrite(pinSegmentB,LOW);
+                digitalWrite(pinSegmentC,HIGH);
+                digitalWrite(pinSegmentD,HIGH);
+                digitalWrite(pinSegmentE,LOW);
+                digitalWrite(pinSegmentF,HIGH);
+                digitalWrite(pinSegmentG,HIGH);
+                break;
+        case 6:
+                digitalWrite(pinSegmentA,HIGH);
+                digitalWrite(pinSegmentB,LOW);
+                digitalWrite(pinSegmentC,HIGH);
+                digitalWrite(pinSegmentD,HIGH);
+                digitalWrite(pinSegmentE,HIGH);
+                digitalWrite(pinSegmentF,HIGH);
+                digitalWrite(pinSegmentG,HIGH);
+                break;
+        case 7:
+                digitalWrite(pinSegmentA,HIGH);
+                digitalWrite(pinSegmentB,HIGH);
+                digitalWrite(pinSegmentC,HIGH);
+                digitalWrite(pinSegmentD,LOW);
+                digitalWrite(pinSegmentE,LOW);
+                digitalWrite(pinSegmentF,LOW);
+                digitalWrite(pinSegmentG,LOW);
+                break;
+        case 8:
+                digitalWrite(pinSegmentA,HIGH);
+                digitalWrite(pinSegmentB,HIGH);
+                digitalWrite(pinSegmentC,HIGH);
+                digitalWrite(pinSegmentD,HIGH);
+                digitalWrite(pinSegmentE,HIGH);
+                digitalWrite(pinSegmentF,HIGH);
+                digitalWrite(pinSegmentG,HIGH);
+                break;
+        case 9:
+                digitalWrite(pinSegmentA,HIGH);
+                digitalWrite(pinSegmentB,HIGH);
+                digitalWrite(pinSegmentC,HIGH);
+                digitalWrite(pinSegmentD,HIGH);
+                digitalWrite(pinSegmentE,HIGH);
+                digitalWrite(pinSegmentF,LOW);
+                digitalWrite(pinSegmentG,HIGH);
+                break;
+                
+        default:
+                digitalWrite(pinSegmentA,LOW);
+                digitalWrite(pinSegmentB,LOW);
+                digitalWrite(pinSegmentC,LOW);
+                digitalWrite(pinSegmentD,LOW);
+                digitalWrite(pinSegmentE,LOW);
+                digitalWrite(pinSegmentF,LOW);
+                digitalWrite(pinSegmentG,HIGH);
+                break;
+        }
+}
+
+void verificationMdp(){
+
+}
+
+void incrementerChiffre(){
+ switch (digitActuel)
+ {
+
+ case 1:
+        valeur7segment[0] = valeur7segment[0] + 1;
+        if (valeur7segment[0] > 9 ) {valeur7segment[0] = 0;}
+       // chiffre(valeur7segment[0]);
+        break;
+ case 2:
+        valeur7segment[1] = valeur7segment[1] + 1;
+        if (valeur7segment[1] > 9 ) {valeur7segment[1] = 0;}
+        break;
+ case 3:
+        valeur7segment[2] = valeur7segment[2] + 1;
+        if (valeur7segment[2] > 9 ) {valeur7segment[2] = 0;}
+        break;
+ case 4:
+        valeur7segment[3] = valeur7segment[3] + 1;
+        if (valeur7segment[3] > 9 ) {valeur7segment[3] = 0;}
+        break;
+ 
+ default:
+         break;
+ }
+
+
+}
+void nextDigit(){
+        digitActuel = digitActuel + 1;
+        if (digitActuel > 4 ){
+                verificationMdp();
+        } 
+
+
+}
+
+
 void init7Segment(){
 // Config pins 7Segement
  pinMode(pinDigit_1, OUTPUT);
@@ -178,7 +359,15 @@ void init7Segment(){
  pinMode(pinSegmentE, OUTPUT);
  pinMode(pinSegmentF, OUTPUT);
  pinMode(pinSegmentG, OUTPUT);
+ //------- Pins bouttons
+ pinMode(pinBtnDigitSuivant,INPUT_PULLDOWN);
+ pinMode(pinBtnIncrementerChiffre,INPUT_PULLDOWN);
+ attachInterrupt(pinBtnIncrementerChiffre,incrementerChiffre,FALLING);
+ attachInterrupt(pinBtnDigitSuivant,nextDigit,FALLING);
+
 }
+
+
 
 
 void setup() {
@@ -190,11 +379,7 @@ void setup() {
   initWifiConnection();
   init7Segment();
 
- 
- 
- 
  }
-
 
 void loop() {
   
@@ -216,11 +401,27 @@ void loop() {
     break;
 
   case 1:
-    mqttClient.publish("esp/test", idCapteur);
+   // mqttClient.publish("esp/test", idCapteur);
   
-    GestionIHM();
+   // GestionIHM();
+ if (digitActuel>0){
+    selectDigit(1);
+    chiffre(valeur7segment[0]);
+    delay(1000);
+
+
+    selectDigit(2);
+    chiffre(valeur7segment[1]);
+    delay(1000);
+    selectDigit(3);
+    chiffre(valeur7segment[2]);
+    delay(1000);
+    selectDigit(4);
+    chiffre(valeur7segment[3]);
+    delay(1000);
+    }
     
-    delay(5000);
+   // delay(5000);
     break;
       
   default:  
@@ -228,11 +429,9 @@ void loop() {
   }
 }
 
+/*
 
-/// note 
-/* il faudra peut-être changer l'adresse mac des cartes
-
-Def pins:
+Pins utilisés par l'écran
 
 #define TFT_MOSI            19
 #define TFT_SCLK            18
@@ -243,10 +442,5 @@ Def pins:
 
 PWM : all pins sauf les pins GPIO36, GPIO39, GPIO34, GPIO35
 12 --> led
-
-GPIO : 
-2 --> capteur
-12 --> bouton
-
 
 */
