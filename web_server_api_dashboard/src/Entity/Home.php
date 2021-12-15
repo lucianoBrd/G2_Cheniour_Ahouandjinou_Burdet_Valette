@@ -63,6 +63,12 @@ class Home
      */
     private $rooms;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"home"})
+     */
+    private $password;
+
     public function __construct()
     {
         $this->rooms = new ArrayCollection();
@@ -116,6 +122,18 @@ class Home
                 $room->setHome(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(?string $password): self
+    {
+        $this->password = $password;
 
         return $this;
     }

@@ -1,0 +1,90 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Dashboard{% endblock %}
+{% block page_actions %}{% endblock %}
+
+{% block main %}
+{% for home in homes %}
+<div class="card border-primary mb-3">
+    <div class="card-header">{{ home.label }}</div>
+    <div class="card-body">
+        <h4 class="card-title">Home: {{ home.label }}</h4>
+        <hr>
+        <form action="{{ path('update_password', { 'id': home.id }) }}" method="POST">
+            <div class="form-group">
+                <label class="col-form-label" for="{{ home.id }}">Modifier le mot de passe</label>
+                <input required pattern="[0-9]{4}" title="4 digit number: e.g. 1234" name="password" type="text" class="form-control"  id="{{ home.id }}" value="{{ home.password }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Valider</button>
+        </form>
+        <hr>
+        <p class="card-text">Liste des Rooms</p>
+        {% for room in home.rooms %}
+        <div class="card border-primary mb-3">
+            <div class="card-header">{{ room.label }}</div>
+            <div class="card-body">
+                <h4 class="card-title">Room: {{ room.label }}</h4>
+                <p class="card-text">Liste des elements</p>
+                {% for element in room.elements %}
+                <div class="card border-primary mb-3">
+                    <div class="card-header">{{ element.label }}</div>
+                    <div class="card-body">
+                        <h4 class="card-title">Element: {{ element.label }}</h4>
+
+                        {% set break = false %}
+                        {% for value in element.elementValues|sort((a, b) => b.datetime <=> a.datetime) %}
+                        {% if not break %}
+                        {% set break = true %}
+                        <p class="card-text">Value: {{ value.value }} le {{ value.datetime|date('d/m/Y H:i:s') }}</p>
+                        {% endif %}
+                        {% endfor %}
+
+                        {% if element.type %}
+                        <p class="card-text">Type: {{element.type.label}}</p>
+
+                        {% set break = false %}
+                        {% set value = null %}
+                        {% set state = null %}
+                        {% for action in element.actions|sort((a, b) => b.datetime <=> a.datetime) %}
+                        {% if not break %}
+                        {% set break = true %}
+                        {% set value = action.value %}
+                        {% set state = action.state %}
+                        {% endif %}
+                        {% endfor %}
+                        <div class="card border-primary mb-3" style="max-width: 20rem;">
+                            <div class="card-header">Action</div>
+                            <div class="card-body">
+                                <h4 class="card-title">Action</h4>
+                                <p class="card-text">Etat: {{ state != null ? 'DONE' : 'DOING' }}</p>
+                                <form action="{{ path('create_action', { 'id': element.id }) }}" method="POST">
+                                    {% if element.type.label == 'sensor' %}
+                                    <div class="form-group">
+                                        <label class="col-form-label" for="{{ room.id }}-{{ element.id }}">Valeur</label>
+                                        <input required name="action" type="number" class="form-control"  id="{{ room.id }}-{{ element.id }}" value="{{ value }}">
+                                    </div>
+                                    {% elseif element.type.label == 'actuator' %}
+                                    <div class="form-group">
+                                        <label for="{{ room.id }}-{{ element.id }}" class="form-label">Valeur</label>
+                                        <select required name="action" class="form-select" id="{{ room.id }}-{{ element.id }}">
+                                          <option value="">Choisir</option>
+                                          <option {% if value != null and value == 'ON' %}selected{% endif %} value="ON">ON</option>
+                                          <option {% if value != null and value == 'OFF' %}selected{% endif %} value="OFF">OFF</option>
+                                        </select>
+                                      </div>
+                                    {% endif %}
+                                    <button type="submit" class="btn btn-primary">Valider</button>
+                                </form>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endfor %}
+{% endblock %}
