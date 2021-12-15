@@ -372,7 +372,12 @@ class Api:
 
         :returns: json -- The json of the actions data
         """
-        return requests.get(self.url + "/actions/get/unresolved", headers = self.header).json()
+        request = requests.get(self.url + "/actions/get/unresolved", headers = self.header).json()
+
+        if request['title'] != 'An error occurred':
+            return request
+        else :
+            return [] 
 
     def get_last_action_by_element_name(self, element_name = ''):
         """
