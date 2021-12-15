@@ -361,10 +361,10 @@ class Api:
         """
         request = requests.get(self.url + "/actions/unresolved/" + element_name, headers = self.header).json()
         
-        if request['title'] != 'An error occurred':
+        if type(request) == list:
             return request
-        else :
-            return [] 
+        else:
+            return []
     
     def get_unresolved_actions(self):
         """
@@ -374,10 +374,10 @@ class Api:
         """
         request = requests.get(self.url + "/actions/get/unresolved", headers = self.header).json()
 
-        if request['title'] != 'An error occurred':
+        if type(request) == list:
             return request
-        else :
-            return [] 
+        else:
+            return []
 
     def get_last_action_by_element_name(self, element_name = ''):
         """
@@ -716,5 +716,5 @@ class Api:
         payload = json.dumps(payload)
         
         request = requests.put(self.url + "/actions/" + str(action_id), data=payload, headers = self.header)
-
+        print(request.text)
         return request.status_code

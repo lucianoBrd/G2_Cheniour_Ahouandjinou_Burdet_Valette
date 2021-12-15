@@ -10,17 +10,18 @@ from decouple import config
 BROKER_ADDRESS = '192.168.43.222'
 TOPIC_DICT = {}
 home = Home()
+PASSWORD_MEMORY = ''
 
 def on_message(client, userdata, message):
     
-    if message.topic.split("/")[-1] != 'acquitement':
+    if message.topic.split("/")[-1] != 'acquittement':
         element = TOPIC_DICT[message.topic]
         data_name = list(element.data.keys())[0]
         element.data[data_name] = str(message.payload.decode("utf-8"))
         print(element.name,element.data)
     else:
-        element = TOPIC_DICT[message.topic.replace('/acquitement', '')]
-        element.acquitement = str(message.payload.decode("utf-8"))
+        element = TOPIC_DICT[message.topic.replace('/acquittement', '')]
+        element.acquittement = str(message.payload.decode("utf-8"))
 
 
 def init_mqtt_connection():
@@ -76,9 +77,8 @@ def init_my_home(mqtt_client, api_obj):
 
 def check_and_format_actions_api (api_obj):
     unresolved_actions = api_obj.get_unresolved_actions()
-
     unresolved_formated_actions = []
-    if unresolved_actions == []:
+    if unresolved_actions == [] or unresolved_actions == None:
         return None
     else :
         for action in unresolved_actions:
@@ -95,9 +95,22 @@ def check_and_format_actions_api (api_obj):
             value = action["value"]
 
             action_formated = {"action_id" : action_id, "home" : home_name, "room" : room_name, "element" : element_name, "value" : value}
-
             unresolved_formated_actions.append(action_formated)
         return unresolved_formated_actions
+    
+def check_password_change(api_obj, password_memory):
+    password = api_obj.get_home_by_name(home.name)['password']
+
+    if password != password_memory:
+        home.mqtt_client.publish("home/security/entry_code", password)
+        PASSWORD_MEMORY = password
+
+def format_value_publish(value):
+    dict_value = {"ON":1, 'OFF':0}
+    if value == "ON" or value == "OFF":
+        return dict_value[value]
+    else:
+        return value
     
 def get_room_obj(home_obj, room_name):
     return home_obj.rooms[room_name]
@@ -107,10 +120,9 @@ def get_element_obj(home_obj, room_name, element_name):
 
 
 if __name__ == "__main__":
-    #mqtt_client = init_mqtt_connection()
-    #home = init_my_home(mqtt_client)
+    mqtt_client = init_mqtt_connection()
     web_api = Api()
-    home = init_my_home(mqtt.Client("test"), web_api)
+    home = init_my_home(mqtt_client, web_api)
     
 
     while True:
@@ -118,56 +130,72 @@ if __name__ == "__main__":
 
         #uniquement en mode automatique ??
         #region check temperature in living room
-        #########CREER UN FONCTION POUR RECUPERER OBJETS EN FONCTION DU NOM ETC
-        temperature_living_room = float(get_element_obj(home, 'living_room', 'sensor_temperature_living_room').data['temperature'])
-        
+        sensor_temperature = get_element_obj(home, 'living_room', 'sensor_temperature_living_room')
+        temperature_living_room = float(sensor_temperature.data['temperature'])
+        web_api.create_value(temperature_living_room, sensor_temperature.name)
+
         vmc_living_room = get_element_obj(home, 'living_room', 'actuator_vmc_living_room')
         heating_living_room = get_element_obj(home, 'living_room', 'actuator_heating_living_room')
         
-        if temperature_living_room < 25 and temperature_living_room > 18:
-            # switch offthe VMC
-            if vmc_living_room.data['state']  != "OFF" :
-                home.mqtt_client.publish(vmc_living_room.topic , "OFF")
-            # switch off the heating
-            if heating_living_room.data['state'] != "OFF" :
-                home.mqtt_client.publish(heating_living_room.topic, "OFF")
-        if temperature_living_room > 25:
-            # powered the VMC
-            if vmc_living_room.data['state'] != "ON" :
-                home.mqtt_client.publish(vmc_living_room.topic , "ON")
-            # switch off the heating
-            if heating_living_room.data['state'] != "OFF" :
-                home.mqtt_client.publish(heating_living_room.topic, "OFF")
-        elif temperature_living_room <18:
-            # switch offthe VMC
-            if vmc_living_room.data['state']  != "OFF" :
-                home.mqtt_client.publish(vmc_living_room.topic , "OFF")
-            # powered the heating
-            if heating_living_room.data['state'] != "ON" :
-                home.mqtt_client.publish(heating_living_room.topic, "ON")
-        #endregion
+        # if temperature_living_room < 25 and temperature_living_room > 18:
+        #     # switch offthe VMC
+        #     if vmc_living_room.data['state']  != "OFF" :
+        #         home.mqtt_client.publish(vmc_living_room.topic , "OFF")
+        #     # switch off the heating
+        #     if heating_living_room.data['state'] != "OFF" :
+        #         home.mqtt_client.publish(heating_living_room.topic, "OFF")
+        # if temperature_living_room > 25:
+        #     # powered the VMC
+        #     if vmc_living_room.data['state'] != "ON" :
+        #         home.mqtt_client.publish(vmc_living_room.topic , "ON")
+        #     # switch off the heating
+        #     if heating_living_room.data['state'] != "OFF" :
+        #         home.mqtt_client.publish(heating_living_room.topic, "OFF")
+        # elif temperature_living_room <18:
+        #     # switch offthe VMC
+        #     if vmc_living_room.data['state']  != "OFF" :
+        #         home.mqtt_client.publish(vmc_living_room.topic , "OFF")
+        #     # powered the heating
+        #     if heating_living_room.data['state'] != "ON" :
+        #         home.mqtt_client.publish(heating_living_room.topic, "ON")
+        # #endregion
 
-        #region check humidity in living room
-        humidity_living_room = float(get_element_obj(home, 'living_room', 'sensor_humidity_living_room').data['humidity'])
+        # #region check humidity in living room
+        # sensor_humidity = get_element_obj(home, 'living_room', 'sensor_humidity_living_room')
+        # humidity_living_room = float(sensor_humidity.data['humidity'])
+        # web_api.create_value(humidity_living_room, sensor_humidity.name)
         
-        if humidity_living_room >= 0 and humidity_living_room < 25:
-            # switch offthe VMC
-            if vmc_living_room.data['state']  != "OFF" :
-                home.mqtt_client.publish(vmc_living_room.topic , "OFF")
-        if humidity_living_room >= 25 and humidity_living_room <= 100:
-            # powered the VMC
-            if vmc_living_room.data['state'] != "ON" :
-                home.mqtt_client.publish(vmc_living_room.topic , "ON")
-        #endregion
+        # if humidity_living_room >= 0 and humidity_living_room < 25:
+        #     # switch offthe VMC
+        #     if vmc_living_room.data['state']  != "OFF" :
+        #         home.mqtt_client.publish(vmc_living_room.topic , "OFF")
+        # if humidity_living_room >= 25 and humidity_living_room <= 100:
+        #     # powered the VMC
+        #     if vmc_living_room.data['state'] != "ON" :
+        #         home.mqtt_client.publish(vmc_living_room.topic , "ON")
+        # #endregion
 
         #uniquement en mode manuel ??
         unresolved_actions = check_and_format_actions_api(web_api)
         if unresolved_actions != None:
+            print(unresolved_actions)
             for action in unresolved_actions:
-                element = get_element_obj(home, action['room'], action['element'])
-                home.mqtt_client.subcribe(element.topic +"/acquitement")
-                while (not (element.acquitement == "ON RECEIVED" or element.acquitement == "OFF RECEIVED")) :
-                    home.mqtt_client.publish(element.topic, action["value"])
-                home.mqtt_client.unsubcribe(element.topic +"/acquitement")
-                web_api.update_action(action["id"], action["value"], element.name, True)
+                print(action)
+                if action["value"] != "":
+                    element = get_element_obj(home, action['room'], action['element'])
+                    home.mqtt_client.subscribe(element.topic +"/acquittement")
+                    home.mqtt_client.publish(element.topic, format_value_publish(action["value"]))
+                    time.sleep(0.1)
+                    while ( element.acquittement != "ON RECEIVED" and element.acquittement != "OFF RECEIVED") :
+                        time.sleep(0.5)
+                        home.mqtt_client.publish(element.topic, format_value_publish(action["value"]))
+                    home.mqtt_client.unsubscribe(element.topic +"/acquittement")
+                    print('ACQ', element.topic)
+                    web_api.update_action(action["action_id"], value = action["value"], state = True)
+                else :
+                    web_api.update_action(action["action_id"], state = True)
+            
+        # envoi du new password s'il est modifié en BDD: 
+        check_password_change(web_api, PASSWORD_MEMORY)
+        
 
