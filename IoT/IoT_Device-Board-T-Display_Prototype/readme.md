@@ -34,3 +34,6 @@ Build
 Pins
  - https://jensd.dk/edu/doc/esp32/ttgo-t.html
  - https://jensd.dk/edu/doc/esp32/ttgo-t-pins.jpg
+ 
+4*7Segnment
+ - https://osoyoo.com/wp-content/uploads/2017/08/4-digit-7-segment-LED-display-pinout.png
