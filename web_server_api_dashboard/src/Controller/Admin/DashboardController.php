@@ -49,7 +49,7 @@ class DashboardController extends AbstractDashboardController
 
         if (!$element) {
             throw $this->createNotFoundException(
-                'No element found for this label'
+                'No element found for this id'
             );
         }
 
@@ -61,6 +61,37 @@ class DashboardController extends AbstractDashboardController
                     ->setElement($element);
             
             $entityManager->persist($action);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('dashboard');
+    }
+
+    /**
+     * @Route("/update-password/{id}", name="update_password")
+     */
+    public function updatePassword($id, Request $request): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $home = $this->getDoctrine()
+            ->getRepository(Home::class)
+            ->findOneBy(
+                ['id' => $id]
+            );
+
+        if (!$home) {
+            throw $this->createNotFoundException(
+                'No home found for this id'
+            );
+        }
+
+        $password = $request->request->get('password');
+
+        if ($password) {
+            $home->setPassword($password);
+            
+            $entityManager->persist($home);
             $entityManager->flush();
         }
 
