@@ -10,6 +10,7 @@ class API:
         Init the API class
         """
         self.url= 'https://work.lucien-brd.com/api'
+        self.url_strict= 'https://work.lucien-brd.com'
         self.header = {'accept': 'application/json', 'Content-Type' : 'application/json'}
         self.header_patch = {'accept': 'application/json', 'Content-Type' : 'application/merge-patch+json'}
 
@@ -104,6 +105,17 @@ class API:
         :returns: json -- The json of the room data
         """
         return requests.get(self.url + "/rooms/" + str(room_id), headers = self.header).json()
+
+    def get_room_by_iri(self, room_iri = ''):
+        """
+        Get one room with it IRI 
+
+        :param room_iri: The IRI of the room, exemple /api/rooms/1
+        :type room_iri: str
+
+        :returns: json -- The json of the room data
+        """
+        return requests.get(self.url_strict + str(room_iri), headers = self.header).json()
     
     def get_room_name_by_id(self, room_id = 0):
         """
@@ -166,6 +178,17 @@ class API:
         :returns: json -- The json of the element data
         """
         return requests.get(self.url + "/elements/" + str(element_id), headers = self.header).json()
+
+    def get_element_by_iri(self, element_iri = ''):
+        """
+        Get one element with it IRI 
+
+        :param element_iri: The IRI of the element, exemple /api/elements/1
+        :type element_iri: str
+
+        :returns: json -- The json of the element data
+        """
+        return requests.get(self.url_strict + str(element_iri), headers = self.header).json()
     
     def get_element_name_by_id(self, element_id = 0):
         """
@@ -228,6 +251,23 @@ class API:
         :returns: json -- The json of the type data
         """
         return requests.get(self.url + "/types/" + str(type_id), headers = self.header).json()
+
+    def get_type_by_iri(self, type_iri = ''):
+        """
+        Get one type with it iri 
+
+        :param type_iri: The IRI of the type, exemple /api/types/1
+        :type type_iri: str
+
+        :returns: json -- The json of the type data
+        """
+
+        request = requests.get(self.url_strict + str(type_iri), headers = self.header)
+        
+        if request.status_code == 200:
+            return request.json()
+
+        return None
     
     def get_type_name_by_id(self, type_id = 0):
         """
@@ -328,6 +368,17 @@ class API:
         :returns: json -- The json of the actions data
         """
         return requests.get(self.url + "/actions/get/unresolved", headers = self.header).json()
+
+    def get_last_action_by_element_name(self, element_name = ''):
+        """
+        Get the last action of an element (by name element name) 
+
+        :param element_name: The element name
+        :type element_name: ID
+
+        :returns: json -- The json of the value data
+        """
+        return requests.get(self.url + "/action/last/" + element_name, headers = self.header).json()
     
     def create_home(self, home_name = '', rooms_list= []):
         """
