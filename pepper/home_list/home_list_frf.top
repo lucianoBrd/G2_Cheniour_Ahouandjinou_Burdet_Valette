@@ -1,0 +1,4 @@
+topic: ~home_list()
+language: frf
+
+u:(e:onStart) $JsonHomeList=$Homes $onStopped=1
