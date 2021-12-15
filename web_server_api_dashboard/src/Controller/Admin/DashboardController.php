@@ -115,6 +115,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Type', 'fa fa-spell-check', Type::class);
         yield MenuItem::linkToCrud('Value', 'fa fa-sort-numeric-up-alt', Value::class);
         yield MenuItem::linkToUrl('API', 'fa fa-road', '/api');
-        yield MenuItem::linkToUrl('Doc', 'fa fa-file-alt', '/doc/');
+        yield MenuItem::linkToUrl('Doc', 'fa fa-file-alt', '/doc/index.html');
     }
 }
