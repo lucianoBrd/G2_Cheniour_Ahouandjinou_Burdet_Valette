@@ -56,7 +56,9 @@
                             <div class="card-header">Action</div>
                             <div class="card-body">
                                 <h4 class="card-title">Action</h4>
-                                <p class="card-text">Etat: {{ state != null ? 'DONE' : 'DOING' }}</p>
+                                {% if state != null %}
+                                <p class="card-text">Etat: {{ state ? 'DONE' : 'DOING' }}</p>
+                                {% endif %}
                                 <form action="{{ path('create_action', { 'id': element.id }) }}" method="POST">
                                     {% if element.type.label == 'sensor' %}
                                     <div class="form-group">
