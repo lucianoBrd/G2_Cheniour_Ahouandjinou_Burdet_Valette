@@ -13,10 +13,14 @@ home = Home()
 
 def on_message(client, userdata, message):
     
-    element = TOPIC_DICT[message.topic]
-    data_name = list(element.data.keys())[0]
-    element.data[data_name] = str(message.payload.decode("utf-8"))
-    print(element.name,element.data)
+    if message.topic.split("/")[-1] != 'acquitement':
+        element = TOPIC_DICT[message.topic]
+        data_name = list(element.data.keys())[0]
+        element.data[data_name] = str(message.payload.decode("utf-8"))
+        print(element.name,element.data)
+    else:
+        element = TOPIC_DICT[message.topic.replace('/acquitement', '')]
+        element.acquitement = str(message.payload.decode("utf-8"))
 
 
 def init_mqtt_connection():
@@ -153,8 +157,9 @@ if __name__ == "__main__":
         if unresolved_actions != None:
             for action in unresolved_actions:
                 element = get_element_obj(home, action['room'], action['element'])
-                #rajouter while acquitement 
-                home.mqtt_client.publish(element.topic, action["value"])
-                ## action réalisé on la passe à true en base
+                home.mqtt_client.subcribe(element.topic +"/acquitement")
+                while (not (element.acquitement == "ON RECEIVED" or element.acquitement == "OFF RECEIVED")) :
+                    home.mqtt_client.publish(element.topic, action["value"])
+                home.mqtt_client.unsubcribe(element.topic +"/acquitement")
                 web_api.update_action(action["id"], action["value"], element.name, True)
 
