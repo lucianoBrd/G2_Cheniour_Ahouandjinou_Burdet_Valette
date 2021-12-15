@@ -39,6 +39,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *         },
  *       },
  *     },
+ *     "get_last_by_labelelement" = {
+ *       "method" = "GET",
+ *       "path" = "/action/last/{labelelement}",
+ *       "controller" = ActionByLabelElement::class,
+ *       "read"=false,
+ *       "openapi_context" = {
+ *         "parameters" = {
+ *           {
+ *             "name" = "labelelement",
+ *             "in" = "path",
+ *             "description" = "The label of the element of the action",
+ *             "type" = "string",
+ *             "required" = true,
+ *             "example"= "label",
+ *           },
+ *         },
+ *       },
+ *     },
  *     "get_unresolved" = {
  *       "method" = "GET",
  *       "path" = "/actions/get/unresolved",
