@@ -32,7 +32,7 @@ def init_mqtt_connection():
 
     return client
 
-def init_my_home(mqtt_client):
+def init_my_home(mqtt_client, api_obj):
     
     #living room
         #sensor
@@ -53,7 +53,15 @@ def init_my_home(mqtt_client):
     rooms_list = [Room(config("ROOM_NAME_1"), living_room_elements_list), Room(config("ROOM_NAME_2"), [])]
     home = Home(config("HOME_NAME"), rooms_list, mqtt_client)
 
-    # Creation of the topic
+    #Creation data in BDD
+    api_obj.create_home(home.name)
+
+    for room_name, room_objr in home.rooms.items():
+        api_obj.create_room(room_name, home.name)
+        for element_name, element_obj in home.rooms[room_name].elements.items():
+            api_obj.create_element(element_name, room_name, element_obj.type)
+    
+    #  Creation of the topics
     home_topic = f'{home.name}/'
     for room_name, room in home.rooms.items():
         room_topic = home_topic + f'{room.name}/'
@@ -67,7 +75,6 @@ def init_my_home(mqtt_client):
     return home
 
 def check_and_format_actions_api (api_obj):
-    api_obj = API()
     unresolved_actions = api_obj.get_unresolved_actions()
 
     unresolved_formated_actions = []
@@ -102,8 +109,9 @@ def get_element_obj(home_obj, room_name, element_name):
 if __name__ == "__main__":
     #mqtt_client = init_mqtt_connection()
     #home = init_my_home(mqtt_client)
-    home = init_my_home(mqtt.Client("test"))
     web_api = API()
+    home = init_my_home(mqtt.Client("test"), web_api)
+    
 
     while True:
         time.sleep(0.5)
