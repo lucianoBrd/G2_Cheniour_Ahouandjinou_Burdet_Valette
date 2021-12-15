@@ -19,7 +19,6 @@
         <File name="sample" src="html/js/sample.js" />
         <File name="api_joke" src="scripts/api.py" />
         <File name="readme" src="readme.md" />
-        <File name="api" src="scripts/api.pyc" />
         <File name="service" src="scripts/service.py" />
     </Resources>
     <Topics>
