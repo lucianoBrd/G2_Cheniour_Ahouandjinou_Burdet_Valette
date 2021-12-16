@@ -7,4 +7,12 @@ export PYTHONPATH=${PYTHONPATH}:/softwares/INFO/Pepper/pynaoqi-python2.7-2.5.5.5
 python2 scripts/service.py
 ```
 
+De plus, il faut également connecter la tablette du pepper à internet, pour ce faire :
+```
+ssh nao@pepper01
+qicli call ALTabletService._openSettings
+```
+Vous devez donc vous connecter en SSH au pepper et lancer la commande ```qicli```. 
+Ensuite, vous devrez connecter la tablette au même réseau WIFI que le microcontroleur ESP32 de la caméra.
+
 Une fois le service lancé, vous pouvez lancer le progamme sur le robot avec l'application Choregraphe.

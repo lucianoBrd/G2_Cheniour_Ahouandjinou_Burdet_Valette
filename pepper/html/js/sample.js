@@ -26,7 +26,11 @@
 
             subscriber.signal.connect(function (data) {
                 var html = '';
-                const home = jQuery.parseJSON(data)
+                const home = jQuery.parseJSON(data);
+
+                if (home.cameraip !== 'undefined' && home.cameraip !== null) {
+                    html += '<iframe class="iframe_camera_home" src="http://' + home.cameraip + '/capture" style="width: 100%;height: 200px;"></iframe>';
+                }
 
                 if (home.label !== 'undefined') {
                     html += '<h1>Home: ' + home.label + '</h1>';
@@ -50,6 +54,7 @@
                                 if (element.label !== 'undefined') {
                                     elements += '<p>Element: ' + element.label + '</p>';
                                 }
+                                elements += '<p>Etat Actuel: ' + (element.state ? 'ON' : 'OFF') + '</p>';
                                 if (element.elementValue !== 'undefined' && element.elementValue !== null && element.elementValue.value !== 'undefined' && element.elementValue.datetime !== 'undefined') {
                                     var dateTime = element.elementValue.datetime;
 
@@ -154,5 +159,9 @@
     $(document).on('click', '.btn_reset_home', function () {
         raise('ResetHome', 1);
     });
+
+    var intervalId = window.setInterval(function(){
+        $( '.iframe_camera_home' ).attr( 'src', function ( i, val ) { return val; });
+    }, 150);
 
 });
