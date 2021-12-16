@@ -5,7 +5,7 @@ from Room import Room
 from Element import Element
 from Api import Api
 from decouple import config
-
+from clint.textui import colored, puts, indent
 
 BROKER_ADDRESS = '192.168.43.222'
 TOPIC_DICT = {}
@@ -14,14 +14,21 @@ PASSWORD_MEMORY = ''
 
 def on_message(client, userdata, message):
     
+    print(colored.green(f"Data received from topic : {message.topic}"))
     if message.topic.split("/")[-1] != 'acquittement':
+        print(colored.blue("Value received :"))
         element = TOPIC_DICT[message.topic]
         data_name = list(element.data.keys())[0]
         element.data[data_name] = str(message.payload.decode("utf-8"))
-        print(element.name,element.data)
+        print(colored.blue(f"{data_name} : {element.data[data_name]} from {element.name}"))
     else:
+        print(colored.blue("Acquitement received :"))
         element = TOPIC_DICT[message.topic.replace('/acquittement', '')]
         element.acquittement = str(message.payload.decode("utf-8"))
+        print(colored.blue(f"Acquittement : {element.acquittement} from {element.name}"))
+    
+    print('\n')
+
 
 
 def init_mqtt_connection():
@@ -71,8 +78,9 @@ def init_my_home(mqtt_client, api_obj):
             element_topic += f'/{list(element.data.keys())[0]}'
             element.topic = element_topic
             TOPIC_DICT[element.topic] = element
-        
-            home.mqtt_client.subscribe(element.topic)
+            
+            if element.type == "sensor":
+                home.mqtt_client.subscribe(element.topic)
     return home
 
 def check_and_format_actions_api (api_obj):
@@ -219,6 +227,7 @@ if __name__ == "__main__":
                                 if vmc_living_room.data['state'] != "ON" :
                                     home.mqtt_client.publish(vmc_living_room.topic , "ON")
                                     vmc_living_room.data['state'] = "ON"
+
                                 web_api.update_action(action["action_id"], state = True)
 
                         #endregion
