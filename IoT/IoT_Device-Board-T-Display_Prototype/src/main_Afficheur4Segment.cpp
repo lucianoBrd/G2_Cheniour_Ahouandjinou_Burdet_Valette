@@ -7,21 +7,20 @@
 
 #define CONNECTION_TIMEOUT 10
 // Pins utilisés sur la carte
-#define pinDigit_1 32   // selection digit, actif l'état bas
-#define pinDigit_2 25
-#define pinDigit_3 33
-#define pinDigit_4 26//39
+#define pinDigitA0 33   // selection digit ( A0A1 : 00 --> Digit1, 10 --> Digit2, 01 --> Digit3, 11 --> Digit4 ) 
+#define pinDigitA1 32
+
 
 #define pinSegmentA 27     // segment à allumer, actif à l'état haut
 #define pinSegmentB 15  //36
 #define pinSegmentC 2   //37
 #define pinSegmentD 12
 #define pinSegmentE 13
-#define pinSegmentF 36// 26
-#define pinSegmentG 38 
+#define pinSegmentF 26// 26
+#define pinSegmentG 25 
 
-#define pinBtnIncrementerChiffre 37               // bouton permettant d'incrementer la valeur d'un digit (7 segment)
-#define pinBtnDigitSuivant 39                    // bouton permettant de passer au digit suivant
+#define pinBtnIncrementerChiffre 39               // bouton permettant d'incrementer la valeur d'un digit (7 segment)
+#define pinBtnDigitSuivant 36                    // bouton permettant de passer au digit suivant
  
 ///_____
 const char* ssid = "Redmi Note 7";               // identifiant réseau           //"SFR_DDA8"; // 
@@ -34,7 +33,7 @@ const char* idCapteur = "Digicode";              // identifiant du module
 
 int etat = -1;                                   // variable representant l'etat du capteur
 int digitActuel = 1;                             // on demarre positionné sur le digit 1
-int valeur7segment[] = {0,0,0,0};
+int valeur7segment[] = {1,2,3,4};
 
 char* etatWifi = "";                             // paramètre permettant de récuperer l'état de connection Wifi
 char* etatMqtt = "";                             // paramètre permettant de récuperer l'état de connection MQTT
@@ -166,28 +165,21 @@ void selectDigit (int digit){
  switch (digit)
  {
   case 1:
-        digitalWrite(pinDigit_1,LOW);
-        digitalWrite(pinDigit_2,HIGH);
-        digitalWrite(pinDigit_3,HIGH);
-        digitalWrite(pinDigit_4,HIGH);
+        digitalWrite(pinDigitA0,LOW);
+        digitalWrite(pinDigitA1,LOW);
+
          break;
   case 2:
-        digitalWrite(pinDigit_1,HIGH);
-        digitalWrite(pinDigit_2,LOW);
-        digitalWrite(pinDigit_3,HIGH);
-        digitalWrite(pinDigit_4,HIGH);
+        digitalWrite(pinDigitA0,HIGH);
+        digitalWrite(pinDigitA1,LOW);
          break;
   case 3:
-        digitalWrite(pinDigit_1,HIGH);
-        digitalWrite(pinDigit_2,HIGH);
-        digitalWrite(pinDigit_3,LOW);
-        digitalWrite(pinDigit_4,HIGH);
+        digitalWrite(pinDigitA0,LOW);
+        digitalWrite(pinDigitA1,HIGH);
          break;
   case 4:
-        digitalWrite(pinDigit_1,HIGH);
-        digitalWrite(pinDigit_2,HIGH);
-        digitalWrite(pinDigit_3,HIGH);
-        digitalWrite(pinDigit_4,LOW);
+        digitalWrite(pinDigitA0,HIGH);
+        digitalWrite(pinDigitA1,HIGH);
          break;
  
  default:
@@ -314,7 +306,6 @@ void incrementerChiffre(){
  case 1:
         valeur7segment[0] = valeur7segment[0] + 1;
         if (valeur7segment[0] > 9 ) {valeur7segment[0] = 0;}
-       // chiffre(valeur7segment[0]);
         break;
  case 2:
         valeur7segment[1] = valeur7segment[1] + 1;
@@ -340,17 +331,13 @@ void nextDigit(){
         if (digitActuel > 4 ){
                 verificationMdp();
         } 
-
-
 }
 
 
 void init7Segment(){
 // Config pins 7Segement
- pinMode(pinDigit_1, OUTPUT);
- pinMode(pinDigit_2, OUTPUT);
- pinMode(pinDigit_3, OUTPUT);
- pinMode(pinDigit_4, OUTPUT);
+ pinMode(pinDigitA0, OUTPUT);
+ pinMode(pinDigitA1, OUTPUT);
 //----------------- Pins segments
  pinMode(pinSegmentA, OUTPUT);
  pinMode(pinSegmentB, OUTPUT);
@@ -366,8 +353,6 @@ void init7Segment(){
  attachInterrupt(pinBtnDigitSuivant,nextDigit,FALLING);
 
 }
-
-
 
 
 void setup() {
@@ -402,27 +387,39 @@ void loop() {
 
   case 1:
    // mqttClient.publish("esp/test", idCapteur);
-  
    // GestionIHM();
- if (digitActuel>0){
-    selectDigit(1);
-    chiffre(valeur7segment[0]);
-    delay(1000);
 
+   selectDigit(1);
+   delay(30);
+   chiffre(valeur7segment[0]);
+   delay(2000);
 
-    selectDigit(2);
-    chiffre(valeur7segment[1]);
-    delay(1000);
-    selectDigit(3);
-    chiffre(valeur7segment[2]);
-    delay(1000);
-    selectDigit(4);
-    chiffre(valeur7segment[3]);
-    delay(1000);
-    }
-    
+   selectDigit(2);
+   delay(30);
+   chiffre(valeur7segment[1]);
+   delay(2000);
+
+   selectDigit(3);
+   delay(30);
+   chiffre(valeur7segment[2]);
+   delay(2000);
+
+   selectDigit(4);
+   delay(30);
+   chiffre(valeur7segment[3]);
+   delay(2000);
+
+//    tft.setCursor(5, 100);
+//    tft.println("Tem : ");
+//    tft.setCursor(70, 100);
+//    tft.println(valeur7segment[1]);
+   //     Serial.println(valeur7segment[0]);
+   //     Serial.println(valeur7segment[1]);
+   //     Serial.println(valeur7segment[2]);
+   //     Serial.println(valeur7segment[3]);
+
    // delay(5000);
-    break;
+   break;
       
   default:  
     break;

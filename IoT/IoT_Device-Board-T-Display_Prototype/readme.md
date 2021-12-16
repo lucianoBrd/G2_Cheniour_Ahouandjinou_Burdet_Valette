@@ -31,9 +31,13 @@ Mqtt
 Build
 - https://docs.platformio.org/en/latest/projectconf/section_env_build.html#src-filter
 
-Pins
+Pins ESP32
  - https://jensd.dk/edu/doc/esp32/ttgo-t.html
  - https://jensd.dk/edu/doc/esp32/ttgo-t-pins.jpg
- 
+ - https://www.electrorules.com/esp32-pinout-reference/
+
 4*7Segnment
  - https://osoyoo.com/wp-content/uploads/2017/08/4-digit-7-segment-LED-display-pinout.png
+
+74HC138N
+ - https://html.alldatasheet.com/html-pdf/15540/PHILIPS/74HC138N/1003/4/74HC138N.html
