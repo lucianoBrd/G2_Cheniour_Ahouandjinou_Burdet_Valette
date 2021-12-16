@@ -5,9 +5,24 @@ from PIL import Image
 import time
 import paho.mqtt.client as mqtt
 
+directory = 'Faces'
+CAMERA_ADDRESS = "192.168.43.113"
+BROKER_ADDRESS = "broker.mqttdashboard.com"
+
+def init_mqtt_connection():
+    # Init MQTT Client
+    client = mqtt.Client('Recognition') #Create a client and set it ID
+    client.connect(BROKER_ADDRESS) # Set the IP of the broker client and connect to it
+    client.loop_start() 
+    return client
+print("Connexion au broker MQTT")
+mqtt_client = init_mqtt_connection()
+
+if not os.path.exists(directory):
+    os.mkdir(directory)
 
 
-os.mkdir("Faces")
+
 satisfait = 0
 while satisfait == 0:
     Question = input("Voulez vous enregistré une nouvelle personne(oui/non)?")
@@ -24,20 +39,22 @@ while satisfait == 0:
         print("1")
         time.sleep(1)
         print("FLASHHH!!!!!!!!")
+        
         urllib.request.urlretrieve(
-            'http://172.20.10.6/capture',
-            "Faces/" + prenom + ".jpg")
-        new_image = face_recognition.load_image_file("Faces/" + prenom + ".jpg")
+            "http://" + CAMERA_ADDRESS + "/capture",
+            directory + "/" + prenom + ".jpg")
+        
+        new_image = face_recognition.load_image_file(directory + "/" + prenom + ".jpg")
         new_detected_faces = face_recognition.face_encodings(new_image)
         if new_detected_faces :
-            img = Image.open("Faces/" + prenom + ".jpg")
+            img = Image.open(directory + "/" + prenom + ".jpg")
             img.show()
             Q1 = input("Etes vous satisfait (o/n)?")
             if Q1 == "n":
-                os.remove("Faces/" + prenom + ".jpg")
+                os.remove(directory + "/" + prenom + ".jpg")
         else :
             print("Pas de visage detecté")
-            os.remove("Faces/" + prenom + ".jpg")
+            os.remove(directory + "/" + prenom + ".jpg")
             Q2 = input("Voulez vous réessayer (o/n)?")
             if Q2 == "n":
                 print("Lancement de la detection")
@@ -51,13 +68,9 @@ while satisfait == 0:
 
 while 1 : 
     urllib.request.urlretrieve(
-    'http://172.20.10.6/capture',
+    'http://' + CAMERA_ADDRESS + '/capture',
     "capture.jpg")
-
-    """img = Image.open("capture.jpg")"""
-
-
-    directory = 'Faces'
+    
 
     for filename in os.scandir(directory):
         if filename.is_file():
@@ -72,9 +85,14 @@ while 1 :
                 unknown_encoding = face_recognition.face_encodings(unknown_image)[0]
                 results = face_recognition.compare_faces(
                 [users_encoding], unknown_encoding)
-                print(results)
+                print(results[0])
+                if results[0] == True :
+                    print("authorizé")
+                    mqtt_client.publish("/topic/recog" , "authorized")
+                elif results[0] == False :
+                    print("non authorizé")
             else :
-                print("no face")
+                print("pas de visage")
     
-    time.sleep(2)
+    time.sleep(0.5)
 
