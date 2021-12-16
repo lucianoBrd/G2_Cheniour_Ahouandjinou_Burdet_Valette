@@ -98,6 +98,37 @@ class DashboardController extends AbstractDashboardController
         return $this->redirectToRoute('dashboard');
     }
 
+    /**
+     * @Route("/update-cameraip/{id}", name="update_cameraip")
+     */
+    public function updateCameraip($id, Request $request): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $home = $this->getDoctrine()
+            ->getRepository(Home::class)
+            ->findOneBy(
+                ['id' => $id]
+            );
+
+        if (!$home) {
+            throw $this->createNotFoundException(
+                'No home found for this id'
+            );
+        }
+
+        $cameraip = $request->request->get('cameraip');
+
+        if ($cameraip) {
+            $home->setCameraip($cameraip);
+            
+            $entityManager->persist($home);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('dashboard');
+    }
+
     public function configureDashboard(): Dashboard
     {
         return Dashboard::new()

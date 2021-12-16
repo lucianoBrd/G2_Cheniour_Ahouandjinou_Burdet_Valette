@@ -69,6 +69,12 @@ class Home
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"home"})
+     */
+    private $cameraip;
+
     public function __construct()
     {
         $this->rooms = new ArrayCollection();
@@ -134,6 +140,18 @@ class Home
     public function setPassword(?string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getCameraip(): ?string
+    {
+        return $this->cameraip;
+    }
+
+    public function setCameraip(?string $cameraip): self
+    {
+        $this->cameraip = $cameraip;
 
         return $this;
     }
