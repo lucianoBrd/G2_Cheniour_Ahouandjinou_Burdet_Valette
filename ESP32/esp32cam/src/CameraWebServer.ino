@@ -1,5 +1,8 @@
 #include "esp_camera.h"
 #include <WiFi.h>
+#include <Wire.h>
+
+#include "ssd1306.h"
 
 //
 // WARNING!!! PSRAM IC required for UXGA resolution and high JPEG quality
@@ -29,6 +32,18 @@ void setup() {
   Serial.begin(115200);
   Serial.setDebugOutput(true);
   Serial.println();
+
+  // Init screen
+  ssd1306_setFixedFont(ssd1306xled_font6x8);
+  /*
+  *   default use I2C_NUM_1
+  *   SDA --> 21
+  *   SCL --> 22
+  */
+  ssd1306_128x64_i2c_init();
+  ssd1306_flipHorizontal(1);
+  ssd1306_flipVertical(1);
+  ssd1306_clearScreen();
 
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
@@ -93,9 +108,26 @@ void setup() {
 
   WiFi.begin(ssid, password);
 
+  int i = 0;
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
+
+    if (i == 0) {
+      ssd1306_clearScreen();
+      ssd1306_printFixed (0,  8, "Connexion", STYLE_NORMAL);
+    } else if (i == 1) {
+      ssd1306_clearScreen();
+      ssd1306_printFixed (0,  8, "Connexion.", STYLE_NORMAL);
+    } else if (i == 2) {
+      ssd1306_clearScreen();
+      ssd1306_printFixed (0,  8, "Connexion..", STYLE_NORMAL);
+    } else if (i == 3) {
+      ssd1306_clearScreen();
+      ssd1306_printFixed (0,  8, "Connexion...", STYLE_NORMAL);
+      i = 0;
+    }
+    i++;
   }
   Serial.println("");
   Serial.println("WiFi connected");
@@ -105,6 +137,11 @@ void setup() {
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP());
   Serial.println("' to connect");
+  
+  ssd1306_clearScreen();
+  ssd1306_printFixed (0,  8, "Camera Ready! Use :", STYLE_NORMAL);
+  ssd1306_printFixed (0, 16, (const char*)WiFi.localIP().toString().c_str(), STYLE_NORMAL);
+  vTaskDelay(30 / portTICK_PERIOD_MS);
 }
 
 void loop() {
