@@ -47,6 +47,8 @@
                         {% endif %}
                         {% endfor %}
 
+                        <p class="card-text">Etat Actuel: {{ element.state ? 'ON' : 'OFF' }}</p>
+
                         {% if element.type %}
                         <p class="card-text">Type: {{element.type.label}}</p>
 
@@ -64,7 +66,7 @@
                             <div class="card-header">Action</div>
                             <div class="card-body">
                                 <h4 class="card-title">Action</h4>
-                                <p class="card-text">Etat Actuel: {{ element.state ? 'ON' : 'OFF' }}</p>
+                                
                                 {% if value != null %}
                                 <p class="card-text">Etat: {{ state ? 'DONE' : 'DOING' }}</p>
                                 {% endif %}
