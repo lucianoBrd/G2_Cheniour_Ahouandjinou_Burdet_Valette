@@ -89,8 +89,15 @@ class Element
      */
     private $actions;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     * @Groups({"element"})
+     */
+    private $state;
+
     public function __construct()
     {
+        $this->state = false;
         $this->elementValues = new ArrayCollection();
         $this->actions = new ArrayCollection();
     }
@@ -209,6 +216,18 @@ class Element
                 $action->setElement(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getState(): ?bool
+    {
+        return $this->state;
+    }
+
+    public function setState(?bool $state): self
+    {
+        $this->state = $state;
 
         return $this;
     }

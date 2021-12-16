@@ -12,8 +12,16 @@
         <hr>
         <form action="{{ path('update_password', { 'id': home.id }) }}" method="POST">
             <div class="form-group">
-                <label class="col-form-label" for="{{ home.id }}">Modifier le mot de passe</label>
-                <input required pattern="[0-9]{4}" title="4 digit number: e.g. 1234" name="password" type="text" class="form-control"  id="{{ home.id }}" value="{{ home.password }}">
+                <label class="col-form-label" for="password-{{ home.id }}">Modifier le mot de passe</label>
+                <input required pattern="[0-9]{4}" title="4 digit number: e.g. 1234" name="password" type="text" class="form-control"  id="password-{{ home.id }}" value="{{ home.password }}">
+            </div>
+            <button type="submit" class="btn btn-primary">Valider</button>
+        </form>
+        <hr>
+        <form action="{{ path('update_cameraip', { 'id': home.id }) }}" method="POST">
+            <div class="form-group">
+                <label class="col-form-label" for="cameraip-{{ home.id }}">Modifier l'IP de la caméra</label>
+                <input required name="cameraip" type="text" class="form-control"  id="cameraip-{{ home.id }}" value="{{ home.cameraip }}">
             </div>
             <button type="submit" class="btn btn-primary">Valider</button>
         </form>
@@ -56,6 +64,7 @@
                             <div class="card-header">Action</div>
                             <div class="card-body">
                                 <h4 class="card-title">Action</h4>
+                                <p class="card-text">Etat Actuel: {{ element.state ? 'ON' : 'OFF' }}</p>
                                 {% if value != null %}
                                 <p class="card-text">Etat: {{ state ? 'DONE' : 'DOING' }}</p>
                                 {% endif %}

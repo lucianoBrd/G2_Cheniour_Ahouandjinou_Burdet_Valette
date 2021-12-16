@@ -22,6 +22,7 @@ class HomeCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
             TextField::new('label'),
             TextField::new('password'),
+            TextField::new('cameraip'),
             AssociationField::new('rooms'),
         ];
     }
