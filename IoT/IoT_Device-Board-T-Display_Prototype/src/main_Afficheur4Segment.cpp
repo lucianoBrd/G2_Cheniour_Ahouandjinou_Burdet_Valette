@@ -191,6 +191,17 @@ void selectDigit (int digit){
 void chiffre(int chiffre){
         switch (chiffre)
         {
+
+        case -1:
+                digitalWrite(pinSegmentA, LOW);
+                digitalWrite(pinSegmentB, LOW);
+                digitalWrite(pinSegmentC, LOW);
+                digitalWrite(pinSegmentD, LOW);
+                digitalWrite(pinSegmentE, LOW);
+                digitalWrite(pinSegmentF, LOW);
+                digitalWrite(pinSegmentG, LOW);
+                break;
+
         case 0:
                 digitalWrite(pinSegmentA,HIGH);
                 digitalWrite(pinSegmentB,HIGH);
@@ -278,8 +289,8 @@ void chiffre(int chiffre){
                 digitalWrite(pinSegmentB,HIGH);
                 digitalWrite(pinSegmentC,HIGH);
                 digitalWrite(pinSegmentD,HIGH);
-                digitalWrite(pinSegmentE,HIGH);
-                digitalWrite(pinSegmentF,LOW);
+                digitalWrite(pinSegmentE,LOW);
+                digitalWrite(pinSegmentF,HIGH);
                 digitalWrite(pinSegmentG,HIGH);
                 break;
                 
@@ -349,8 +360,8 @@ void init7Segment(){
  //------- Pins bouttons
  pinMode(pinBtnDigitSuivant,INPUT_PULLDOWN);
  pinMode(pinBtnIncrementerChiffre,INPUT_PULLDOWN);
- attachInterrupt(pinBtnIncrementerChiffre,incrementerChiffre,FALLING);
- attachInterrupt(pinBtnDigitSuivant,nextDigit,FALLING);
+// attachInterrupt(pinBtnIncrementerChiffre,incrementerChiffre,FALLING);
+// attachInterrupt(pinBtnDigitSuivant,nextDigit,FALLING);
 
 }
 
@@ -388,35 +399,30 @@ void loop() {
   case 1:
    // mqttClient.publish("esp/test", idCapteur);
    // GestionIHM();
-
-   selectDigit(1);
-   delay(30);
+   chiffre(-1);
+   digitalWrite(pinDigitA1, LOW);
+   digitalWrite(pinDigitA0, LOW);
    chiffre(valeur7segment[0]);
-   delay(2000);
+   delay(7);
 
-   selectDigit(2);
-   delay(30);
+   chiffre(-1);
+   digitalWrite(pinDigitA0, HIGH);
+   digitalWrite(pinDigitA1, LOW);
    chiffre(valeur7segment[1]);
-   delay(2000);
+   delay(6);
 
-   selectDigit(3);
-   delay(30);
+   chiffre(-1);
+   digitalWrite(pinDigitA1, HIGH);
+   digitalWrite(pinDigitA0, LOW);
    chiffre(valeur7segment[2]);
-   delay(2000);
+   delay(6);
 
-   selectDigit(4);
-   delay(30);
+   chiffre(-1);
+   digitalWrite(pinDigitA0, HIGH);
+   digitalWrite(pinDigitA1, HIGH);
    chiffre(valeur7segment[3]);
-   delay(2000);
+   delay(7);
 
-//    tft.setCursor(5, 100);
-//    tft.println("Tem : ");
-//    tft.setCursor(70, 100);
-//    tft.println(valeur7segment[1]);
-   //     Serial.println(valeur7segment[0]);
-   //     Serial.println(valeur7segment[1]);
-   //     Serial.println(valeur7segment[2]);
-   //     Serial.println(valeur7segment[3]);
 
    // delay(5000);
    break;
