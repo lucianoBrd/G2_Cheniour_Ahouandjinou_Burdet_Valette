@@ -189,6 +189,19 @@
 #define HREF_GPIO_NUM       25
 #define PCLK_GPIO_NUM       19
 
+#define VSYNC_GPIO_NUM      27
+#define HREF_GPIO_NUM       25
+#define PCLK_GPIO_NUM       19
+
+#define I2C_SDA             21
+#define I2C_SCL             22
+
+#define BUTTON_1            34
+
+#define SSD130_MODLE_TYPE   0   // 0 : GEOMETRY_128_64  // 1: GEOMETRY_128_32
+
+#define AS312_PIN           33
+
 #else
 #error "Camera model not selected"
 #endif
