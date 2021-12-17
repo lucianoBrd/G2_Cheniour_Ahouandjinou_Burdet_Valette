@@ -23,8 +23,8 @@
 
 #include "camera_pins.h"
 
-const char* ssid = "Luciano";
-const char* password = "123456789";
+const char* ssid = "Domotique";
+const char* password = "Domotique";
 
 void startCameraServer();
 
@@ -41,8 +41,8 @@ void setup() {
   *   SCL --> 22
   */
   ssd1306_128x64_i2c_init();
-  ssd1306_flipHorizontal(1);
-  ssd1306_flipVertical(1);
+  ssd1306_flipHorizontal(0);
+  ssd1306_flipVertical(0);
   ssd1306_clearScreen();
 
   camera_config_t config;

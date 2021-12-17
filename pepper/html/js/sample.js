@@ -1,5 +1,6 @@
 ﻿$(document).ready(function () {
     session = new QiSession();
+    var src = null;
 
     session.service("ALMemory").done(function (ALMemory) {
 
@@ -8,6 +9,8 @@
             subscriber.signal.connect(function (data) {
                 var html = '<h1>Choix du home</h1>';
                 const homes = jQuery.parseJSON(data);
+
+                src = null;
 
                 $.each(homes, function (key, home) {
                     html += '<hr><div>';
@@ -29,7 +32,9 @@
                 const home = jQuery.parseJSON(data);
 
                 if (home.cameraip !== 'undefined' && home.cameraip !== null) {
-                    html += '<iframe class="iframe_camera_home" src="http://' + home.cameraip + '/capture" style="width: 100%;height: 200px;"></iframe>';
+                    src = 'http://' + home.cameraip + '/capture';
+                } else {
+                    src = null;
                 }
 
                 if (home.label !== 'undefined') {
@@ -158,10 +163,16 @@
 
     $(document).on('click', '.btn_reset_home', function () {
         raise('ResetHome', 1);
+        src = null;
     });
 
     var intervalId = window.setInterval(function(){
-        $( '.iframe_camera_home' ).attr( 'src', function ( i, val ) { return val; });
+        if (src !== null) {
+            $( '.iframe_camera_home' ).show();
+            $( '.iframe_camera_home' ).attr( 'src', function ( i, val ) { return src; });
+        } else {
+            $( '.iframe_camera_home' ).hide();
+        }
     }, 150);
 
 });

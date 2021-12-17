@@ -60,7 +60,7 @@ class APIModule:
 
             home["rooms"] = rooms
         """
-        #print json.dumps(home) 
+        print json.dumps(home) 
 
         return json.dumps(home)
 
