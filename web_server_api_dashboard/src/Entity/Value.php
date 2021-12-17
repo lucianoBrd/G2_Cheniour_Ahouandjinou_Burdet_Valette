@@ -116,6 +116,8 @@ class Value
     public function setElement(?Element $element): self
     {
         $this->element = $element;
+        
+        $this->element->setElementValue($this);
 
         return $this;
     }

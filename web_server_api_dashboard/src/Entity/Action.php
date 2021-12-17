@@ -163,6 +163,8 @@ class Action
     {
         $this->element = $element;
 
+        $this->element->setAction($this);
+
         return $this;
     }
 }
