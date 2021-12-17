@@ -47,13 +47,13 @@ class Type
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"type"})
+     * @Groups({"type", "home:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=191, unique=true)
-     * @Groups({"type"})
+     * @Groups({"type", "home:read"})
      */
     private $label;
 

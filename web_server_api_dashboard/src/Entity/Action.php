@@ -74,25 +74,25 @@ class Action
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"action:read"})
+     * @Groups({"action:read", "home"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=191)
-     * @Groups({"action:read", "action:write"})
+     * @Groups({"action:read", "action:write", "home:read"})
      */
     private $value;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"action:read"})
+     * @Groups({"action:read", "home:read"})
      */
     private $datetime;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"action:read", "action:write"})
+     * @Groups({"action:read", "action:write", "home:read"})
      */
     private $state = false; // Not done by default
 

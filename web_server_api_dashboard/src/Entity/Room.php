@@ -47,13 +47,13 @@ class Room
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"room"})
+     * @Groups({"room", "home:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=191, unique=true)
-     * @Groups({"room"})
+     * @Groups({"room", "home:read"})
      */
     private $label;
 
@@ -66,7 +66,7 @@ class Room
 
     /**
      * @ORM\OneToMany(targetEntity=Element::class, mappedBy="room")
-     * @Groups({"room"})
+     * @Groups({"room", "home:read"})
      */
     private $elements;
 

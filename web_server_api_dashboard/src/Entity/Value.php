@@ -46,19 +46,19 @@ class Value
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"value:read"})
+     * @Groups({"value:read", "home:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=191)
-     * @Groups({"value:read", "value:write"})
+     * @Groups({"value:read", "value:write", "home:read"})
      */
     private $value;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups({"value:read"})
+     * @Groups({"value:read", "home:read"})
      */
     private $datetime;
 

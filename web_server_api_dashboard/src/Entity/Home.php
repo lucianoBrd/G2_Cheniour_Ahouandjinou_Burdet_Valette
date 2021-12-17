@@ -12,7 +12,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ApiResource(
- *  normalizationContext={"groups" = {"home"}},
+ *  normalizationContext={"groups" = {"home:read"}},
  *  denormalizationContext={"groups" = {"home"}},
  *  itemOperations={
  *     "get",
@@ -47,31 +47,31 @@ class Home
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"home"})
+     * @Groups({"home", "home:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=191, unique=true)
-     * @Groups({"home"})
+     * @Groups({"home", "home:read"})
      */
     private $label;
 
     /**
      * @ORM\OneToMany(targetEntity=Room::class, mappedBy="home")
-     * @Groups({"home"})
+     * @Groups({"home", "home:read"})
      */
     private $rooms;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"home"})
+     * @Groups({"home", "home:read"})
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"home"})
+     * @Groups({"home", "home:read"})
      */
     private $cameraip;
 

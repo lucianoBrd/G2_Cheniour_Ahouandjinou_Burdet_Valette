@@ -47,19 +47,19 @@ class Element
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"element"})
+     * @Groups({"element", "home:read"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=191, unique=true)
-     * @Groups({"element"})
+     * @Groups({"element", "home:read"})
      */
     private $label;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"element"})
+     * @Groups({"element", "home:read"})
      */
     private $battery;
 
@@ -72,28 +72,40 @@ class Element
 
     /**
      * @ORM\OneToMany(targetEntity=Value::class, mappedBy="element", orphanRemoval=true)
-     * @Groups({"element"})
+     * @Groups({"element", "home:read"})
      */
     private $elementValues;
 
     /**
      * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="elements")
      * @ORM\JoinColumn(nullable=true)
-     * @Groups({"element"})
+     * @Groups({"element", "home:read"})
      */
     private $type;
 
     /**
      * @ORM\OneToMany(targetEntity=Action::class, mappedBy="element", orphanRemoval=true)
-     * @Groups({"element"})
+     * @Groups({"element", "home:read"})
      */
     private $actions;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
-     * @Groups({"element"})
+     * @Groups({"element", "home:read"})
      */
     private $state;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Action::class, cascade={"persist", "remove"})
+     * @Groups({"element", "home:read"})
+     */
+    private $action;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Value::class, cascade={"persist", "remove"})
+     * @Groups({"element", "home:read"})
+     */
+    private $elementValue;
 
     public function __construct()
     {
@@ -160,6 +172,7 @@ class Element
     {
         if (!$this->elementValues->contains($elementValue)) {
             $this->elementValues[] = $elementValue;
+            $this->elementValue = $elementValue;
             $elementValue->setElement($this);
         }
 
@@ -202,6 +215,7 @@ class Element
     {
         if (!$this->actions->contains($action)) {
             $this->actions[] = $action;
+            $this->action = $action;
             $action->setElement($this);
         }
 
@@ -228,6 +242,30 @@ class Element
     public function setState(?bool $state): self
     {
         $this->state = $state;
+
+        return $this;
+    }
+
+    public function getAction(): ?Action
+    {
+        return $this->action;
+    }
+
+    public function setAction(?Action $action): self
+    {
+        $this->action = $action;
+
+        return $this;
+    }
+
+    public function getElementValue(): ?Value
+    {
+        return $this->elementValue;
+    }
+
+    public function setElementValue(?Value $elementValue): self
+    {
+        $this->elementValue = $elementValue;
 
         return $this;
     }
