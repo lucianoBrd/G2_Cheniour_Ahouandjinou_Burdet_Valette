@@ -2,6 +2,9 @@
 
 Notre projet permet de visualiser, faciliter et administrer différents éléments de sa maison : température, humidité, porte-volet, chauffage, VMC...
 
+Lien de la vidéo de démonstration du jalon 1
+- https://youtu.be/Neju9fB2eeY
+
 Voici le lien de nottre application WEB (API + Dashboard) :
 - https://work.lucien-brd.com/
 
