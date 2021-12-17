@@ -10,9 +10,9 @@
 
 #define CONNECTION_TIMEOUT 30
 ///_____
-const char* ssid = "Redmi Note 7";
-const char* password = "dallez94";
-const char* mqttServer = "192.168.43.222";
+const char* ssid = "Domotique";
+const char* password = "Domotique";
+const char* mqttServer = "192.168.12.222";
 const int mqttPort = 1883;
 const char* mqttUser = "";
 const char* mqttPassword = "";
