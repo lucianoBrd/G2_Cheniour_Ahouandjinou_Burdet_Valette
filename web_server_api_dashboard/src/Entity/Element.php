@@ -96,13 +96,13 @@ class Element
     private $state;
 
     /**
-     * @ORM\OneToOne(targetEntity=Action::class, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Action::class, cascade={"persist", "remove"}, orphanRemoval=true)
      * @Groups({"element", "home:read"})
      */
     private $action = null;
 
     /**
-     * @ORM\OneToOne(targetEntity=Value::class, cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Value::class, cascade={"persist", "remove"}, orphanRemoval=true)
      * @Groups({"element", "home:read"})
      */
     private $elementValue = null;
