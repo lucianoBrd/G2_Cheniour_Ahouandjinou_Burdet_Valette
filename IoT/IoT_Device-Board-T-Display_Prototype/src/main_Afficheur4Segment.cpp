@@ -19,17 +19,18 @@
 #define pinSegmentF 26// 26
 #define pinSegmentG 25 
 
-#define pinBtnIncrementerChiffre 39               // bouton permettant d'incrementer la valeur d'un digit (7 segment)
-#define pinBtnDigitSuivant 36                    // bouton permettant de passer au digit suivant
- 
+#define pinBtnIncrementerChiffre 37               // bouton permettant d'incrementer la valeur d'un digit (7 segment)
+#define pinBtnDigitSuivant 38                    // bouton permettant de passer au digit suivant
+#define pinBtnValiderMdp 36                      // bouton permettant de valider le mdp
 ///_____
-const char* ssid = "Redmi Note 7";               // identifiant réseau           //"SFR_DDA8"; // 
-const char* password = "dallez94";               // mot de passe réseau          //"3vsk72pjpz5fkd69umkz"; 
-const char* mqttServer = "192.168.43.222";       // addresse IP du brooker Mqtt
+const char* ssid = "Domotique";               // identifiant réseau           //"SFR_DDA8"; // 
+const char* password = "Domotique";               // mot de passe réseau        
+const char* mqttServer = "192.168.12.222";       // addresse IP du brooker Mqtt
 const int mqttPort = 1883;                       // port de connection mqtt
 const char* mqttUser = "";
 const char* mqttPassword = "";
 const char* idCapteur = "Digicode";              // identifiant du module 
+const int mdpPorte = 2468;
 
 int etat = -1;                                   // variable representant l'etat du capteur
 int digitActuel = 1;                             // on demarre positionné sur le digit 1
@@ -308,6 +309,10 @@ void chiffre(int chiffre){
 
 void verificationMdp(){
 
+        if ((1000*valeur7segment[0]+100*valeur7segment[1]+10*valeur7segment[2]+valeur7segment[3])==mdpPorte){
+                mqttClient.publish("home/living_room/actuator_entry_door/state", "1");
+        }
+
 }
 
 void incrementerChiffre(){
@@ -340,7 +345,7 @@ void incrementerChiffre(){
 void nextDigit(){
         digitActuel = digitActuel + 1;
         if (digitActuel > 4 ){
-                verificationMdp();
+                digitActuel = 1;
         } 
 }
 
@@ -358,10 +363,12 @@ void init7Segment(){
  pinMode(pinSegmentF, OUTPUT);
  pinMode(pinSegmentG, OUTPUT);
  //------- Pins bouttons
- pinMode(pinBtnDigitSuivant,INPUT_PULLDOWN);
- pinMode(pinBtnIncrementerChiffre,INPUT_PULLDOWN);
-// attachInterrupt(pinBtnIncrementerChiffre,incrementerChiffre,FALLING);
-// attachInterrupt(pinBtnDigitSuivant,nextDigit,FALLING);
+ pinMode(pinBtnDigitSuivant,INPUT_PULLUP);
+ pinMode(pinBtnIncrementerChiffre,INPUT_PULLUP);
+ pinMode(pinBtnValiderMdp,INPUT_PULLUP);
+ attachInterrupt(pinBtnIncrementerChiffre,incrementerChiffre,FALLING);
+ attachInterrupt(pinBtnDigitSuivant,nextDigit,FALLING);
+ attachInterrupt(pinBtnValiderMdp,verificationMdp,FALLING);
 
 }
 
@@ -402,27 +409,41 @@ void loop() {
    chiffre(-1);
    digitalWrite(pinDigitA1, LOW);
    digitalWrite(pinDigitA0, LOW);
+   delayMicroseconds(1);
    chiffre(valeur7segment[0]);
-   delay(7);
+   delay(6);
 
    chiffre(-1);
    digitalWrite(pinDigitA0, HIGH);
    digitalWrite(pinDigitA1, LOW);
+   delayMicroseconds(1);
    chiffre(valeur7segment[1]);
    delay(6);
+   
 
    chiffre(-1);
    digitalWrite(pinDigitA1, HIGH);
    digitalWrite(pinDigitA0, LOW);
+   delayMicroseconds(1);
    chiffre(valeur7segment[2]);
    delay(6);
 
    chiffre(-1);
    digitalWrite(pinDigitA0, HIGH);
    digitalWrite(pinDigitA1, HIGH);
+   delayMicroseconds(1);
    chiffre(valeur7segment[3]);
-   delay(7);
+   delay(6);
 
+//    tft.fillScreen(TFT_WHITE);
+//    tft.setCursor(40, 40);
+//    tft.println(valeur7segment[0]);
+//    tft.setCursor(50, 40);
+//    tft.println(valeur7segment[1]);
+//    tft.setCursor(60, 40);
+//    tft.println(valeur7segment[2]);
+//    tft.setCursor(70, 40);
+//    tft.println(valeur7segment[3]);
 
    // delay(5000);
    break;
