@@ -113,7 +113,6 @@ def check_password_change(api_obj, password_memory):
     else :
         return password_memory
     
-
 def format_value_publish(value):
     dict_value = {"ON":1, 'OFF':0}
     if value == "ON" or value == "OFF":
