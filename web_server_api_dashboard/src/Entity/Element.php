@@ -71,7 +71,7 @@ class Element
     private $room;
 
     /**
-     * @ORM\OneToMany(targetEntity=Value::class, mappedBy="element", orphanRemoval=true, cascade={"remove"})
+     * @ORM\OneToMany(targetEntity=Value::class, mappedBy="element", orphanRemoval=true)
      * @Groups({"element"})
      */
     private $elementValues;
@@ -84,7 +84,7 @@ class Element
     private $type;
 
     /**
-     * @ORM\OneToMany(targetEntity=Action::class, mappedBy="element", orphanRemoval=true, cascade={"remove"})
+     * @ORM\OneToMany(targetEntity=Action::class, mappedBy="element", orphanRemoval=true)
      * @Groups({"element"})
      */
     private $actions;
@@ -96,13 +96,13 @@ class Element
     private $state;
 
     /**
-     * @ORM\OneToOne(targetEntity=Action::class, cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity=Action::class, orphanRemoval=true)
      * @Groups({"element", "home:read"})
      */
     private $action = null;
 
     /**
-     * @ORM\OneToOne(targetEntity=Value::class, cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity=Value::class, orphanRemoval=true)
      * @Groups({"element", "home:read"})
      */
     private $elementValue = null;
