@@ -6,8 +6,8 @@ import time
 import paho.mqtt.client as mqtt
 
 directory = 'Faces'
-CAMERA_ADDRESS = "192.168.43.113"
-BROKER_ADDRESS = "broker.mqttdashboard.com"
+CAMERA_ADDRESS = "192.168.12.1"
+BROKER_ADDRESS = "192.168.12.222"
 
 def init_mqtt_connection():
     # Init MQTT Client
@@ -16,6 +16,8 @@ def init_mqtt_connection():
     client.loop_start() 
     return client
 print("Connexion au broker MQTT")
+
+TOPIC = "home/entry_door/detection"
 mqtt_client = init_mqtt_connection()
 
 if not os.path.exists(directory):
@@ -67,9 +69,12 @@ while satisfait == 0:
 
 
 while 1 : 
-    urllib.request.urlretrieve(
-    'http://' + CAMERA_ADDRESS + '/capture',
-    "capture.jpg")
+    try :
+        urllib.request.urlretrieve(
+        'http://' + CAMERA_ADDRESS + '/capture',
+        "capture.jpg")
+    except:
+        pass
     
 
     for filename in os.scandir(directory):
@@ -88,7 +93,7 @@ while 1 :
                 print(results[0])
                 if results[0] == True :
                     print("authorizé")
-                    mqtt_client.publish("/topic/recog" , "authorized")
+                    mqtt_client.publish(TOPIC , "authorized")
                 elif results[0] == False :
                     print("non authorizé")
             else :
