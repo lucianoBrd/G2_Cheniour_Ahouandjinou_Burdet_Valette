@@ -99,13 +99,13 @@ class Element
      * @ORM\OneToOne(targetEntity=Action::class, cascade={"persist", "remove"})
      * @Groups({"element", "home:read"})
      */
-    private $action;
+    private $action = null;
 
     /**
      * @ORM\OneToOne(targetEntity=Value::class, cascade={"persist", "remove"})
      * @Groups({"element", "home:read"})
      */
-    private $elementValue;
+    private $elementValue = null;
 
     public function __construct()
     {
