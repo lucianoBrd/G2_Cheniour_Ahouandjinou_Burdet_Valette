@@ -26,7 +26,9 @@ class ElementCrudController extends AbstractCrudController
             IntegerField::new('battery'),
             AssociationField::new('room'),
             AssociationField::new('actions'),
+            AssociationField::new('action')->hideOnForm(),
             AssociationField::new('elementValues'),
+            AssociationField::new('elementValue')->hideOnForm(),
             BooleanField::new('state'),
             AssociationField::new('type'),
         ];
