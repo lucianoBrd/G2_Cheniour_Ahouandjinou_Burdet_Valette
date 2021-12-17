@@ -3,11 +3,11 @@
 ## Installation
 
 ### Pré-requis
-- Installation de python : si vous n'avez pas python sur votre machine vous pouvez le télécharger via le lien https://www.python.org/downloads/
+- Installation de python : si vous n'avez pas python sur votre machine vous pouvez le télécharger via le lien suivant : https://www.python.org/downloads/
 
 - Insallation du package `virtualenv` : ouvrir un terminal et exécuter la commande `pip install virtualenv`
 
-- Création d'un environnement virtuel : il est fortement recommandé d'utiliser un environnement virtuel pour exécuter en sécurité le projet, pour cela exécuter la commence suivante dans la racine du projet `virtualenv venv`
+- Création d'un environnement virtuel : il est fortement recommandé d'utiliser un environnement virtuel pour exécuter en sécurité le projet, pour cela exécuter la commande suivante dans la racine du projet `virtualenv venv`
 
 - Activer le venv : `./venv/Scripts/activate.ps1`
 

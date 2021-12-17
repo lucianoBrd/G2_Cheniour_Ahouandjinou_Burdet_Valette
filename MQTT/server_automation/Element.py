@@ -22,7 +22,7 @@ class Element:
             raise ValueError(f'The type muste be "sensor" or "actuator" and not {type}')
 
         self.topic = ''
-        self.acquitement = ''
+        self.acquittement = ''
         self.data = data
 
         

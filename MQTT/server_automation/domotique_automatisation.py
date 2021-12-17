@@ -5,23 +5,29 @@ from Room import Room
 from Element import Element
 from Api import Api
 from decouple import config
+from clint.textui import colored, puts, indent
 
-
-BROKER_ADDRESS = '192.168.43.222'
+BROKER_ADDRESS = '192.168.12.222'
 TOPIC_DICT = {}
 home = Home()
+PASSWORD_MEMORY = ''
 
 def on_message(client, userdata, message):
     
-    if message.topic.split("/")[-1] != 'acquitement':
+    print(colored.green(f"Data received from topic : {message.topic}"))
+    if message.topic.split("/")[-1] != 'acquittement':
         element = TOPIC_DICT[message.topic]
+        print(colored.blue(f"Value received from {element.name}: "), end='')
         data_name = list(element.data.keys())[0]
         element.data[data_name] = str(message.payload.decode("utf-8"))
-        print(element.name,element.data)
+        print(colored.magenta(f"{data_name} = {element.data[data_name]}"))
     else:
-        element = TOPIC_DICT[message.topic.replace('/acquitement', '')]
-        element.acquitement = str(message.payload.decode("utf-8"))
-
+        print(colored.cyan("Acquitement received :"), end = '')
+        element = TOPIC_DICT[message.topic.replace('/acquittement', '')]
+        element.acquittement = str(message.payload.decode("utf-8"))
+        print(colored.cyan(f"Acquittement : {element.acquittement} from {element.name}"))
+    
+    print('\n')
 
 def init_mqtt_connection():
     # Init MQTT Client
@@ -70,15 +76,15 @@ def init_my_home(mqtt_client, api_obj):
             element_topic += f'/{list(element.data.keys())[0]}'
             element.topic = element_topic
             TOPIC_DICT[element.topic] = element
-        
-            home.mqtt_client.subscribe(element.topic)
+            
+            if element.type == "sensor":
+                home.mqtt_client.subscribe(element.topic)
     return home
 
 def check_and_format_actions_api (api_obj):
     unresolved_actions = api_obj.get_unresolved_actions()
-
     unresolved_formated_actions = []
-    if unresolved_actions == []:
+    if unresolved_actions == [] or unresolved_actions == None:
         return None
     else :
         for action in unresolved_actions:
@@ -95,79 +101,136 @@ def check_and_format_actions_api (api_obj):
             value = action["value"]
 
             action_formated = {"action_id" : action_id, "home" : home_name, "room" : room_name, "element" : element_name, "value" : value}
-
             unresolved_formated_actions.append(action_formated)
         return unresolved_formated_actions
     
+def check_password_change(api_obj, password_memory):
+    password = api_obj.get_home_by_name(home.name)['password']
+
+    if password != password_memory:
+        home.mqtt_client.publish("home/security/entry_code", password)
+        return password
+    else :
+        return password_memory
+    
+
+def format_value_publish(value):
+    dict_value = {"ON":1, 'OFF':0}
+    if value == "ON" or value == "OFF":
+        return dict_value[value]
+    else:
+        return value
+
+def state_to_boolean(state):
+    dict_state = {"ON" : True, "OFF":False}
+    return dict_state[state]
+
 def get_room_obj(home_obj, room_name):
     return home_obj.rooms[room_name]
 
 def get_element_obj(home_obj, room_name, element_name):
     return home_obj.rooms[room_name].elements[element_name]
 
-
 if __name__ == "__main__":
-    #mqtt_client = init_mqtt_connection()
-    #home = init_my_home(mqtt_client)
+    mqtt_client = init_mqtt_connection()
     web_api = Api()
-    home = init_my_home(mqtt.Client("test"), web_api)
+    home = init_my_home(mqtt_client, web_api)
     
+    vmc_living_room = get_element_obj(home, 'living_room', 'actuator_vmc_living_room')
+    heating_living_room = get_element_obj(home, 'living_room', 'actuator_heating_living_room')
 
+    sensor_temperature = get_element_obj(home, 'living_room', 'sensor_temperature_living_room')
+    sensor_humidity = get_element_obj(home, 'living_room', 'sensor_humidity_living_room')
     while True:
-        time.sleep(0.5)
-
         #uniquement en mode automatique ??
         #region check temperature in living room
-        #########CREER UN FONCTION POUR RECUPERER OBJETS EN FONCTION DU NOM ETC
-        temperature_living_room = float(get_element_obj(home, 'living_room', 'sensor_temperature_living_room').data['temperature'])
-        
-        vmc_living_room = get_element_obj(home, 'living_room', 'actuator_vmc_living_room')
-        heating_living_room = get_element_obj(home, 'living_room', 'actuator_heating_living_room')
-        
-        if temperature_living_room < 25 and temperature_living_room > 18:
-            # switch offthe VMC
-            if vmc_living_room.data['state']  != "OFF" :
-                home.mqtt_client.publish(vmc_living_room.topic , "OFF")
-            # switch off the heating
-            if heating_living_room.data['state'] != "OFF" :
-                home.mqtt_client.publish(heating_living_room.topic, "OFF")
-        if temperature_living_room > 25:
-            # powered the VMC
-            if vmc_living_room.data['state'] != "ON" :
-                home.mqtt_client.publish(vmc_living_room.topic , "ON")
-            # switch off the heating
-            if heating_living_room.data['state'] != "OFF" :
-                home.mqtt_client.publish(heating_living_room.topic, "OFF")
-        elif temperature_living_room <18:
-            # switch offthe VMC
-            if vmc_living_room.data['state']  != "OFF" :
-                home.mqtt_client.publish(vmc_living_room.topic , "OFF")
-            # powered the heating
-            if heating_living_room.data['state'] != "ON" :
-                home.mqtt_client.publish(heating_living_room.topic, "ON")
-        #endregion
+        temperature_living_room = float(sensor_temperature.data['temperature'])
+        web_api.create_value(temperature_living_room, sensor_temperature.name)
 
-        #region check humidity in living room
-        humidity_living_room = float(get_element_obj(home, 'living_room', 'sensor_humidity_living_room').data['humidity'])
-        
-        if humidity_living_room >= 0 and humidity_living_room < 25:
-            # switch offthe VMC
-            if vmc_living_room.data['state']  != "OFF" :
-                home.mqtt_client.publish(vmc_living_room.topic , "OFF")
-        if humidity_living_room >= 25 and humidity_living_room <= 100:
-            # powered the VMC
-            if vmc_living_room.data['state'] != "ON" :
-                home.mqtt_client.publish(vmc_living_room.topic , "ON")
-        #endregion
+       
+        humidity_living_room = float(sensor_humidity.data['humidity'])
+        web_api.create_value(humidity_living_room, sensor_humidity.name)
 
         #uniquement en mode manuel ??
         unresolved_actions = check_and_format_actions_api(web_api)
         if unresolved_actions != None:
             for action in unresolved_actions:
-                element = get_element_obj(home, action['room'], action['element'])
-                home.mqtt_client.subcribe(element.topic +"/acquitement")
-                while (not (element.acquitement == "ON RECEIVED" or element.acquitement == "OFF RECEIVED")) :
-                    home.mqtt_client.publish(element.topic, action["value"])
-                home.mqtt_client.unsubcribe(element.topic +"/acquitement")
-                web_api.update_action(action["id"], action["value"], element.name, True)
+                print(colored.yellow(f"Traitment of the action {action}"))
+                if action["value"] != "":
+                    element = get_element_obj(home, action['room'], action['element'])
+                    if element.type == "actuator":
+                        if element.data["state"] != action["value"]:
+                            home.mqtt_client.subscribe(element.topic +"/acquittement")
+                            home.mqtt_client.publish(element.topic, format_value_publish(action["value"]))
+                            sender_cpt = 0
+                            flag_acquittement = True
+                            while ( element.acquittement != f"{action['value']} RECEIVED") :
+                                time.sleep(0.2)
+                                home.mqtt_client.publish(element.topic, format_value_publish(action["value"]))
+                                sender_cpt += 1
+                                if sender_cpt == 20:
+                                    flag_acquittement = False
+                                    break
+                            if flag_acquittement :
+                                home.mqtt_client.unsubscribe(element.topic +"/acquittement")
+                                element.data["state"] = action["value"]
+
+                                web_api.update_element(web_api.get_element_id_by_name(element.name), element_name = element.name,state = state_to_boolean(element.data["state"]))
+                                web_api.update_action(action["action_id"], value = action["value"], state = True)
+
+                    elif element.type == "sensor":
+                        if list(element.data.keys())[0] == "temperature":
+                            temperature_to_reach = float(action["value"])
+                            if temperature_living_room < temperature_to_reach + 0.5 and temperature_living_room > temperature_to_reach - 0.5:
+                                # switch off the VMC
+                                if vmc_living_room.data['state']  != "OFF" :
+                                    web_api.create_action("OFF", vmc_living_room.name)
+
+                                # switch off the heating
+                                if heating_living_room.data['state'] != "OFF" :
+                                    web_api.create_action("OFF", heating_living_room.name)
+
+
+                                web_api.update_action(action["action_id"], state = True, value = action["value"])
+
+                            if temperature_living_room > temperature_to_reach + 0.5:
+                                # powered the VMC
+                                if vmc_living_room.data['state'] != "ON" :
+                                    web_api.create_action("ON", vmc_living_room.name)
+
+                                # switch off the heating))
+                                if heating_living_room.data['state'] != "OFF" :
+                                    web_api.create_action("OFF", humidity_living_room.name)
+
+                            elif temperature_living_room < temperature_to_reach - 0.5:
+                                # switch offthe VMC
+                                if vmc_living_room.data['state'] != "OFF" :
+                                    web_api.create_action("OFF", vmc_living_room.name)
+                                # powered the heating
+                                if heating_living_room.data['state'] != "ON" :
+                                    web_api.create_action("ON", heating_living_room.name)
+                            #endregion
+
+                        #region check humidity in living room
+                        if list(element.data.keys())[0] == "humidiy":
+                            humidity_to_reach = float(action["value"])
+                            if humidity_living_room >= 0 and humidity_living_room < humidity_to_reach:
+                                # switch offthe VMC
+                                if vmc_living_room.data['state'] != "OFF" :
+                                    web_api.create_action("OFF", vmc_living_room.name)
+
+                            if humidity_living_room >= humidity_to_reach and humidity_living_room <= 100:
+                                # powered the VMC
+                                if vmc_living_room.data['state'] != "ON" :
+                                    web_api.create_action("ON", vmc_living_room.name)
+
+                                web_api.update_action(action["action_id"], state = True, value = action["value"])
+
+                        #endregion
+                else :
+                    web_api.update_action(action["action_id"], state = True)
+            
+        # envoi du new password s'il est modifié en BDD: 
+        #PASSWORD_MAMORY = check_password_change(web_api, PASSWORD_MEMORY)
+        
 

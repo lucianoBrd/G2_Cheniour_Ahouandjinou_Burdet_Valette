@@ -361,10 +361,10 @@ class Api:
         """
         request = requests.get(self.url + "/actions/unresolved/" + element_name, headers = self.header).json()
         
-        if request['title'] != 'An error occurred':
+        if type(request) == list:
             return request
-        else :
-            return [] 
+        else:
+            return []
     
     def get_unresolved_actions(self):
         """
@@ -374,10 +374,10 @@ class Api:
         """
         request = requests.get(self.url + "/actions/get/unresolved", headers = self.header).json()
 
-        if request['title'] != 'An error occurred':
+        if type(request) == list:
             return request
-        else :
-            return [] 
+        else:
+            return []
 
     def get_last_action_by_element_name(self, element_name = ''):
         """
@@ -528,7 +528,7 @@ class Api:
         })
         
         request = requests.post(self.url + "/actions", data=payload, headers = self.header)
-
+        
         return request.status_code
     
     def update_home(self, home_id = 0, home_name = '', rooms_list = None):
@@ -606,7 +606,7 @@ class Api:
 
         return request.status_code
 
-    def update_element(self, element_id = 0, element_name = '', parent_room_name = '', type_name = '', actions_id = None, values_id = None):
+    def update_element(self, element_id = 0, element_name = '', parent_room_name = '', type_name = '', actions_id = None, values_id = None, state = None):
         """
         Update an element
 
@@ -624,6 +624,9 @@ class Api:
 
         :param values_id: The list of values
         :type values_id: list
+
+        :param state: The state of the element (for actuator)
+        :type state: bool
 
         :returns: int -- The status code of the request put
         """
@@ -643,7 +646,8 @@ class Api:
             payload["actions"] = ["/api/actions/" + str(action) for action in actions_id]
         if values_id != None:
             payload["elementValues"] = ["/api/values/" + str(value) for value in values_id]
-        
+        if state != None:
+            payload["state"] = state
         payload = json.dumps(payload)
 
         request = requests.put(self.url + "/elements/" + str(element_id), data=payload, headers = self.header)
@@ -716,5 +720,5 @@ class Api:
         payload = json.dumps(payload)
         
         request = requests.put(self.url + "/actions/" + str(action_id), data=payload, headers = self.header)
-
+        
         return request.status_code
