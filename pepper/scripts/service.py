@@ -32,7 +32,7 @@ class APIModule:
     def get_home_by_id(self, home_id):
         
         home = self.api.get_home_by_id(home_id)
-        
+        """
         if "rooms" in home :
             rooms = []
 
@@ -59,7 +59,7 @@ class APIModule:
                 rooms.append(room)
 
             home["rooms"] = rooms
-
+        """
         #print json.dumps(home) 
 
         return json.dumps(home)
