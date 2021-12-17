@@ -10,7 +10,6 @@
 #define pinDigitA0 33   // selection digit ( A0A1 : 00 --> Digit1, 10 --> Digit2, 01 --> Digit3, 11 --> Digit4 ) 
 #define pinDigitA1 32
 
-
 #define pinSegmentA 27     // segment à allumer, actif à l'état haut
 #define pinSegmentB 15  //36
 #define pinSegmentC 2   //37
@@ -21,7 +20,7 @@
 
 #define pinBtnIncrementerChiffre 37               // bouton permettant d'incrementer la valeur d'un digit (7 segment)
 #define pinBtnDigitSuivant 38                    // bouton permettant de passer au digit suivant
-#define pinBtnValiderMdp 36                      // bouton permettant de valider le mdp
+#define pinBtnValiderMdp 39                      // bouton permettant de valider le mdp
 ///_____
 const char* ssid = "Domotique";               // identifiant réseau           //"SFR_DDA8"; // 
 const char* password = "Domotique";               // mot de passe réseau        
@@ -310,9 +309,14 @@ void chiffre(int chiffre){
 void verificationMdp(){
 
         if ((1000*valeur7segment[0]+100*valeur7segment[1]+10*valeur7segment[2]+valeur7segment[3])==mdpPorte){
-                mqttClient.publish("home/living_room/actuator_entry_door/state", "1");
+              //  mqttClient.publish("home/living_room/actuator_entry_door/state", "1");
+                valeur7segment[0] = 0;
+                valeur7segment[1] = 0;
+                valeur7segment[2] = 0;
+                valeur7segment[3] = 0;
+                Serial.println("bon");
         }
-
+      
 }
 
 void incrementerChiffre(){

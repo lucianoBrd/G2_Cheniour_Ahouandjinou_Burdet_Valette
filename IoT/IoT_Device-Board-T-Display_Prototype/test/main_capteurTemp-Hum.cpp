@@ -14,9 +14,9 @@
 #define pinBouton 27     // pin pour le boutton
 
 ///_____
-const char* ssid = "Redmi Note 7";                 //"SFR_DDA8"; // 
-const char* password = "dallez94"; //"3vsk72pjpz5fkd69umkz"; 
-const char* mqttServer = "192.168.43.222";       //"broker.hivemq.com";//IPAddress my_IPAddress(192,168,43,222);
+const char* ssid = "Domotique";//"Redmi Note 7";                 //"SFR_DDA8"; // 
+const char* password = "Domotique";//"dallez94"; //"3vsk72pjpz5fkd69umkz"; 
+const char* mqttServer = "192.168.12.222";       //"broker.hivemq.com";//IPAddress my_IPAddress(192,168,43,222);
 const int mqttPort = 1883;
 const char* mqttUser = "";
 const char* mqttPassword = "";
