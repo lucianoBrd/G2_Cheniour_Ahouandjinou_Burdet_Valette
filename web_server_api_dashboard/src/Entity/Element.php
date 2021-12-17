@@ -72,7 +72,7 @@ class Element
 
     /**
      * @ORM\OneToMany(targetEntity=Value::class, mappedBy="element", orphanRemoval=true)
-     * @Groups({"element", "home:read"})
+     * @Groups({"element"})
      */
     private $elementValues;
 
@@ -85,7 +85,7 @@ class Element
 
     /**
      * @ORM\OneToMany(targetEntity=Action::class, mappedBy="element", orphanRemoval=true)
-     * @Groups({"element", "home:read"})
+     * @Groups({"element"})
      */
     private $actions;
 
