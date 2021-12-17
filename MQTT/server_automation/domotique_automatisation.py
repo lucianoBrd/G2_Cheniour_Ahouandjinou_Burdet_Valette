@@ -217,14 +217,12 @@ if __name__ == "__main__":
                             if humidity_living_room >= 0 and humidity_living_room < humidity_to_reach:
                                 # switch offthe VMC
                                 if vmc_living_room.data['state'] != "OFF" :
-                                    home.mqtt_client.publish(vmc_living_room.topic , "OFF")
-                                    vmc_living_room.data['state'] = "OFF"
+                                    web_api.create_action("OFF", vmc_living_room.name)
 
                             if humidity_living_room >= humidity_to_reach and humidity_living_room <= 100:
                                 # powered the VMC
                                 if vmc_living_room.data['state'] != "ON" :
-                                    home.mqtt_client.publish(vmc_living_room.topic , "ON")
-                                    vmc_living_room.data['state'] = "ON"
+                                    web_api.create_action("ON", vmc_living_room.name)
 
                                 web_api.update_action(action["action_id"], state = True, value = action["value"])
 
