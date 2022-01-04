@@ -64,7 +64,7 @@ class Value
 
     /**
      * @ORM\ManyToOne(targetEntity=Element::class, inversedBy="elementValues")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      * @Groups({"value:read", "value:write"})
      */
     private $element;

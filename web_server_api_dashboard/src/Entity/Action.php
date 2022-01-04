@@ -98,7 +98,7 @@ class Action
 
     /**
      * @ORM\ManyToOne(targetEntity=Element::class, inversedBy="actions")
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
      * @Groups({"action:read", "action:write"})
      */
     private $element;
