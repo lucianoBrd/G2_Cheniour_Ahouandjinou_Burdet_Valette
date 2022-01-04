@@ -95,7 +95,7 @@ D'autre part de façon contrôlée, c'est à dire gérer via la voix, ou de mani
 # Liste des topic mqtt
 - home/living_room/sensor_temperature/temperature
 - home/living_room/sensor_humidity/humidity
-- home/living_room/sensor_luminosite/luminosite
+- home/living_room/sensor_luminosity/luminosity
 - home/living_room/actuator_vmc/state
 - home/living_room/actuator_entry_door/state
 - home/living_room/actuator_shutter/state
