@@ -162,8 +162,6 @@ if __name__ == "__main__":
         luminosity_living_room = float(sensor_luminosity.data['luminosity'])
         web_api.create_value(humidity_living_room, sensor_humidity.name)
 
-        entry_dor_value_living_room = sensor_entry_door_authentification_face.data["authentification"]
-
         #uniquement en mode manuel ??
         unresolved_actions = check_and_format_actions_api(web_api)
         if unresolved_actions != None:
@@ -263,13 +261,13 @@ if __name__ == "__main__":
                 else :
                     web_api.update_action(action["action_id"], state = True)
             
-        if entry_dor_value_living_room == "authorized":
+        if sensor_entry_door_authentification_face.data["authentification"] == "authorized":
             print("go2")
             if entry_door.data['state'] != "ON" :
                 print("go3")
                 web_api.create_action("ON", entry_door.name)
                 web_api.create_action("OFF", entry_door.name)
-            entry_door.data["authentification"] = ""
+            sensor_entry_door_authentification_face.data["authentification"] = ""
 
         # envoi du new password s'il est modifié en BDD: 
         #PASSWORD_MAMORY = check_password_change(web_api, PASSWORD_MEMORY)
