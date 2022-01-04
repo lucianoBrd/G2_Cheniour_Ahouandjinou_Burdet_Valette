@@ -44,14 +44,17 @@ def init_my_home(mqtt_client, api_obj):
         #sensor
     sensor_temperature_living_room = Element('sensor_temperature_living_room', 'sensor', {"temperature":0}) #temperature in degrès Celcius
     sensor_humidity_living_room = Element('sensor_humidity_living_room', 'sensor', {"humidity":0}) #percentage of humidity
+    sensor_luminosity_living_room = Element('sensor_lumidity_living_room', 'sensor', {"luminosity":0}) #percentage of humidity
         #actuator
     actuator_vmc_living_room = Element('actuator_vmc_living_room', 'actuator', {"state": "OFF"}) #state OFF or ON
     actuator_entry_door_living_room = Element('actuator_entry_door_living_room', 'actuator', {"state": "OPEN"}) #state OPEN or CLOSE
     actuator_shutter_living_room = Element('actuator_shutter_living_room', 'actuator', {"state": "OPEN"}) #state OPEN or CLOSE
     actuator_heating_living_room = Element('actuator_heating_living_room', 'actuator', {"state": "OFF"}) #state OFF or ON
+    actuator_lum_living_room = Element('actuator_lum_living_room', 'actuator', {"state": "OFF"}) #state OFF or ON
 
-    living_room_elements_list = [sensor_temperature_living_room, sensor_humidity_living_room, actuator_vmc_living_room,
-    actuator_entry_door_living_room, actuator_shutter_living_room, actuator_heating_living_room]
+
+    living_room_elements_list = [sensor_temperature_living_room, sensor_humidity_living_room, sensor_luminosity_living_room, actuator_vmc_living_room,
+    actuator_entry_door_living_room, actuator_shutter_living_room, actuator_heating_living_room, actuator_lum_living_room]
     #bed room 1
         #sensor
         #actuator
@@ -137,17 +140,22 @@ if __name__ == "__main__":
     
     vmc_living_room = get_element_obj(home, 'living_room', 'actuator_vmc_living_room')
     heating_living_room = get_element_obj(home, 'living_room', 'actuator_heating_living_room')
+    lum_living_room = get_element_obj(home, 'living_room', 'actuator_lum_living_room')
 
     sensor_temperature = get_element_obj(home, 'living_room', 'sensor_temperature_living_room')
     sensor_humidity = get_element_obj(home, 'living_room', 'sensor_humidity_living_room')
+    sensor_luminosity = get_element_obj(home, 'living_room', 'sensor_luminosity_living_room')
+
     while True:
         #uniquement en mode automatique ??
         #region check temperature in living room
         temperature_living_room = float(sensor_temperature.data['temperature'])
         web_api.create_value(temperature_living_room, sensor_temperature.name)
 
-       
         humidity_living_room = float(sensor_humidity.data['humidity'])
+        web_api.create_value(humidity_living_room, sensor_humidity.name)
+
+        luminosity_living_room = float(sensor_luminosity.data['luminosity'])
         web_api.create_value(humidity_living_room, sensor_humidity.name)
 
         #uniquement en mode manuel ??
@@ -219,6 +227,23 @@ if __name__ == "__main__":
                                     web_api.create_action("OFF", vmc_living_room.name)
 
                             if humidity_living_room >= humidity_to_reach and humidity_living_room <= 100:
+                                # powered the VMC
+                                if vmc_living_room.data['state'] != "ON" :
+                                    web_api.create_action("ON", vmc_living_room.name)
+
+                                web_api.update_action(action["action_id"], state = True, value = action["value"])
+
+                        #endregion
+
+                        #region check luminosity in living room
+                        if list(element.data.keys())[0] == "luminosity":
+                            luminosity_to_reach = float(action["value"])
+                            if luminosity_living_room >= 0 and luminosity_living_room < luminosity_to_reach:
+                                # switch offthe VMC
+                                if vmc_living_room.data['state'] != "OFF" :
+                                    web_api.create_action("OFF", vmc_living_room.name)
+
+                            if luminosity_living_room >= luminosity_to_reach and luminosity_living_room <= 100:
                                 # powered the VMC
                                 if vmc_living_room.data['state'] != "ON" :
                                     web_api.create_action("ON", vmc_living_room.name)
