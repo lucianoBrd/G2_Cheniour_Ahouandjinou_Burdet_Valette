@@ -12,9 +12,9 @@
 #define pinPhotoresistance 32               // pin pour la photoresistance
 
 ///_____
-const char* ssid = "Redmi Note 7";     //"SFR_DDA8";                   // // 
-const char* password = "dallez94";      //"3vsk72pjpz5fkd69umkz";  // 
-const char* mqttServer = "192.168.43.222";       //"broker.hivemq.com";//IPAddress my_IPAddress(192,168,43,222);
+const char* ssid = "Domotique";     //"SFR_DDA8";                   // // 
+const char* password = "Domotique";      //"3vsk72pjpz5fkd69umkz";  // 
+const char* mqttServer = "192.168.223.222";       //"broker.hivemq.com";//IPAddress my_IPAddress(192,168,43,222);
 const int mqttPort = 1883;
 const char* mqttUser = "module_lumi01";
 const char* mqttPassword = "";
@@ -196,9 +196,9 @@ void loop() {
     break;
 
   case 1:
-    GestionIHM(intensiteLum);
+    GestionIHM(intensiteLum*100/500);
    // mqttClient.publish("esp/test", "Hello from ESP32");
-    mqtt_publish_float("home/living_room/sensor_luminosite/luminosite",intensiteLum);
+    mqtt_publish_float("home/living_room/sensor_luminosity/luminosity",intensiteLum*100/500);
     
     if (pwmFreq!=0.1){
       pwmFreq =0.1;
