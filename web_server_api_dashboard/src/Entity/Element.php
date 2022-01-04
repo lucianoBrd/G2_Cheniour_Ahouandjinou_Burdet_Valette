@@ -97,14 +97,12 @@ class Element
 
     /**
      * @ORM\OneToOne(targetEntity=Action::class, orphanRemoval=true)
-     * @ORM\JoinColumn(onDelete="CASCADE")
      * @Groups({"element", "home:read"})
      */
     private $action = null;
 
     /**
      * @ORM\OneToOne(targetEntity=Value::class, orphanRemoval=true)
-     * @ORM\JoinColumn(onDelete="CASCADE")
      * @Groups({"element", "home:read"})
      */
     private $elementValue = null;
