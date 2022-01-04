@@ -101,32 +101,38 @@
                                     typeLabel = type;
 
                                     var actionForm = '<form class="pure-form pure-form-stacked"><fieldset>';
+                                    var actionLabel = '<ul>';
                                     if (element.hasOwnProperty('action') && element.action !== 'undefined' && element.action !== null && element.action.hasOwnProperty('value') && element.action.hasOwnProperty('state') && element.action.value !== 'undefined' && element.action.state !== 'undefined') {
                                         action = element.action.value;
                                         state = element.action.state;
                                     }
 
                                     if ((type === 'sensor' || type === 'actuator') && state !== null) {
-                                        actionForm += '<label for="' + room.id + '-' + element.id + '">Etat: ' + (state ? 'Done' : 'DOING') + '</label>';
+                                        actionLabel += '<li>Etat: ' + (state ? 'Done' : 'DOING') + '</li>';
+                                    } else {
+                                        actionLabel += '<li>Etat: NA</li>';
                                     }
 
                                     var found = false;
                                     if (type === 'sensor') {
                                         found = true;
-                                        actionForm += '<input class="input_change_action" id="' + room.id + '-' + element.id + '" data-element="' + element.label + '" type="number" ' + (action ? ('value="' + action + '">') : '>');
+                                        actionForm += '<input class="input_change_action" id="' + room.id + '-' + element.id + '" data-element="' + element.label + '" type="number" >';
                                     } else if (type === 'actuator') {
                                         found = true;
-                                        actionForm += '<select class="input_change_action" id="' + room.id + '-' + element.id + '" data-element="' + element.label + '"><option value="">Choisir</option><option ' + ((action && action === 'ON') ? 'selected' : '') + ' value="ON">ON</option><option ' + ((action && action === 'OFF') ? 'selected' : '') + ' value="OFF">OFF</option></select>';
+                                        actionForm += '<select class="input_change_action" id="' + room.id + '-' + element.id + '" data-element="' + element.label + '"><option value="">Choisir</option><option value="ON">ON</option><option value="OFF">OFF</option></select>';
                                     }
+
+                                    actionLabel += '<li>Value: ' + (action ? action : 'NA') + '</li>';
 
                                     if (found) {
                                         actionForm += '<button data-input="' + room.id + '-' + element.id + '" class="button_change_action pure-button pure-button-primary" type="button" class="btn btn-primary">Valider</button>';
                                     }
 
                                     actionForm += '</fieldset></form>';
+                                    actionLabel += '</ul>';
                                 }
 
-                                elements += '<table class="pure-table pure-table-bordered"><thead><tr><th>Etat Actuel</th><th>Value</th><th>Type</th><th>Action</th></tr></thead><tbody><tr><td class="element-state-' + element.id + '">' + stateLabel + '</td><td class="element-value-' + element.id + '">' + value + '</td><td class="element-type-' + element.id + '">' + typeLabel + '</td><td>' + actionForm + '</td></tr></tbody></table>';
+                                elements += '<table class="pure-table pure-table-bordered"><thead><tr><th>Etat Actuel</th><th>Value</th><th>Type</th><th>Action</th><th>#</th></tr></thead><tbody><tr><td class="element-state-' + element.id + '">' + stateLabel + '</td><td class="element-value-' + element.id + '">' + value + '</td><td class="element-type-' + element.id + '">' + typeLabel + '</td><td class="element-action-' + element.id + '">' + actionLabel + '</td><td>' + actionForm + '</td></tr></tbody></table>';
 
                                 elements += '</div>';
 
@@ -139,6 +145,7 @@
                                     $('.element-state-' + element.id).html(stateLabel);
                                     $('.element-value-' + element.id).html(value);
                                     $('.element-type-' + element.id).html(typeLabel);
+                                    $('.element-action-' + element.id).html(actionLabel);
                                 }
                             });
                             elementsContainer += '</div>';
