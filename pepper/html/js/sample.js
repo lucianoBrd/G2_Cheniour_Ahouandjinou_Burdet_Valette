@@ -126,7 +126,7 @@
                                     actionForm += '</fieldset></form>';
                                 }
 
-                                elements += '<table class="pure-table pure-table-bordered"><thead><tr><th>Etat Actuel</th><th>Value</th><th>Type</th><th>Action</th></tr></thead><tbody><tr><td class="element-state' + element.id + '">' + stateLabel + '</td><td class="element-value' + element.id + '">' + value + '</td><td class="element-type' + element.id + '">' + typeLabel + '</td><td>' + actionForm + '</td></tr></tbody></table>';
+                                elements += '<table class="pure-table pure-table-bordered"><thead><tr><th>Etat Actuel</th><th>Value</th><th>Type</th><th>Action</th></tr></thead><tbody><tr><td class="element-state-' + element.id + '">' + stateLabel + '</td><td class="element-value-' + element.id + '">' + value + '</td><td class="element-type-' + element.id + '">' + typeLabel + '</td><td>' + actionForm + '</td></tr></tbody></table>';
 
                                 elements += '</div>';
 
