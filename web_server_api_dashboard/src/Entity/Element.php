@@ -96,13 +96,13 @@ class Element
     private $state;
 
     /**
-     * @ORM\OneToOne(targetEntity=Action::class, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity=Action::class)
      * @Groups({"element", "home:read"})
      */
     private $action = null;
 
     /**
-     * @ORM\OneToOne(targetEntity=Value::class, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity=Value::class)
      * @Groups({"element", "home:read"})
      */
     private $elementValue = null;
