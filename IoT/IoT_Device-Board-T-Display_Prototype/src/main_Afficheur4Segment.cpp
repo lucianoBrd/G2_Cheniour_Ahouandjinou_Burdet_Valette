@@ -4,49 +4,52 @@
 #include <PubSubClient.h>
 #include <Wire.h>
 #include <SPI.h>
+#include <BluetoothSerial.h>
 
 #define CONNECTION_TIMEOUT 10
 // Pins utilisés sur la carte
-#define pinDigitA0 33   // selection digit ( A0A1 : 00 --> Digit1, 10 --> Digit2, 01 --> Digit3, 11 --> Digit4 ) 
+#define pinDigitA0 33           // selection digit ( A0A1 : 00 --> Digit1, 10 --> Digit2, 01 --> Digit3, 11 --> Digit4 ) 
 #define pinDigitA1 32
 
-#define pinSegmentA 27     // segment à allumer, actif à l'état haut
-#define pinSegmentB 15  //36
-#define pinSegmentC 2   //37
+#define pinSegmentA 27          // segment à allumer, actif à l'état haut
+#define pinSegmentB 15  
+#define pinSegmentC 2   
 #define pinSegmentD 12
 #define pinSegmentE 13
-#define pinSegmentF 26// 26
+#define pinSegmentF 26
 #define pinSegmentG 25 
 
-#define pinBtnIncrementerChiffre 37               // bouton permettant d'incrementer la valeur d'un digit (7 segment)
+#define pinBtnIncrementerChiffre 37              // bouton permettant d'incrementer la valeur d'un digit (7 segment)
 #define pinBtnDigitSuivant 38                    // bouton permettant de passer au digit suivant
 #define pinBtnValiderMdp 39                      // bouton permettant de valider le mdp
+
+
 ///_____
-const char* ssid = "Domotique";               // identifiant réseau           //"SFR_DDA8"; // 
-const char* password = "Domotique";               // mot de passe réseau        
-const char* mqttServer = "192.168.12.222";       // addresse IP du brooker Mqtt
+const char *ssid = "Redmi Note 7";                  //"SFR_DDA8"; //"Domotique";// identifiant réseau//"SFR_DDA8";
+const char *password = "dallez94";              //"3vsk72pjpz5fkd69umkz";   // mot de passe réseau
+const char* mqttServer = "192.168.43.222";      // addresse IP du brooker Mqtt
 const int mqttPort = 1883;                       // port de connection mqtt
 const char* mqttUser = "";
 const char* mqttPassword = "";
 const char* idCapteur = "Digicode";              // identifiant du module 
-const int mdpPorte = 2468;
+const int mdpPorte = 2468;                       // mot de passe de la porte
 
-int etat = -1;                                   // variable representant l'etat du capteur
-int digitActuel = 1;                             // on demarre positionné sur le digit 1
-int valeur7segment[] = {1,2,3,4};
+int etat = -1;                                   // variable representant l'etat du capteur : (-1) --> Wifi deconnecté 
+int digitActuel = 1;                             // variable correspondant au digit à allumer, on demarre positionné sur le digit 1
+int valeur7segment[] = {1,2,3,4};                // valeur affiché sur le 7Segment
 
 char* etatWifi = "";                             // paramètre permettant de récuperer l'état de connection Wifi
 char* etatMqtt = "";                             // paramètre permettant de récuperer l'état de connection MQTT
 
 ///____ Appel classes
-TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup_Select.h
+TFT_eSPI tft = TFT_eSPI();                       // Invoke library, pins defined in User_Setup_Select.h
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
+BluetoothSerial SerialBT;
 ///____
 //Demarre l'ecran 
 void initScreen()
 {
-  // tft.init();
   tft.begin();
   tft.setRotation(0);
   tft.setTextSize(2);
@@ -61,7 +64,7 @@ void initScreen()
   sleep(1);
 }
 
-void GestionIHM(){
+void GestionIHM(char* info){
   tft.fillScreen(TFT_WHITE);
   tft.setCursor(15, 20);
   tft.println(idCapteur);           //mqttClient.state());
@@ -70,9 +73,7 @@ void GestionIHM(){
 
 
   tft.setCursor(5, 100);
-  tft.println("Tem : ");
-  tft.setCursor(70, 100);
-  tft.println("");
+  tft.println(info);
 
   tft.setCursor(5, 190);
   tft.println("WiFi : ");
@@ -126,9 +127,7 @@ void mqttCallback(char* valeur, uint8_t* var, unsigned int nb){
 
 }
 
-void initMqtt(){
- // while (WiFi.status() != WL_CONNECTED){}
-  
+void initMqtt(){ 
   mqttClient.setServer(mqttServer, mqttPort);
   while (!mqttClient.connected()) {
       
@@ -139,17 +138,18 @@ void initMqtt(){
       delay(2000);
       }
     mqttClient.setCallback(mqttCallback);
-    GestionIHM();
+    GestionIHM("");
     }
     mqttClient.loop(); 
   
 }
-
+/*
 void gestionBouton(){
   // la pin 4 correspond à la backlight
   if (digitalRead(4)!=LOW){digitalWrite(4,LOW);}
   else{digitalWrite(4,HIGH);} 
 }
+*/
 
 //Fonction pour publier un float sur un topic 
 void mqtt_publish_float(String topic, float t){
@@ -167,7 +167,6 @@ void selectDigit (int digit){
   case 1:
         digitalWrite(pinDigitA0,LOW);
         digitalWrite(pinDigitA1,LOW);
-
          break;
   case 2:
         digitalWrite(pinDigitA0,HIGH);
@@ -309,12 +308,50 @@ void chiffre(int chiffre){
 void verificationMdp(){
 
         if ((1000*valeur7segment[0]+100*valeur7segment[1]+10*valeur7segment[2]+valeur7segment[3])==mdpPorte){
+              
+              valeur7segment[0] = 0;
+              valeur7segment[1] = 0;
+              valeur7segment[2] = 0;
+              valeur7segment[3] = 0;
+              for(int i=0;i<10;i++){
+              chiffre(-1);
+              digitalWrite(pinDigitA0, HIGH);       // digit 2
+              digitalWrite(pinDigitA1, LOW);
+              delayMicroseconds(1);
+              chiffre(0);
+              delay(6);
+
+              chiffre(-1);
+              digitalWrite(pinDigitA1, HIGH);           // digit 3
+              digitalWrite(pinDigitA0, LOW);
+              delayMicroseconds(1);
+              digitalWrite(pinSegmentA, LOW);
+              digitalWrite(pinSegmentB, HIGH);
+              digitalWrite(pinSegmentC, HIGH);
+              digitalWrite(pinSegmentD, LOW);
+              digitalWrite(pinSegmentE, HIGH);
+              digitalWrite(pinSegmentF, HIGH);
+              digitalWrite(pinSegmentG, HIGH);
+              delay(6);
+              }
               //  mqttClient.publish("home/living_room/actuator_entry_door/state", "1");
+        }else{
                 valeur7segment[0] = 0;
                 valeur7segment[1] = 0;
                 valeur7segment[2] = 0;
                 valeur7segment[3] = 0;
-                Serial.println("bon");
+                chiffre(-1);
+                delay(1000);
+                chiffre(10);
+                delay(1000);
+                chiffre(-1);
+                delay(1000);
+                chiffre(10);
+                delay(1000);
+                chiffre(-1);
+                delay(1000);
+                chiffre(10);
+                delay(1000);
         }
       
 }
@@ -382,9 +419,10 @@ void setup() {
   Serial.begin(115200);
   delay(1000);
   initScreen();
-  GestionIHM();
+  GestionIHM("");
   initWifiConnection();
   init7Segment();
+
 
  }
 
@@ -395,6 +433,7 @@ void loop() {
   if (WiFi.status() != WL_CONNECTED){etatWifi = "KO";}
   else{etatWifi = "OK";}
 
+  
   switch (etat)
   {
     case 0:               // si état=0, client mqtt est déconnecté
@@ -402,7 +441,7 @@ void loop() {
       if (WiFi.status() != WL_CONNECTED){         // Contrôle status connection Wifi, reconnection si déconnecté
         WiFi.reconnect();
       }
-      GestionIHM();
+      GestionIHM("");
       initMqtt();                                 // tentative de (re)connection du client mqtt au brooker
 
     break;
@@ -410,9 +449,9 @@ void loop() {
   case 1:
    // mqttClient.publish("esp/test", idCapteur);
    // GestionIHM();
-   chiffre(-1);
+   
    digitalWrite(pinDigitA1, LOW);
-   digitalWrite(pinDigitA0, LOW);
+   digitalWrite(pinDigitA0, LOW);chiffre(-1);
    delayMicroseconds(1);
    chiffre(valeur7segment[0]);
    delay(6);
@@ -438,16 +477,7 @@ void loop() {
    delayMicroseconds(1);
    chiffre(valeur7segment[3]);
    delay(6);
-
-//    tft.fillScreen(TFT_WHITE);
-//    tft.setCursor(40, 40);
-//    tft.println(valeur7segment[0]);
-//    tft.setCursor(50, 40);
-//    tft.println(valeur7segment[1]);
-//    tft.setCursor(60, 40);
-//    tft.println(valeur7segment[2]);
-//    tft.setCursor(70, 40);
-//    tft.println(valeur7segment[3]);
+   //chiffre(-1);
 
    // delay(5000);
    break;
