@@ -22,6 +22,7 @@
         <File name="service" src="scripts/service.py" />
         <File name="rire" src="sound/rire.ogg" />
         <File name="api" src="scripts/api.pyc" />
+        <File name="default" src="html/css/default.css" />
     </Resources>
     <Topics>
         <Topic name="stop_frf" src="stop/stop_frf.top" topicName="stop" language="fr_FR" />

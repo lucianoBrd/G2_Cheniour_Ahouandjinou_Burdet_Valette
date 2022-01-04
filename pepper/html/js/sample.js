@@ -7,21 +7,23 @@
         ALMemory.subscriber("JsonHomeList").done(function (subscriber) {
 
             subscriber.signal.connect(function (data) {
-                var html = '<h1>Choix du home</h1>';
+                var html = '';
                 const homes = jQuery.parseJSON(data);
 
                 src = null;
 
+                html += '<div class="splash">';
                 $.each(homes, function (key, home) {
-                    html += '<hr><div>';
                     if (home.hasOwnProperty('label') && home.hasOwnProperty('id') && home.label !== 'undefined' && home.id !== 'undefined') {
-                        html += '<button class="btn_choice_home" type="button" data-id="' + home.id + '">' + home.label + '</button>';
+                        html += '<h1 class="splash-head btn_choice_home" data-id="' + home.id + '">' + home.label + '</h1>';
                     }
-                    html += '</div><hr>';
                 });
+                html += '</div>';
 
-                $('.home').html('');
-                $('.choice_home').html(html);
+                $('.pure-menu-heading').html('Choix du home');
+                $('.pure-menu-list').html('');
+                $('.splash-container').html(html);
+                $('.content-wrapper').html('');
             });
         });
 
@@ -29,6 +31,7 @@
 
             subscriber.signal.connect(function (data) {
                 var html = '';
+                var title = 'Home: NA';
                 const home = jQuery.parseJSON(data);
 
                 if (home.hasOwnProperty('cameraip') && home.cameraip !== 'undefined' && home.cameraip !== null) {
@@ -38,28 +41,41 @@
                 }
 
                 if (home.hasOwnProperty('label') && home.label !== 'undefined') {
-                    html += '<h1>Home: ' + home.label + '</h1>';
+                    title = 'Home: ' + home.label;
                 }
 
                 if (home.hasOwnProperty('rooms') && home.rooms !== 'undefined') {
-                    html += '<div><h2>Liste des Rooms</h2><div>';
 
-                    var rooms = '';
                     $.each(home.rooms, function (key, room) {
-                        rooms += '<hr><div>';
-                        if (room.hasOwnProperty('label') && room.label !== 'undefined') {
-                            rooms += '<p>Room: ' + room.label + '</p>';
+                        var issetRoom = false;
+                        if ($('.room-' + room.id)[0]) {
+                            issetRoom = true;
                         }
 
-                        var elements = '<h3>Liste des elements</h3>';
+                        var rooms = '<div class="content room-' + room.id + '">';
+
+                        if (room.hasOwnProperty('label') && room.label !== 'undefined') {
+                            rooms += '<h2 class="content-head is-center room-label-' + room.id + '">Room: ' + room.label + '</h2>';
+                        }
+
                         if (room.hasOwnProperty('elements') && room.elements !== 'undefined') {
-                            elements += '<ul>';
+                            var elementsContainer = '<div class="pure-g room-elements-' + room.id + '">';
+
                             $.each(room.elements, function (key, element) {
-                                elements += '<li>';
-                                if (element.hasOwnProperty('label') && element.label !== 'undefined') {
-                                    elements += '<p>Element: ' + element.label + '</p>';
+                                var issetElement = false;
+                                if ($('.element-' + element.id)[0]) {
+                                    issetElement = true;
                                 }
-                                elements += '<p>Etat Actuel: ' + (element.state ? 'ON' : 'OFF') + '</p>';
+
+                                var elements = '<div class="l-box pure-u-1-2 pure-u-md-1-2 pure-u-lg-1-4 element-' + element.id + '">';
+                                if (element.hasOwnProperty('label') && element.label !== 'undefined') {
+                                    elements += '<h4 class="element-label-' + element.id + '">Element: ' + element.label + '</h4>';
+                                }
+
+                                var stateLabel = (element.state ? 'ON' : 'OFF');
+                                var value = 'NA';
+                                var typeLabel = 'NA';
+
                                 if (element.hasOwnProperty('elementValue') && element.elementValue !== 'undefined' && element.elementValue !== null && element.elementValue.hasOwnProperty('value') && element.elementValue.hasOwnProperty('datetime') && element.elementValue.value !== 'undefined' && element.elementValue.datetime !== 'undefined') {
                                     var dateTime = element.elementValue.datetime;
 
@@ -74,58 +90,93 @@
                                         dateTime = date + ' à ' + time;
                                     } catch (error) { }
 
-                                    elements += '<p>Value: ' + element.elementValue.value + ' le ' + dateTime + '</p>';
+                                    value = element.elementValue.value + ' le ' + dateTime;
                                 }
+
                                 if (element.hasOwnProperty('type') && element.hasOwnProperty('label') && element.type !== 'undefined' && element.type.label !== null && element.label !== 'undefined') {
                                     var type = element.type.label;
                                     var action = null;
                                     var state = null;
 
-                                    elements += '<p>Type: ' + type + '</p>';
+                                    typeLabel = type;
 
-                                    elements += '<div>Action: ';
+                                    var actionForm = '<form class="pure-form pure-form-stacked"><fieldset>';
+                                    var actionLabel = '<ul>';
                                     if (element.hasOwnProperty('action') && element.action !== 'undefined' && element.action !== null && element.action.hasOwnProperty('value') && element.action.hasOwnProperty('state') && element.action.value !== 'undefined' && element.action.state !== 'undefined') {
                                         action = element.action.value;
                                         state = element.action.state;
                                     }
 
                                     if ((type === 'sensor' || type === 'actuator') && state !== null) {
-                                        elements += '<label for="' + room.id + '-' + element.id + '">Etat: ' + (state ? 'Done' : 'DOING') + '</label>';
+                                        actionLabel += '<li>Etat: ' + (state ? 'Done' : 'DOING') + '</li>';
+                                    } else {
+                                        actionLabel += '<li>Etat: NA</li>';
                                     }
 
                                     var found = false;
                                     if (type === 'sensor') {
                                         found = true;
-                                        elements += '<input class="input_change_action" id="' + room.id + '-' + element.id + '" data-element="' + element.label + '" type="number" ' + (action ? ('value="' + action + '">') : '>');
+                                        actionForm += '<input class="input_change_action" id="' + room.id + '-' + element.id + '" data-element="' + element.label + '" type="number" >';
                                     } else if (type === 'actuator') {
                                         found = true;
-                                        elements += '<select class="input_change_action" id="' + room.id + '-' + element.id + '" data-element="' + element.label + '"><option value="">Choisir</option><option ' + ((action && action === 'ON') ? 'selected' : '') + ' value="ON">ON</option><option ' + ((action && action === 'OFF') ? 'selected' : '') + ' value="OFF">OFF</option></select>';
+                                        actionForm += '<select class="input_change_action" id="' + room.id + '-' + element.id + '" data-element="' + element.label + '"><option value="">Choisir</option><option value="ON">ON</option><option value="OFF">OFF</option></select>';
                                     }
+
+                                    actionLabel += '<li>Value: ' + (action ? action : 'NA') + '</li>';
 
                                     if (found) {
-                                        elements += '<button data-input="' + room.id + '-' + element.id + '" class="button_change_action" type="button" class="btn btn-primary">Valider</button>';
+                                        actionForm += '<button data-input="' + room.id + '-' + element.id + '" class="button_change_action pure-button pure-button-primary" type="button" class="btn btn-primary">Valider</button>';
                                     }
 
-                                    elements += '</div>';
+                                    actionForm += '</fieldset></form>';
+                                    actionLabel += '</ul>';
                                 }
 
-                                elements += '</li>';
+                                elements += '<table class="pure-table pure-table-bordered"><thead><tr><th>Etat Actuel</th><th>Value</th><th>Type</th><th>Action</th><th>#</th></tr></thead><tbody><tr><td class="element-state-' + element.id + '">' + stateLabel + '</td><td class="element-value-' + element.id + '">' + value + '</td><td class="element-type-' + element.id + '">' + typeLabel + '</td><td class="element-action-' + element.id + '">' + actionLabel + '</td><td>' + actionForm + '</td></tr></tbody></table>';
+
+                                elements += '</div>';
+
+                                elementsContainer += elements;
+
+                                if (!issetElement) {
+                                    $('.room-elements-' + room.id).append(elements);
+                                } else {
+                                    $('.element-label-' + element.id).html('Element: ' + element.label);
+                                    $('.element-state-' + element.id).html(stateLabel);
+                                    $('.element-value-' + element.id).html(value);
+                                    $('.element-type-' + element.id).html(typeLabel);
+                                    $('.element-action-' + element.id).html(actionLabel);
+                                }
                             });
-                            elements += '</ul>';
+                            elementsContainer += '</div>';
                         }
 
-                        rooms += elements;
+                        rooms += elementsContainer;
 
-                        rooms += '</div><hr>';
+                        rooms += '</div>';
+
+                        html += rooms;
+
+                        if (!issetRoom) {
+                            $('.content-wrapper').append(rooms);
+                        } else {
+                            $('.room-label-' + room.id).html('Room: ' + room.label);
+                        }
                     });
 
-                    html += rooms;
-
-                    html += '</div></div>';
                 }
 
-                $('.home').html(html);
-                $('.choice_home').html('<button class="btn_reset_home" type="button"">Choisir un autre home</button><small>(ou dire reset)</small>');
+                $('.pure-menu-heading').html(title);
+
+                if (!$('.pure-menu-item')[0]) {
+                    $('.pure-menu-list').html('<li class="pure-menu-item"><a href="#" class="pure-menu-link btn_reset_home">Reset</a></li><li class="pure-menu-item">(ou dire reset)</li>');
+                }
+                if (!$('.iframe_camera_home')[0]) {
+                    $('.splash-container').html('<div class="splash"><p><iframe class="iframe_camera_home pure-img" src="" style="width: 100%;height: 500px;"></iframe></p></div>');
+                }
+                if (!$('.content')[0]) {
+                    $('.content-wrapper').html(html);
+                }
             });
         });
 
@@ -166,12 +217,12 @@
         src = null;
     });
 
-    var intervalId = window.setInterval(function(){
+    var intervalId = window.setInterval(function () {
         if (src !== null) {
-            $( '.iframe_camera_home' ).show();
-            $( '.iframe_camera_home' ).attr( 'src', function ( i, val ) { return src; });
+            $('.iframe_camera_home').show();
+            $('.iframe_camera_home').attr('src', function (i, val) { return src; });
         } else {
-            $( '.iframe_camera_home' ).hide();
+            $('.iframe_camera_home').hide();
         }
     }, 150);
 
