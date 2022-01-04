@@ -1,4 +1,4 @@
 topic: ~reset_home()
 language: frf
 
-u:([Reset e:ResetHome]) $IdHome=-1 Reset du home. $onStopped=1
+u:(["Reset" e:ResetHome]) $IdHome=-1 Reset du home. $onStopped=1

@@ -33,6 +33,19 @@ class APIModule:
 
         return 'Inconnu'
 
+    def get_temperature(self):
+        element = {}
+
+        try:
+            element = self.api.get_element_by_name(config("SENSOR_TEMPERATURE_LIVING_ROOM"))
+        except:
+            pass
+
+        if "value" in element :
+            return element["value"]
+
+        return 'Inconnu'
+
     def get_home_by_id(self, home_id):
         home = {}
         try:

@@ -1,0 +1,5 @@
+topic: ~get_temperature()
+language: frf
+
+
+u:(["température"]) $onStopped=1
