@@ -163,11 +163,7 @@ class Api:
 
         :returns: str -- The name of the active mode
         """
-        modes_list = self.get_modes()
-
-        for mode in modes_list:
-            if mode["state"] == "active":
-                return mode["label"]
+        return requests.get(self.url + "/get/mode/active", headers = self.header).json()
 
     def get_elements(self):
         """

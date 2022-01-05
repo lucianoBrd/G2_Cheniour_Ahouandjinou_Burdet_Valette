@@ -12,6 +12,7 @@ TOPIC_DICT = {}
 home = Home()
 PASSWORD_MEMORY = ''
 MODE = "normal"
+mode_lum_dict = {"OFF" : 0, "ON" : 1, "ROUGE" : 2, "VERT" : 3, "JAUNE": 4, "FETE" : 5, "ALARME" : 6}
 
 def on_message(client, userdata, message):
     
@@ -52,7 +53,7 @@ def init_my_home(mqtt_client, api_obj):
     actuator_entry_door_living_room = Element('actuator_entry_door_living_room', 'actuator', {"state": "OPEN"}) #state OPEN or CLOSE
     actuator_shutter_living_room = Element('actuator_shutter_living_room', 'actuator', {"state": "OPEN"}) #state OPEN or CLOSE
     actuator_heating_living_room = Element('actuator_heating_living_room', 'actuator', {"state": "OFF"}) #state OFF or ON
-    actuator_lum_living_room = Element('actuator_lum_living_room', 'actuator', {"state": "OFF"}) #state OFF or ON
+    actuator_lum_living_room = Element('actuator_lum_living_room', 'actuator', {"state": mode_lum_dict["OFF"],}) #state OFF or ON
 
 
     living_room_elements_list = [sensor_temperature_living_room, sensor_humidity_living_room, sensor_luminosity_living_room, sensor_entry_door_authentification_face_living_room, actuator_vmc_living_room,
@@ -163,6 +164,8 @@ if __name__ == "__main__":
         luminosity_living_room = float(sensor_luminosity.data['luminosity'])
         web_api.create_value(humidity_living_room, sensor_humidity.name)
 
+        MODE = web_api.get_active_mode()["label"]
+        print(MODE)
         #uniquement en mode manuel ??
         unresolved_actions = check_and_format_actions_api(web_api)
         if unresolved_actions != None:
@@ -275,6 +278,7 @@ if __name__ == "__main__":
 
         if MODE == "absent":
 
+            print(colored.red("Activation du mode \"Absent\""))
             if lum_living_room.data['state'] != "OFF" :
                 web_api.create_action("OFF", lum_living_room.name)
             
@@ -288,8 +292,8 @@ if __name__ == "__main__":
                 web_api.create_action("OFF", entry_door.name)
 
         
-        if MODE == "absent":
-            print("")
-            pass
+        if MODE == "chill":
+            print(colored.red("Activation du mode \"Chill\""))
+
         
 
