@@ -280,7 +280,7 @@ if __name__ == "__main__":
         # envoi du new password s'il est modifié en BDD: 
         #PASSWORD_MAMORY = check_password_change(web_api, PASSWORD_MEMORY)
 
-        if MODE == "absent":
+        if MODE == "ABSENT":
 
             if lum_living_room.data['state'] != "OFF" :
                 web_api.create_action("OFF", lum_living_room.name)
