@@ -35,13 +35,14 @@
                 src = null;
 
                 html += '<div class="splash">';
+                html += '<form class="pure-form pure-form-stacked"><fieldset><label for="password">Mot de passe</label><input id="password" class="input_password" type="text"></fieldset></form>';
                 html += '<h1 class="splash-head btn_goto_normal_mode">Retour mode normal</h1>';
                 html += '</div>';
 
                 $('.pure-menu-heading').html('Mode absence');
                 $('.pure-menu-list').html('');
                 $('.splash-container').html(html);
-                $('.content-wrapper').html('<div class="content><div class="pure-g><form class="pure-form pure-form-stacked"><fieldset><label for="password">Mot de passe</label><input id="password" class="input_password" type="text"></fieldset></form></div></div>');
+                $('.content-wrapper').html('');
             });
         });
 
@@ -192,11 +193,11 @@
 
                 $('.pure-menu-heading').html(title);
 
-                if (!$('.pure-menu-item')[0]) {
-                    $('.pure-menu-list').html('<li class="pure-menu-item"><a href="#" class="pure-menu-link btn_reset_home">Reset</a></li><li class="pure-menu-item">(ou dire reset)</li>');
+                if (!$('.btn_reset_home')[0]) {
+                    $('.pure-menu-list').html('<li class="pure-menu-item"><a href="#" class="pure-menu-link btn_reset_home">Reset</a></li>');
                 }
                 if (!$('.iframe_camera_home')[0]) {
-                    $('.splash-container').html('<div class="splash"><p><iframe class="iframe_camera_home pure-img" src="" style="width: 100%;height: 200px;"></iframe></p><p class="splash-subhead">température climat temps "quelle temps fait-il"</p><p class="splash-subhead">humidité fraîcheur hygrométrie "quelle humidité fait-il"</p><p><a href="#" class="pure-button pure-button-primary btn_mode_absence">Mode absence</a></p></div>');
+                    $('.splash-container').html('<div class="splash"><p><iframe class="iframe_camera_home pure-img" src="" style="width: 100%;height: 200px;"></iframe></p><p class="splash-subhead">Reset</p><p class="splash-subhead">"Mode absence"</p><p class="splash-subhead">température climat temps "quelle temps fait-il"</p><p class="splash-subhead">humidité fraîcheur hygrométrie "quelle humidité fait-il"</p><p><a href="#" class="pure-button pure-button-primary btn_mode_absence">Mode absence</a></p></div>');
                 }
                 if (!$('.content')[0]) {
                     $('.content-wrapper').html(html);
