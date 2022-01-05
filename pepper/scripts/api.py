@@ -1,7 +1,7 @@
 import requests
 import json
 
-class API:
+class Api:
     """
     API class
     """
@@ -148,6 +148,22 @@ class API:
             id = None
 
         return id
+
+    def get_modes(self):
+        """
+        Get all modes
+
+        :returns: json -- The json of all modes data
+        """
+        return requests.get(self.url + "/modes", headers = self.header).json()
+    
+    def get_active_mode(self):
+        """
+        Get the active mode
+
+        :returns: str -- The name of the active mode
+        """
+        return requests.get(self.url + "/get/mode/active", headers = self.header).json()
 
     def get_elements(self):
         """
@@ -359,7 +375,12 @@ class API:
 
         :returns: json -- The json of the actions data
         """
-        return requests.get(self.url + "/actions/unresolved/" + element_name, headers = self.header).json()
+        request = requests.get(self.url + "/actions/unresolved/" + element_name, headers = self.header).json()
+        
+        if type(request) == list:
+            return request
+        else:
+            return []
     
     def get_unresolved_actions(self):
         """
@@ -367,7 +388,12 @@ class API:
 
         :returns: json -- The json of the actions data
         """
-        return requests.get(self.url + "/actions/get/unresolved", headers = self.header).json()
+        request = requests.get(self.url + "/actions/get/unresolved", headers = self.header).json()
+
+        if type(request) == list:
+            return request
+        else:
+            return []
 
     def get_last_action_by_element_name(self, element_name = ''):
         """
@@ -430,12 +456,36 @@ class API:
 
         return request.status_code
 
+    def create_mode(self, mode_name = ''):
+        """
+        Create a mode
+
+        :param element_name: The name of the mode
+        :type element_name: str
+
+        :returns: int -- The status code of the request post
+        """
+
+        payload = json.dumps({
+        "label": mode_name,
+            })
+        
+        request = requests.post(self.url + "/moedes", data=payload, headers = self.header)
+
+        return request.status_code
+
     def create_element(self, element_name = '', parent_room_name = '', type_name = ''):
         """
         Create an element
 
         :param element_name: The name of the element
         :type element_name: str
+
+        :param parent_room_name: The name of the room parent
+        :type parent_room_name: str
+
+        :param type_name: The type of the element
+        :type type_name: str
 
         :returns: int -- The status code of the request post
         """
@@ -512,7 +562,7 @@ class API:
         })
         
         request = requests.post(self.url + "/actions", data=payload, headers = self.header)
-
+        
         return request.status_code
     
     def update_home(self, home_id = 0, home_name = '', rooms_list = None):
@@ -590,7 +640,7 @@ class API:
 
         return request.status_code
 
-    def update_element(self, element_id = 0, element_name = '', parent_room_name = '', type_name = '', actions_id = None, values_id = None):
+    def update_element(self, element_id = 0, element_name = '', parent_room_name = '', type_name = '', actions_id = None, values_id = None, state = None):
         """
         Update an element
 
@@ -608,6 +658,9 @@ class API:
 
         :param values_id: The list of values
         :type values_id: list
+
+        :param state: The state of the element (for actuator)
+        :type state: bool
 
         :returns: int -- The status code of the request put
         """
@@ -627,7 +680,8 @@ class API:
             payload["actions"] = ["/api/actions/" + str(action) for action in actions_id]
         if values_id != None:
             payload["elementValues"] = ["/api/values/" + str(value) for value in values_id]
-        
+        if state != None:
+            payload["state"] = state
         payload = json.dumps(payload)
 
         request = requests.put(self.url + "/elements/" + str(element_id), data=payload, headers = self.header)
@@ -700,5 +754,5 @@ class API:
         payload = json.dumps(payload)
         
         request = requests.put(self.url + "/actions/" + str(action_id), data=payload, headers = self.header)
-
+        
         return request.status_code
