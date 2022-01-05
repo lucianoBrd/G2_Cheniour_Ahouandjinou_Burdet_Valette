@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
     session = new QiSession();
     var src = null;
+    var password = '1234';
 
     session.service("ALMemory").done(function (ALMemory) {
 
@@ -31,7 +32,6 @@
 
             subscriber.signal.connect(function (data) {
                 var html = '';
-
                 src = null;
 
                 html += '<div class="splash">';
@@ -56,6 +56,12 @@
                     src = 'http://' + home.cameraip + '/capture';
                 } else {
                     src = null;
+                }
+
+                if (home.hasOwnProperty('password') && home.password !== 'undefined' && home.password !== null) {
+                    password = home.password;
+                } else {
+                    password = '1234';
                 }
 
                 if (home.hasOwnProperty('label') && home.label !== 'undefined') {
@@ -243,9 +249,9 @@
     });
 
     $(document).on('click', '.btn_goto_normal_mode', function () {
-        var password = $('.input_password').val();
+        var pwd = $('.input_password').val();
 
-        if (password == '1234') {
+        if (pwd == password) {
             raise('GotoNormalMode', 1);
         }
     });
