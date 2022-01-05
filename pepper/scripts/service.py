@@ -10,7 +10,7 @@
 import qi
 import json
 from decouple import config
-from api import API
+from api import Api
 
 class APIModule:
     
@@ -111,6 +111,19 @@ class APIModule:
                 status_code = self.api.create_action(parameter["value"], parameter["elementName"])
             except:
                 pass
+
+        #print status_code
+
+        return status_code
+
+    def create_action_alarme(self):
+        parameter = json.loads(parameter)
+        status_code = 404
+
+        try:
+            status_code = self.api.create_action("ALARME", "actuator_lum_living_room")
+        except:
+            pass
 
         #print status_code
 
