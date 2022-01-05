@@ -35,12 +35,19 @@ class APIModule:
 
     def get_temperature(self):
         try:
-            element = self.api.get_element_by_name(config("SENSOR_TEMPERATURE_LIVING_ROOM"))
-            if "elementValue" in element :
-                value_iri = element["elementValue"]
-                value = self.api.get_value_by_iri(value_iri)
-                if "value" in value :
-                    return value["value"]
+            value = self.api.get_last_value_by_element_name(config("SENSOR_TEMPERATURE_LIVING_ROOM"))
+            if "value" in value :
+                return value["value"]
+        except:
+            pass
+
+        return 'Inconnu'
+
+    def get_humidity(self):
+        try:
+            value = self.api.get_last_value_by_element_name(config("SENSOR_HUMIDITY_LIVING_ROOM"))
+            if "value" in value :
+                return value["value"]
         except:
             pass
 

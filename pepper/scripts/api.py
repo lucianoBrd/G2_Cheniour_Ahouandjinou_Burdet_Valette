@@ -320,17 +320,6 @@ class API:
         """
         return requests.get(self.url + "/values/" + str(value_id), headers = self.header).json()
 
-    def get_value_by_iri(self, value_iri = ''):
-        """
-        Get one value with it IRI 
-
-        :param value_iri: The IRI of the value
-        :type value_iri: str
-
-        :returns: json -- The json of the value data
-        """
-        return requests.get(self.url_strict + str(value_iri), headers = self.header).json()
-
     def get_last_value_by_element_name(self, element_name = ''):
         """
         Get the last value of an element (by name element name) 
