@@ -26,9 +26,9 @@ class APIModule:
         try:
             home = self.api.get_home_by_id(home_id)
         except:
-            pass
+            home = {}
 
-        if "label" in home :
+        if home != None and "label" in home :
             return home["label"]
 
         return 'Inconnu'
@@ -39,9 +39,9 @@ class APIModule:
         try:
             mode = self.api.get_active_mode(home_name)
         except:
-            pass
+            mode = {}
 
-        if "label" in mode :
+        if mode != None and "label" in mode :
             return mode["label"]
 
         return 'Inconnu'
