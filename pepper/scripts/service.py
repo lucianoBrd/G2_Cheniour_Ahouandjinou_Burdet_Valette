@@ -49,7 +49,7 @@ class APIModule:
     def get_temperature(self):
         try:
             value = self.api.get_last_value_by_element_name(config("SENSOR_TEMPERATURE_LIVING_ROOM"))
-            if "value" in value :
+            if value != None and "value" in value :
                 return value["value"]
         except:
             pass
@@ -59,7 +59,7 @@ class APIModule:
     def get_humidity(self):
         try:
             value = self.api.get_last_value_by_element_name(config("SENSOR_HUMIDITY_LIVING_ROOM"))
-            if "value" in value :
+            if value != None and "value" in value :
                 return value["value"]
         except:
             pass
@@ -119,7 +119,7 @@ class APIModule:
         parameter = json.loads(parameter)
         status_code = 404
 
-        if "elementName" in parameter and "value" in parameter :
+        if parameter != None and "elementName" in parameter and "value" in parameter :
             try:
                 status_code = self.api.create_action(parameter["value"], parameter["elementName"])
             except:
@@ -158,7 +158,7 @@ class APIModule:
 
         try:
             mode = self.api.get_mode_by_name(home_name, mode_name)
-            if "id" in mode :
+            if mode != None and "id" in mode :
                 status_code = self.api.update_mode(mode["id"], state)
         except:
             pass
