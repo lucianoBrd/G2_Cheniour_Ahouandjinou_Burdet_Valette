@@ -149,6 +149,40 @@ class Api:
 
         return id
 
+    def get_modes(self):
+        """
+        Get all modes
+
+        :returns: json -- The json of all modes data
+        """
+        return requests.get(self.url + "/modes", headers = self.header).json()
+    
+    def get_mode_by_name(self, home_name = '', mode_name = ''):
+        """
+        Get one mode with it name 
+
+        :param home_name: The name of the home of the mode
+        :type home_name: str
+
+        :param mode_name: The name of the mode
+        :type mode_name: str
+
+        :returns: json -- The json of the mode data
+        """
+        return requests.get(self.url + "/mode/" + home_name + "/" + mode_name, headers = self.header).json()
+
+    def get_active_mode(self, home_name):
+        """
+        Get the active mode
+
+        :param home_name: The name of the home's mode
+        :type home_name: str
+
+        :returns: str -- The name of the active mode
+        """
+
+        return requests.get(self.url + "/get/mode/active/" + home_name, headers = self.header).json()
+
     def get_elements(self):
         """
         Get all elements
@@ -440,6 +474,30 @@ class Api:
 
         return request.status_code
 
+    def create_mode(self, mode_name = '', parent_home_name = ''):
+        """
+        Create a mode
+
+        :param element_name: The name of the mode
+        :type element_name: str
+
+        :param parent_home_name: The name of the parent home
+        :type parent_home_name: str
+
+        :returns: int -- The status code of the request post
+        """
+
+        parent_home_id = self.get_home_id_by_name(parent_home_name)
+
+        payload = json.dumps({
+        "home" : parent_home_id,
+        "label": mode_name,
+            })
+        
+        request = requests.post(self.url + "/moedes", data=payload, headers = self.header)
+
+        return request.status_code
+
     def create_element(self, element_name = '', parent_room_name = '', type_name = ''):
         """
         Create an element
@@ -720,5 +778,28 @@ class Api:
         payload = json.dumps(payload)
         
         request = requests.put(self.url + "/actions/" + str(action_id), data=payload, headers = self.header)
+        
+        return request.status_code
+    
+    def update_mode(self, mode_id = 0, state = False):
+        """
+        Update a mode
+
+        :param mode_id: The ID of the mode
+        :type mode_id: int
+
+        :param state: The state of the action
+        :type state: bool
+
+        :returns: int -- The status code of the request put
+        """
+
+        payload = {
+            "state": state
+        }
+
+        payload = json.dumps(payload)
+        
+        request = requests.put(self.url + "/modes/" + str(mode_id), data=payload, headers = self.header)
         
         return request.status_code

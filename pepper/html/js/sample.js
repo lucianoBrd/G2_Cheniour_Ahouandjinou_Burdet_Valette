@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
     session = new QiSession();
     var src = null;
+    var password = '1234';
 
     session.service("ALMemory").done(function (ALMemory) {
 
@@ -27,6 +28,24 @@
             });
         });
 
+        ALMemory.subscriber("AbsenceMode").done(function (subscriber) {
+
+            subscriber.signal.connect(function (data) {
+                var html = '';
+                src = null;
+
+                html += '<div class="splash">';
+                html += '<form class="pure-form pure-form-stacked"><fieldset><label for="password">Mot de passe</label><input id="password" class="input_password" type="text"></fieldset></form>';
+                html += '<h1 class="splash-head btn_goto_normal_mode">Retour mode normal</h1>';
+                html += '</div>';
+
+                $('.pure-menu-heading').html('Mode absence');
+                $('.pure-menu-list').html('');
+                $('.splash-container').html(html);
+                $('.content-wrapper').html('');
+            });
+        });
+
         ALMemory.subscriber("JsonHome").done(function (subscriber) {
 
             subscriber.signal.connect(function (data) {
@@ -38,6 +57,12 @@
                     src = 'http://' + home.cameraip + '/capture';
                 } else {
                     src = null;
+                }
+
+                if (home.hasOwnProperty('password') && home.password !== 'undefined' && home.password !== null) {
+                    password = home.password;
+                } else {
+                    password = '1234';
                 }
 
                 if (home.hasOwnProperty('label') && home.label !== 'undefined') {
@@ -168,11 +193,11 @@
 
                 $('.pure-menu-heading').html(title);
 
-                if (!$('.pure-menu-item')[0]) {
-                    $('.pure-menu-list').html('<li class="pure-menu-item"><a href="#" class="pure-menu-link btn_reset_home">Reset</a></li><li class="pure-menu-item">(ou dire reset)</li>');
+                if (!$('.btn_reset_home')[0]) {
+                    $('.pure-menu-list').html('<li class="pure-menu-item"><a href="#" class="pure-menu-link btn_reset_home">Reset</a></li>');
                 }
                 if (!$('.iframe_camera_home')[0]) {
-                    $('.splash-container').html('<div class="splash"><p><iframe class="iframe_camera_home pure-img" src="" style="width: 100%;height: 200px;"></iframe></p><p class="splash-subhead">température climat temps "quelle temps fait-il"</p><p class="splash-subhead">humidité fraîcheur hygrométrie "quelle humidité fait-il"</p></div>');
+                    $('.splash-container').html('<div class="splash"><p><iframe class="iframe_camera_home pure-img" src="" style="width: 100%;height: 200px;"></iframe></p><p class="splash-subhead">Reset</p><p class="splash-subhead">"Mode absence"</p><p class="splash-subhead">température climat temps "quelle temps fait-il"</p><p class="splash-subhead">humidité fraîcheur hygrométrie "quelle humidité fait-il"</p><p><a href="#" class="pure-button pure-button-primary btn_mode_absence">Mode absence</a></p></div>');
                 }
                 if (!$('.content')[0]) {
                     $('.content-wrapper').html(html);
@@ -209,12 +234,31 @@
 
         var parameter = '{"elementName": "' + element_name + '", "value": "' + value + '"}';
 
-        raise('CreateAction', parameter);
+        if (value && value != '') {
+            raise('CreateAction', parameter);
+        }
     });
-
+    
     $(document).on('click', '.btn_reset_home', function () {
         raise('ResetHome', 1);
         src = null;
+    });
+
+    $(document).on('click', '.btn_mode_absence', function () {
+        raise('GotoAbsenceMode', 1);
+        src = null;
+    });
+
+    $(document).on('click', '.btn_goto_normal_mode', function () {
+        var pwd = $('.input_password').val();
+
+        if (pwd == password) {
+            raise('GotoNormalMode', 1);
+        }
+    });
+
+    $(document).on('submit', 'form', function (e) {
+        e.preventDefault();
     });
 
     var intervalId = window.setInterval(function () {
