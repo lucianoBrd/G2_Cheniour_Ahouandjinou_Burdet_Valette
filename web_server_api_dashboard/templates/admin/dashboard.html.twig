@@ -35,8 +35,8 @@
             <div class="card-body">
                 <h4 class="card-title">Room: {{ room.label }}</h4>
                 <p class="card-text">Liste des elements</p>
-                {% for element in room.elements %}
                 <div class="row">
+                    {% for element in room.elements %}
                     <div class="card border-primary mb-3 col-6">
                         <div class="card-header">{{ element.label }}</div>
                         <div class="card-body">
@@ -103,8 +103,8 @@
                             {% endif %}
                         </div>
                     </div>
+                    {% endfor %}
                 </div>
-                {% endfor %}
             </div>
         </div>
         {% endfor %}
