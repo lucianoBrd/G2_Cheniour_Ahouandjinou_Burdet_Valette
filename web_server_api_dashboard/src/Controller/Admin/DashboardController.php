@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Home;
+use App\Entity\Mode;
 use App\Entity\Room;
 use App\Entity\Type;
 use App\Entity\Value;
@@ -145,6 +146,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Room', 'fa fa-person-booth', Room::class)->setController(RoomCrudController::class);
         yield MenuItem::linkToCrud('Type', 'fa fa-spell-check', Type::class);
         yield MenuItem::linkToCrud('Value', 'fa fa-sort-numeric-up-alt', Value::class);
+        yield MenuItem::linkToCrud('Mode', 'fa fa-microchip', Mode::class);
         yield MenuItem::linkToUrl('API', 'fa fa-road', '/api');
         yield MenuItem::linkToUrl('Doc', 'fa fa-file-alt', '/doc/index.html');
     }
