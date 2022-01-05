@@ -165,7 +165,7 @@ if __name__ == "__main__":
         web_api.create_value(humidity_living_room, sensor_humidity.name)
 
         MODE = web_api.get_active_mode()["label"]
-        print(MODE)
+
         #uniquement en mode manuel ??
         unresolved_actions = check_and_format_actions_api(web_api)
         if unresolved_actions != None:
@@ -278,7 +278,6 @@ if __name__ == "__main__":
 
         if MODE == "absent":
 
-            print(colored.red("Activation du mode \"Absent\""))
             if lum_living_room.data['state'] != "OFF" :
                 web_api.create_action("OFF", lum_living_room.name)
             
