@@ -257,6 +257,10 @@
         }
     });
 
+    $(document).on('submit', 'form', function (e) {
+        e.preventDefault();
+    });
+
     var intervalId = window.setInterval(function () {
         if (src !== null) {
             $('.iframe_camera_home').show();

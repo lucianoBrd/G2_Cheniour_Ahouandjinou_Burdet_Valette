@@ -33,6 +33,19 @@ class APIModule:
 
         return 'Inconnu'
 
+    def get_active_mode_label_by_home_name(self, home_name):
+        mode = {}
+
+        try:
+            mode = self.api.get_active_mode(home_name)
+        except:
+            pass
+
+        if "label" in mode :
+            return mode["label"]
+
+        return 'Inconnu'
+
     def get_temperature(self):
         try:
             value = self.api.get_last_value_by_element_name(config("SENSOR_TEMPERATURE_LIVING_ROOM"))
@@ -117,7 +130,6 @@ class APIModule:
         return status_code
 
     def create_action_alarme(self):
-        parameter = json.loads(parameter)
         status_code = 404
 
         try:
@@ -126,6 +138,30 @@ class APIModule:
             pass
 
         #print status_code
+
+        return status_code
+
+    def create_action_on(self):
+        status_code = 404
+
+        try:
+            status_code = self.api.create_action("ON", "actuator_lum_living_room")
+        except:
+            pass
+
+        #print status_code
+
+        return status_code
+
+    def update_mode(self, home_name, mode_name, state):
+        status_code = 404
+
+        try:
+            mode = self.api.get_mode_by_name(home_name, mode_name)
+            if "id" in mode :
+                status_code = self.api.update_mode(mode["id"], state)
+        except:
+            pass
 
         return status_code
 
