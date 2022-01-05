@@ -13,7 +13,8 @@
         <form action="{{ path('update_password', { 'id': home.id }) }}" method="POST">
             <div class="form-group">
                 <label class="col-form-label" for="password-{{ home.id }}">Modifier le mot de passe</label>
-                <input required pattern="[0-9]{4}" title="4 digit number: e.g. 1234" name="password" type="text" class="form-control"  id="password-{{ home.id }}" value="{{ home.password }}">
+                <input required pattern="[0-9]{4}" title="4 digit number: e.g. 1234" name="password" type="text"
+                    class="form-control" id="password-{{ home.id }}" value="{{ home.password }}">
             </div>
             <button type="submit" class="btn btn-primary">Valider</button>
         </form>
@@ -21,7 +22,8 @@
         <form action="{{ path('update_cameraip', { 'id': home.id }) }}" method="POST">
             <div class="form-group">
                 <label class="col-form-label" for="cameraip-{{ home.id }}">Modifier l'IP de la caméra</label>
-                <input required name="cameraip" type="text" class="form-control"  id="cameraip-{{ home.id }}" value="{{ home.cameraip }}">
+                <input required name="cameraip" type="text" class="form-control" id="cameraip-{{ home.id }}"
+                    value="{{ home.cameraip }}">
             </div>
             <button type="submit" class="btn btn-primary">Valider</button>
         </form>
@@ -34,63 +36,72 @@
                 <h4 class="card-title">Room: {{ room.label }}</h4>
                 <p class="card-text">Liste des elements</p>
                 {% for element in room.elements %}
-                <div class="card border-primary mb-3">
-                    <div class="card-header">{{ element.label }}</div>
-                    <div class="card-body">
-                        <h4 class="card-title">Element: {{ element.label }}</h4>
+                <div class="row">
+                    <div class="card border-primary mb-3 col-6">
+                        <div class="card-header">{{ element.label }}</div>
+                        <div class="card-body">
+                            <h4 class="card-title">Element: {{ element.label }}</h4>
 
-                        {% set break = false %}
-                        {% for value in element.elementValues|sort((a, b) => b.datetime <=> a.datetime) %}
-                        {% if not break %}
-                        {% set break = true %}
-                        <p class="card-text">Value: {{ value.value }} le {{ value.datetime|date('d/m/Y H:i:s') }}</p>
-                        {% endif %}
-                        {% endfor %}
+                            {% set break = false %}
+                            {% for value in element.elementValues|sort((a, b) => b.datetime <=> a.datetime) %}
+                            {% if not break %}
+                            {% set break = true %}
+                            <p class="card-text">Value: {{ value.value }} le {{ value.datetime|date('d/m/Y H:i:s') }}
+                            </p>
+                            {% endif %}
+                            {% endfor %}
 
-                        <p class="card-text">Etat Actuel: {{ element.state ? 'ON' : 'OFF' }}</p>
+                            <p class="card-text">Etat Actuel: {{ element.state ? 'ON' : 'OFF' }}</p>
 
-                        {% if element.type %}
-                        <p class="card-text">Type: {{element.type.label}}</p>
+                            {% if element.type %}
+                            <p class="card-text">Type: {{element.type.label}}</p>
 
-                        {% set break = false %}
-                        {% set value = null %}
-                        {% set state = null %}
-                        {% for action in element.actions|sort((a, b) => b.datetime <=> a.datetime) %}
-                        {% if not break %}
-                        {% set break = true %}
-                        {% set value = action.value %}
-                        {% set state = action.state %}
-                        {% endif %}
-                        {% endfor %}
-                        <div class="card border-primary mb-3" style="max-width: 20rem;">
-                            <div class="card-header">Action</div>
-                            <div class="card-body">
-                                <h4 class="card-title">Action</h4>
-                                
-                                {% if value != null %}
-                                <p class="card-text">Etat: {{ state ? 'DONE' : 'DOING' }}</p>
-                                {% endif %}
-                                <form action="{{ path('create_action', { 'id': element.id }) }}" method="POST">
-                                    {% if element.type.label == 'sensor' %}
-                                    <div class="form-group">
-                                        <label class="col-form-label" for="{{ room.id }}-{{ element.id }}">Valeur</label>
-                                        <input required name="action" type="number" class="form-control"  id="{{ room.id }}-{{ element.id }}" value="{{ value }}">
-                                    </div>
-                                    {% elseif element.type.label == 'actuator' %}
-                                    <div class="form-group">
-                                        <label for="{{ room.id }}-{{ element.id }}" class="form-label">Valeur</label>
-                                        <select required name="action" class="form-select" id="{{ room.id }}-{{ element.id }}">
-                                          <option value="">Choisir</option>
-                                          <option {% if value != null and value == 'ON' %}selected{% endif %} value="ON">ON</option>
-                                          <option {% if value != null and value == 'OFF' %}selected{% endif %} value="OFF">OFF</option>
-                                        </select>
-                                      </div>
+                            {% set break = false %}
+                            {% set value = null %}
+                            {% set state = null %}
+                            {% for action in element.actions|sort((a, b) => b.datetime <=> a.datetime) %}
+                            {% if not break %}
+                            {% set break = true %}
+                            {% set value = action.value %}
+                            {% set state = action.state %}
+                            {% endif %}
+                            {% endfor %}
+                            <div class="card border-primary mb-3" style="max-width: 20rem;">
+                                <div class="card-header">Action</div>
+                                <div class="card-body">
+                                    <h4 class="card-title">Action</h4>
+
+                                    {% if value != null %}
+                                    <p class="card-text">Etat: {{ state ? 'DONE' : 'DOING' }}</p>
                                     {% endif %}
-                                    <button type="submit" class="btn btn-primary">Valider</button>
-                                </form>
+                                    <form action="{{ path('create_action', { 'id': element.id }) }}" method="POST">
+                                        {% if element.type.label == 'sensor' %}
+                                        <div class="form-group">
+                                            <label class="col-form-label"
+                                                for="{{ room.id }}-{{ element.id }}">Valeur</label>
+                                            <input required name="action" type="number" class="form-control"
+                                                id="{{ room.id }}-{{ element.id }}" value="{{ value }}">
+                                        </div>
+                                        {% elseif element.type.label == 'actuator' %}
+                                        <div class="form-group">
+                                            <label for="{{ room.id }}-{{ element.id }}"
+                                                class="form-label">Valeur</label>
+                                            <select required name="action" class="form-select"
+                                                id="{{ room.id }}-{{ element.id }}">
+                                                <option value="">Choisir</option>
+                                                <option {% if value != null and value == 'ON' %}selected{% endif %}
+                                                    value="ON">ON</option>
+                                                <option {% if value != null and value == 'OFF' %}selected{% endif %}
+                                                    value="OFF">OFF</option>
+                                            </select>
+                                        </div>
+                                        {% endif %}
+                                        <button type="submit" class="btn btn-primary">Valider</button>
+                                    </form>
+                                </div>
                             </div>
+                            {% endif %}
                         </div>
-                        {% endif %}
                     </div>
                 </div>
                 {% endfor %}

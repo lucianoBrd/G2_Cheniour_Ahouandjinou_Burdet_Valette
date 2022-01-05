@@ -60,7 +60,7 @@ class Mode
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=191, unique=true)
      * @Groups({"mode"})
      */
     private $label;

@@ -64,13 +64,13 @@ class Home
     private $rooms;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=191, nullable=true)
      * @Groups({"home", "home:read"})
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=191, nullable=true)
      * @Groups({"home", "home:read"})
      */
     private $cameraip;
