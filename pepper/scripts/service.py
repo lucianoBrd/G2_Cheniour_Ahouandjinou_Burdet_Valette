@@ -18,7 +18,7 @@ class APIModule:
         self.session = session
         self.memory = self.session.service("ALMemory")
 
-        self.api = API()
+        self.api = Api()
 
     def get_label_home_by_id(self, home_id):
         home = {}
