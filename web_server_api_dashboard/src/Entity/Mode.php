@@ -20,7 +20,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     "put",
  *     "get_by_label" = {
  *       "method" = "GET",
- *       "path" = "/mode/{label}",
+ *       "path" = "/mode/{labelhome}/{label}",
  *       "controller" = ModeByLabel::class,
  *       "read"=false,
  *       "openapi_context" = {
@@ -33,16 +33,33 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *             "required" = true,
  *             "example"= "label",
  *           },
+ *           {
+ *             "name" = "labelhome",
+ *             "in" = "path",
+ *             "description" = "The label of the home of the mode",
+ *             "type" = "string",
+ *             "required" = true,
+ *             "example"= "label",
+ *           },
  *         },
  *       },
  *     },
  *     "get_mode_active" = {
  *       "method" = "GET",
- *       "path" = "/get/mode/active",
+ *       "path" = "/get/mode/active/{labelhome}",
  *       "controller" = ModeActive::class,
  *       "read"=false,
  *       "openapi_context" = {
- *         "parameters" = {},
+ *         "parameters" = {
+ *           {
+ *             "name" = "labelhome",
+ *             "in" = "path",
+ *             "description" = "The label of the home of the mode",
+ *             "type" = "string",
+ *             "required" = true,
+ *             "example"= "label",
+ *           },
+ *        },
  *       },
  *     },
  *   },
@@ -70,6 +87,13 @@ class Mode
      * @Groups({"mode"})
      */
     private $state;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Home::class, inversedBy="modes")
+     * @ORM\JoinColumn(nullable=true)
+     * @Groups({"mode"})
+     */
+    private $home;
 
     public function __construct()
     {
@@ -101,6 +125,18 @@ class Mode
     public function setState(bool $state): self
     {
         $this->state = $state;
+
+        return $this;
+    }
+
+    public function getHome(): ?Home
+    {
+        return $this->home;
+    }
+
+    public function setHome(?Home $home): self
+    {
+        $this->home = $home;
 
         return $this;
     }

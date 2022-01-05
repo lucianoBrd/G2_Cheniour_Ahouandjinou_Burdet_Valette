@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Home;
 use App\Entity\Mode;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -9,12 +10,24 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[AsController]
 class ModeActive extends AbstractController
 {
-    public function __invoke()
+    public function __invoke(string $labelhome)
     {
+        $home = $this->getDoctrine()
+            ->getRepository(Home::class)
+            ->findOneBy(
+                ['label' => $labelhome],
+            );
+ 
+        if (!$home) {
+            throw $this->createNotFoundException(
+                'No home found for this label'
+            );
+        }
+        
         $modes = $this->getDoctrine()
             ->getRepository(Mode::class)
             ->findBy(
-                ['state' => true],
+                ['state' => true, 'home' => $home],
                 [],
                 1
             );

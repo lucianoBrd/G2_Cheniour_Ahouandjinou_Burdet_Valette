@@ -6,6 +6,7 @@ use App\Entity\Mode;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 
 class ModeCrudController extends AbstractCrudController
@@ -22,6 +23,7 @@ class ModeCrudController extends AbstractCrudController
             IdField::new('id')->hideOnForm(),
             TextField::new('label'),
             BooleanField::new('state'),
+            AssociationField::new('home'),
         ];
     }
     

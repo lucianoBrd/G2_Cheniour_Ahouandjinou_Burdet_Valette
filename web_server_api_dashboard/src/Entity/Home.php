@@ -75,9 +75,16 @@ class Home
      */
     private $cameraip;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Mode::class, mappedBy="home", orphanRemoval=true)
+     * @Groups({"home", "home:read"})
+     */
+    private $modes;
+
     public function __construct()
     {
         $this->rooms = new ArrayCollection();
+        $this->modes = new ArrayCollection();
     }
 
     public function __toString()
@@ -152,6 +159,36 @@ class Home
     public function setCameraip(?string $cameraip): self
     {
         $this->cameraip = $cameraip;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Mode[]
+     */
+    public function getModes(): Collection
+    {
+        return $this->modes;
+    }
+
+    public function addMode(Mode $mode): self
+    {
+        if (!$this->modes->contains($mode)) {
+            $this->modes[] = $mode;
+            $mode->setHome($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMode(Mode $mode): self
+    {
+        if ($this->modes->removeElement($mode)) {
+            // set the owning side to null (unless already changed)
+            if ($mode->getHome() === $this) {
+                $mode->setHome(null);
+            }
+        }
 
         return $this;
     }
