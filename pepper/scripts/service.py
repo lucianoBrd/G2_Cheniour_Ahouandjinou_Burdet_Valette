@@ -34,15 +34,15 @@ class APIModule:
         return 'Inconnu'
 
     def get_temperature(self):
-        element = {}
-
         try:
             element = self.api.get_element_by_name(config("SENSOR_TEMPERATURE_LIVING_ROOM"))
+            if "elementValue" in element :
+                value_iri = element["elementValue"]
+                value = self.api.get_value_by_iri(value_iri)
+                if "value" in value :
+                    return value["value"]
         except:
             pass
-
-        if "value" in element :
-            return element["value"]
 
         return 'Inconnu'
 

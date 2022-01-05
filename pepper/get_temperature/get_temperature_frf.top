@@ -2,4 +2,4 @@ topic: ~get_temperature()
 language: frf
 
 
-u:(["température"]) $onStopped=1
+u:([température]) OKEY $onStopped=1
