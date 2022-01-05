@@ -149,6 +149,22 @@ class Api:
 
         return id
 
+    def get_modes(self):
+        """
+        Get all modes
+
+        :returns: json -- The json of all modes data
+        """
+        return requests.get(self.url + "/modes", headers = self.header).json()
+    
+    def get_active_mode(self):
+        """
+        Get the active mode
+
+        :returns: str -- The name of the active mode
+        """
+        return requests.get(self.url + "/get/mode/active", headers = self.header).json()
+
     def get_elements(self):
         """
         Get all elements
@@ -437,6 +453,24 @@ class Api:
             })
                 
         request = requests.post(self.url + "/rooms", data=payload, headers = self.header)
+
+        return request.status_code
+
+    def create_mode(self, mode_name = ''):
+        """
+        Create a mode
+
+        :param element_name: The name of the mode
+        :type element_name: str
+
+        :returns: int -- The status code of the request post
+        """
+
+        payload = json.dumps({
+        "label": mode_name,
+            })
+        
+        request = requests.post(self.url + "/moedes", data=payload, headers = self.header)
 
         return request.status_code
 
