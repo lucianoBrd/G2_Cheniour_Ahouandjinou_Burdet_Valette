@@ -41,7 +41,7 @@
                 $('.pure-menu-heading').html('Mode absence');
                 $('.pure-menu-list').html('');
                 $('.splash-container').html(html);
-                $('.content-wrapper').html('<div class="content><div class="pure-g><form class="pure-form pure-form-stacked"><fieldset><label for="password">Mot de passe</label><input id="password" class="input_password" type="number"></fieldset></form></div></div>');
+                $('.content-wrapper').html('<div class="content><div class="pure-g><form class="pure-form pure-form-stacked"><fieldset><label for="password">Mot de passe</label><input id="password" class="input_password" type="text"></fieldset></form></div></div>');
             });
         });
 
