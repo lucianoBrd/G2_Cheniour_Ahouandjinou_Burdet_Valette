@@ -9,7 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 #[AsController]
 class ModeActive extends AbstractController
 {
-    public function __invoke(string $labelelement)
+    public function __invoke()
     {
         $modes = $this->getDoctrine()
             ->getRepository(Mode::class)
