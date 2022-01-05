@@ -21,17 +21,44 @@ class APIModule:
         self.api = API()
 
     def get_label_home_by_id(self, home_id):
-        
-        home = self.api.get_home_by_id(home_id)
+        home = {}
+
+        try:
+            home = self.api.get_home_by_id(home_id)
+        except:
+            pass
 
         if "label" in home :
             return home["label"]
 
         return 'Inconnu'
 
+    def get_temperature(self):
+        try:
+            value = self.api.get_last_value_by_element_name(config("SENSOR_TEMPERATURE_LIVING_ROOM"))
+            if "value" in value :
+                return value["value"]
+        except:
+            pass
+
+        return 'Inconnu'
+
+    def get_humidity(self):
+        try:
+            value = self.api.get_last_value_by_element_name(config("SENSOR_HUMIDITY_LIVING_ROOM"))
+            if "value" in value :
+                return value["value"]
+        except:
+            pass
+
+        return 'Inconnu'
+
     def get_home_by_id(self, home_id):
-        
-        home = self.api.get_home_by_id(home_id)
+        home = {}
+        try:
+            home = self.api.get_home_by_id(home_id)
+        except:
+            pass
         """
         if "rooms" in home :
             rooms = []
@@ -65,7 +92,11 @@ class APIModule:
         return json.dumps(home)
 
     def get_homes(self):
-        homes = self.api.get_homes()
+        homes = {}
+        try:
+            homes = self.api.get_homes()
+        except:
+            pass
 
         #print json.dumps(homes)
 
@@ -76,7 +107,10 @@ class APIModule:
         status_code = 404
 
         if "elementName" in parameter and "value" in parameter :
-            status_code = self.api.create_action(parameter["value"], parameter["elementName"])
+            try:
+                status_code = self.api.create_action(parameter["value"], parameter["elementName"])
+            except:
+                pass
 
         #print status_code
 

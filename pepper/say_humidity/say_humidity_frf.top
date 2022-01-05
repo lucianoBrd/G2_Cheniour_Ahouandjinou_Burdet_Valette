@@ -1,0 +1,4 @@
+topic: ~say_humidity()
+language: frf
+
+u:(e:onStart) L'humidité est de $Humidity pourcent $onStopped=1

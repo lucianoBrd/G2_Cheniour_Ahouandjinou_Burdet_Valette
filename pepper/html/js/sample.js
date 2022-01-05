@@ -172,7 +172,7 @@
                     $('.pure-menu-list').html('<li class="pure-menu-item"><a href="#" class="pure-menu-link btn_reset_home">Reset</a></li><li class="pure-menu-item">(ou dire reset)</li>');
                 }
                 if (!$('.iframe_camera_home')[0]) {
-                    $('.splash-container').html('<div class="splash"><p><iframe class="iframe_camera_home pure-img" src="" style="width: 100%;height: 500px;"></iframe></p></div>');
+                    $('.splash-container').html('<div class="splash"><p><iframe class="iframe_camera_home pure-img" src="" style="width: 100%;height: 200px;"></iframe></p><p class="splash-subhead">température climat temps "quelle temps fait-il"</p><p class="splash-subhead">humidité fraîcheur hygrométrie "quelle humidité fait-il"</p></div>');
                 }
                 if (!$('.content')[0]) {
                     $('.content-wrapper').html(html);

@@ -12,6 +12,10 @@
         <Dialog name="reset_home" src="reset_home/reset_home.dlg" />
         <Dialog name="label_home" src="label_home/label_home.dlg" />
         <Dialog name="create_action" src="create_action/create_action.dlg" />
+        <Dialog name="get_temperature" src="get_temperature/get_temperature.dlg" />
+        <Dialog name="say_temperature" src="say_temperature/say_temperature.dlg" />
+        <Dialog name="get_humidity" src="get_humidity/get_humidity.dlg" />
+        <Dialog name="say_humidity" src="say_humidity/say_humidity.dlg" />
     </Dialogs>
     <Resources>
         <File name="index" src="html/index.html" />
@@ -32,6 +36,10 @@
         <Topic name="reset_home_frf" src="reset_home/reset_home_frf.top" topicName="reset_home" language="fr_FR" />
         <Topic name="label_home_frf" src="label_home/label_home_frf.top" topicName="label_home" language="fr_FR" />
         <Topic name="create_action_frf" src="create_action/create_action_frf.top" topicName="create_action" language="fr_FR" />
+        <Topic name="get_temperature_frf" src="get_temperature/get_temperature_frf.top" topicName="get_temperature" language="fr_FR" />
+        <Topic name="say_temperature_frf" src="say_temperature/say_temperature_frf.top" topicName="say_temperature" language="fr_FR" />
+        <Topic name="get_humidity_frf" src="get_humidity/get_humidity_frf.top" topicName="get_humidity" language="fr_FR" />
+        <Topic name="say_humidity_frf" src="say_humidity/say_humidity_frf.top" topicName="say_humidity" language="fr_FR" />
     </Topics>
     <IgnoredPaths />
     <Translations auto-fill="fr_FR">
