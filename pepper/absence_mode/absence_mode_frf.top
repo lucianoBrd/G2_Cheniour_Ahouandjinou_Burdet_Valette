@@ -1,0 +1,4 @@
+topic: ~absence_mode()
+language: frf
+
+u:(e:onStart) $AbsenceMode=1 $onStopped=1

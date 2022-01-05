@@ -16,6 +16,9 @@
         <Dialog name="say_temperature" src="say_temperature/say_temperature.dlg" />
         <Dialog name="get_humidity" src="get_humidity/get_humidity.dlg" />
         <Dialog name="say_humidity" src="say_humidity/say_humidity.dlg" />
+        <Dialog name="goto_normal_mode" src="goto_normal_mode/goto_normal_mode.dlg" />
+        <Dialog name="absence_mode" src="absence_mode/absence_mode.dlg" />
+        <Dialog name="goto_absence_mode" src="goto_absence_mode/goto_absence_mode.dlg" />
     </Dialogs>
     <Resources>
         <File name="index" src="html/index.html" />
@@ -27,6 +30,7 @@
         <File name="rire" src="sound/rire.ogg" />
         <File name="api" src="scripts/api.pyc" />
         <File name="default" src="html/css/default.css" />
+        <File name="alerte" src="sound/alerte.ogg" />
     </Resources>
     <Topics>
         <Topic name="stop_frf" src="stop/stop_frf.top" topicName="stop" language="fr_FR" />
@@ -40,6 +44,9 @@
         <Topic name="say_temperature_frf" src="say_temperature/say_temperature_frf.top" topicName="say_temperature" language="fr_FR" />
         <Topic name="get_humidity_frf" src="get_humidity/get_humidity_frf.top" topicName="get_humidity" language="fr_FR" />
         <Topic name="say_humidity_frf" src="say_humidity/say_humidity_frf.top" topicName="say_humidity" language="fr_FR" />
+        <Topic name="goto_normal_mode_frf" src="goto_normal_mode/goto_normal_mode_frf.top" topicName="goto_normal_mode" language="fr_FR" />
+        <Topic name="absence_mode_frf" src="absence_mode/absence_mode_frf.top" topicName="absence_mode" language="fr_FR" />
+        <Topic name="goto_absence_mode_frf" src="goto_absence_mode/goto_absence_mode_frf.top" topicName="goto_absence_mode" language="fr_FR" />
     </Topics>
     <IgnoredPaths />
     <Translations auto-fill="fr_FR">

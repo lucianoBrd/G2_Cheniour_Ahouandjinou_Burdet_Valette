@@ -1,0 +1,4 @@
+topic: ~goto_absence_mode()
+language: frf
+
+u:(["Mode absence" e:GotoAbsenceMode]) Début du mode absence $onStopped=1
