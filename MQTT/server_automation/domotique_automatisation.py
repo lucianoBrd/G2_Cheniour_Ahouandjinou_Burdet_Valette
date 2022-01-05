@@ -11,6 +11,7 @@ BROKER_ADDRESS = '192.168.223.222'
 TOPIC_DICT = {}
 home = Home()
 PASSWORD_MEMORY = ''
+MODE = "normal"
 
 def on_message(client, userdata, message):
     
@@ -151,7 +152,7 @@ if __name__ == "__main__":
     sensor_entry_door_authentification_face = get_element_obj(home, 'living_room', 'sensor_entry_door_authentification_face_living_room')
 
     while True:
-        #uniquement en mode automatique ??
+
         #region check temperature in living room
         temperature_living_room = float(sensor_temperature.data['temperature'])
         web_api.create_value(temperature_living_room, sensor_temperature.name)
@@ -271,5 +272,24 @@ if __name__ == "__main__":
 
         # envoi du new password s'il est modifié en BDD: 
         #PASSWORD_MAMORY = check_password_change(web_api, PASSWORD_MEMORY)
+
+        if MODE == "absent":
+
+            if lum_living_room.data['state'] != "OFF" :
+                web_api.create_action("OFF", lum_living_room.name)
+            
+            if vmc_living_room.data['state'] != "OFF" :
+                web_api.create_action("OFF", vmc_living_room.name)
+            
+            if heating_living_room.data['state'] != "OFF" :
+                web_api.create_action("OFF", humidity_living_room.name)
+            
+            if entry_door.data['state'] != "OFF" :
+                web_api.create_action("OFF", entry_door.name)
+
+        
+        if MODE == "absent":
+            print("")
+            pass
         
 
