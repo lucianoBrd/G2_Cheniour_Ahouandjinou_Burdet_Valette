@@ -9,6 +9,13 @@
     <div class="card-header">{{ home.label }}</div>
     <div class="card-body">
         <h4 class="card-title">Home: {{ home.label }}</h4>
+        {% set mode = null %}
+        {% for m in home.modes %}
+        {% if m.state %}
+        {% set mode = m %}
+        {% endif %}
+        {% endfor %
+        <p class="card-text">Mode actuel: {{ mode ? mode.label : 'Normal'  }}}}</p>
         <hr>
         <form action="{{ path('update_password', { 'id': home.id }) }}" method="POST">
             <div class="form-group">
