@@ -67,6 +67,9 @@ def init_my_home(mqtt_client, api_obj):
     #Creation data in BDD
     api_obj.create_home(home.name)
 
+    api_obj.create_mode(home.name, "ABSENT")
+    api_obj.create_mode(home.name, "FETE")
+
     for room_name, room_objr in home.rooms.items():
         api_obj.create_room(room_name, home.name)
         for element_name, element_obj in home.rooms[room_name].elements.items():
@@ -139,10 +142,15 @@ def get_element_obj(home_obj, room_name, element_name):
     return home_obj.rooms[room_name].elements[element_name]
 
 if __name__ == "__main__":
+    print(colored.blue("Lancement du server domotique..."))
+    print(colored.cyan(f"Initialisation du server MQTT"))
     mqtt_client = init_mqtt_connection()
+    print(colored.green("Connexion au server MQTT réussi"))
     web_api = Api()
+    print(colored.cyan(f"Initialisation de la maison"))
     home = init_my_home(mqtt_client, web_api)
-    
+    print(colored.green(f"Initialisation de la maison {home.name} réussie\n\n"))
+
     vmc_living_room = get_element_obj(home, 'living_room', 'actuator_vmc_living_room')
     heating_living_room = get_element_obj(home, 'living_room', 'actuator_heating_living_room')
     lum_living_room = get_element_obj(home, 'living_room', 'actuator_lum_living_room')
@@ -295,8 +303,9 @@ if __name__ == "__main__":
                 web_api.create_action("OFF", entry_door.name)
 
         
-        if MODE == "chill":
-            print(colored.red("Activation du mode \"Chill\""))
+        if MODE == "FETE":
+            if lum_living_room.data['state'] != "FETE" :
+                web_api.create_action("FETE", lum_living_room.name)
 
         
 
