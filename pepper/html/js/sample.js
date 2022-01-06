@@ -46,7 +46,7 @@
             });
         });
 
-        ALMemory.subscriber("JsonLabelMode").done(function (subscriber) {
+        ALMemory.subscriber("Mode").done(function (subscriber) {
 
             subscriber.signal.connect(function (data) {
                 const label = jQuery.parseJSON(data);
