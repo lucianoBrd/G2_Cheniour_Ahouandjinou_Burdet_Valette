@@ -1,0 +1,4 @@
+topic: ~mode()
+language: frf
+
+u:(e:onStart) $JsonLabelMode=$LabelMode $onStopped=1

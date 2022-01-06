@@ -21,6 +21,7 @@
         <Dialog name="goto_absence_mode" src="goto_absence_mode/goto_absence_mode.dlg" />
         <Dialog name="goto_fete_mode" src="goto_fete_mode/goto_fete_mode.dlg" />
         <Dialog name="normal_mode" src="normal_mode/normal_mode.dlg" />
+        <Dialog name="mode" src="mode/mode.dlg" />
     </Dialogs>
     <Resources>
         <File name="index" src="html/index.html" />
@@ -52,6 +53,7 @@
         <Topic name="goto_absence_mode_frf" src="goto_absence_mode/goto_absence_mode_frf.top" topicName="goto_absence_mode" language="fr_FR" />
         <Topic name="goto_fete_mode_frf" src="goto_fete_mode/goto_fete_mode_frf.top" topicName="goto_fete_mode" language="fr_FR" />
         <Topic name="normal_mode_frf" src="normal_mode/normal_mode_frf.top" topicName="normal_mode" language="fr_FR" />
+        <Topic name="mode_frf" src="mode/mode_frf.top" topicName="mode" language="fr_FR" />
     </Topics>
     <IgnoredPaths />
     <Translations auto-fill="fr_FR">
