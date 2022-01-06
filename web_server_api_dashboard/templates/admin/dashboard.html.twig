@@ -15,7 +15,7 @@
         {% set mode = m %}
         {% endif %}
         {% endfor %
-        <p class="card-text">Mode actuel: {{ mode ? mode.label : 'Normal'  }}}}</p>
+        <p class="card-text">Mode actuel: {{ mode ? mode.label : 'Normal'  }}</p>
         <hr>
         <form action="{{ path('update_password', { 'id': home.id }) }}" method="POST">
             <div class="form-group">
