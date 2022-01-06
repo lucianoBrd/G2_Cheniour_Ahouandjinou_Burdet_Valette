@@ -23,11 +23,13 @@
 #define pinBtnDigitSuivant 38                    // bouton permettant de passer au digit suivant
 #define pinBtnValiderMdp 17                      // bouton permettant de valider le mdp
 
+#define pinLedVert 21
+#define pinLedRouge 22
 
 ///_____
 const char *ssid = "Domotique";                //"SFR_DDA8"; //"Domotique";// identifiant réseau//"SFR_DDA8";
 const char *password = "Domotique";            //"3vsk72pjpz5fkd69umkz";   // mot de passe réseau
-const char* mqttServer = "192.168.223.222";      // addresse IP du brooker Mqtt
+const char* mqttServer = "192.168.135.222";      // addresse IP du brooker Mqtt
 const int mqttPort = 1883;                       // port de connection mqtt
 const char* mqttUser = "";
 const char* mqttPassword = "";
@@ -35,8 +37,9 @@ const char* idCapteur = "Digicode";              // identifiant du module
 const int mdpPorte = 2468;                       // mot de passe de la porte
 
 int etat = -1;                                   // variable representant l'etat du capteur : (-1) --> Wifi deconnecté 
-int digitActuel = 1;                             // variable correspondant au digit à allumer, on demarre positionné sur le digit 1
-int valeur7segment[] = {1,2,3,4};                // valeur affiché sur le 7Segment
+volatile int digitActuel = 1;                             // variable correspondant au digit à allumer, on demarre positionné sur le digit 1
+volatile int valeur7segment[] = {1,2,3,4};                // valeur affiché sur le 7Segment
+int codeValide = 0;
 
 char* etatWifi = "";                             // paramètre permettant de récuperer l'état de connection Wifi
 char* etatMqtt = "";                             // paramètre permettant de récuperer l'état de connection MQTT
@@ -122,7 +125,7 @@ void initWifiConnection(){
 
     WiFi.begin(ssid, password);
 }
-
+// fonction Callback pour publication sur le topic mdp
 void mqttCallback(char* valeur, uint8_t* var, unsigned int nb){
 
 }
@@ -308,55 +311,57 @@ void chiffre(int chiffre){
 }
 
 void verificationMdp(){
-        delay(500);
         if ((1000*valeur7segment[0]+100*valeur7segment[1]+10*valeur7segment[2]+valeur7segment[3])==mdpPorte){
-              
+              digitalWrite(pinLedVert,HIGH);
               valeur7segment[0] = 0;
               valeur7segment[1] = 0;
               valeur7segment[2] = 0;
               valeur7segment[3] = 0;
-        //       for(int i=0;i<1000000;i++){
-        //         chiffre(-1);
-        //         digitalWrite(pinDigitA0, HIGH);          // digit 2
-        //         digitalWrite(pinDigitA1, LOW);
-        //         delayMicroseconds(1);
-        //         chiffre(0);
-        //         delay(6);
+              for(int i=0;i<1000000;i++){
+                chiffre(-1);
+                digitalWrite(pinDigitA0, HIGH);          // digit 2
+                digitalWrite(pinDigitA1, LOW);
+                delayMicroseconds(1);
+                chiffre(0);
+                delay(6);
 
-        //         chiffre(-1);
-        //         digitalWrite(pinDigitA1, HIGH);           // digit 3
-        //         digitalWrite(pinDigitA0, LOW);
-        //         delayMicroseconds(1);
-        //         digitalWrite(pinSegmentA, LOW);
-        //         digitalWrite(pinSegmentB, HIGH);
-        //         digitalWrite(pinSegmentC, HIGH);
-        //         digitalWrite(pinSegmentD, LOW);
-        //         digitalWrite(pinSegmentE, HIGH);
-        //         digitalWrite(pinSegmentF, HIGH);
-        //         digitalWrite(pinSegmentG, HIGH);
-        //         delay(6);
-        //       }
-              //while(!mqttClient.publish("home/living_room/actuator_entry_door/state", "1"));
+                chiffre(-1);
+                digitalWrite(pinDigitA1, HIGH);           // digit 3
+                digitalWrite(pinDigitA0, LOW);
+                delayMicroseconds(1);
+                digitalWrite(pinSegmentA, LOW);
+                digitalWrite(pinSegmentB, HIGH);
+                digitalWrite(pinSegmentC, HIGH);
+                digitalWrite(pinSegmentD, LOW);
+                digitalWrite(pinSegmentE, HIGH);
+                digitalWrite(pinSegmentF, HIGH);
+                digitalWrite(pinSegmentG, HIGH);
+                delay(6);
+                chiffre(-1);
+              }
+              codeValide = 1;
+            
         }else{
                 valeur7segment[0] = 0;
                 valeur7segment[1] = 0;
                 valeur7segment[2] = 0;
                 valeur7segment[3] = 0;
-                chiffre(-1);
-                delay(10000);
-                delay(1000);
-                chiffre(10);
-                delay(1000);
-                chiffre(-1);
-                delay(1000);
-                chiffre(10);
-                delay(1000);
-                chiffre(-1);
-                delay(1000);
-                chiffre(10);
-                delay(1000);
+                // chiffre(-1);
+                // delay(10000);
+                // delay(1000);
+                // chiffre(10);
+                // delay(1000);
+                // chiffre(-1);
+                // delay(1000);
+                // chiffre(10);
+                // delay(1000);
+                // chiffre(-1);
+                // delay(1000);
+                // chiffre(10);
+                // delay(1000);
+             //  
         }
-     delay(500); mqttClient.publish("home/living_room/actuator_entry_door/state", "1");
+     
 }
 
 void incrementerChiffre(){
@@ -383,7 +388,7 @@ void incrementerChiffre(){
  default:
          break;
  }
- delay(800); 
+
 
 }
 void nextDigit(){
@@ -399,7 +404,7 @@ void init7Segment(){
 // Config pins 7Segement
  pinMode(pinDigitA0, OUTPUT);
  pinMode(pinDigitA1, OUTPUT);
-//----------------- Pins segments
+//----------------- Pins 7 segments
  pinMode(pinSegmentA, OUTPUT);
  pinMode(pinSegmentB, OUTPUT);
  pinMode(pinSegmentC, OUTPUT);
@@ -407,14 +412,18 @@ void init7Segment(){
  pinMode(pinSegmentE, OUTPUT);
  pinMode(pinSegmentF, OUTPUT);
  pinMode(pinSegmentG, OUTPUT);
- //------- Pins bouttons
+}
+void initBouton(){
+
+  //------- Pins bouttons
  pinMode(pinBtnDigitSuivant,INPUT);
  pinMode(pinBtnIncrementerChiffre,INPUT);
  pinMode(pinBtnValiderMdp,INPUT);
  attachInterrupt(pinBtnIncrementerChiffre,incrementerChiffre,RISING);
- attachInterrupt(pinBtnDigitSuivant,nextDigit,FALLING);
- attachInterrupt(pinBtnValiderMdp,verificationMdp,FALLING);
-
+ attachInterrupt(pinBtnDigitSuivant,nextDigit,RISING);
+ attachInterrupt(pinBtnValiderMdp,verificationMdp,RISING);       
+ pinMode(pinLedRouge,OUTPUT);
+ pinMode(pinLedVert,OUTPUT);
 }
 
 
@@ -426,16 +435,21 @@ void setup() {
   GestionIHM("");
   initWifiConnection();
   init7Segment();
+  initBouton();
  }
 
 void loop() {
-  
-  if (!mqttClient.connected()){etat = 0;etatMqtt = "KO";}       // si le client mqtt est déconnecté
-  else{etat = 1;etatMqtt = "OK";}
+ 
+  if (!mqttClient.connected()){
+        etat = 0;etatMqtt = "KO";
+        }                                               // si le client mqtt est déconnecté
+  else{
+        etat = 1;etatMqtt = "OK";
+        }
   if (WiFi.status() != WL_CONNECTED){etatWifi = "KO";}
   else{etatWifi = "OK";}
-
   
+
   switch (etat)
   {
     case 0:               // si état=0, client mqtt est déconnecté
@@ -446,11 +460,12 @@ void loop() {
       GestionIHM("");
       initMqtt();                                 // tentative de (re)connection du client mqtt au brooker
 
+      
+
     break;
 
   case 1:
-   // mqttClient.publish("esp/test", idCapteur);
-   // GestionIHM();
+  
    chiffre(-1);
    digitalWrite(pinDigitA1, LOW);
    digitalWrite(pinDigitA0, LOW);
@@ -479,11 +494,17 @@ void loop() {
    chiffre(valeur7segment[3]);
    delay(7);
 
+   if (codeValide == 1)
+   {
+        codeValide = 0;
+        mqttClient.publish("home/living_room/actuator_entry_door/state", "1");
+   }
    break;
-      
+
   default:  
     break;
   }
+ 
 }
 
 /*
