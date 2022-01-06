@@ -23,18 +23,18 @@
 #define pinBtnDigitSuivant 38                    // bouton permettant de passer au digit suivant
 #define pinBtnValiderMdp 17                      // bouton permettant de valider le mdp
 
-#define pinLedVert 21
-#define pinLedRouge 22
+#define pinLedVert 22
+#define pinLedRouge 21
 
 ///_____
-const char *ssid = "Domotique";                //"SFR_DDA8"; //"Domotique";// identifiant réseau//"SFR_DDA8";
-const char *password = "Domotique";            //"3vsk72pjpz5fkd69umkz";   // mot de passe réseau
-const char* mqttServer = "192.168.135.222";      // addresse IP du brooker Mqtt
+const char *ssid = "Redmi Note 7";                //"SFR_DDA8"; //"Domotique";// identifiant réseau//"SFR_DDA8";
+const char *password = "dallez94";            //"3vsk72pjpz5fkd69umkz";   // mot de passe réseau
+const char* mqttServer = "192.168.43.222";      // addresse IP du brooker Mqtt
 const int mqttPort = 1883;                       // port de connection mqtt
 const char* mqttUser = "";
 const char* mqttPassword = "";
 const char* idCapteur = "Digicode";              // identifiant du module 
-const int mdpPorte = 2468;                       // mot de passe de la porte
+const int mdpPorte = 1234;                       // mot de passe de la porte
 
 int etat = -1;                                   // variable representant l'etat du capteur : (-1) --> Wifi deconnecté 
 volatile int digitActuel = 1;                             // variable correspondant au digit à allumer, on demarre positionné sur le digit 1
@@ -312,40 +312,18 @@ void chiffre(int chiffre){
 
 void verificationMdp(){
         if ((1000*valeur7segment[0]+100*valeur7segment[1]+10*valeur7segment[2]+valeur7segment[3])==mdpPorte){
-              digitalWrite(pinLedVert,HIGH);
               valeur7segment[0] = 0;
               valeur7segment[1] = 0;
               valeur7segment[2] = 0;
               valeur7segment[3] = 0;
-              for(int i=0;i<1000000;i++){
-                chiffre(-1);
-                digitalWrite(pinDigitA0, HIGH);          // digit 2
-                digitalWrite(pinDigitA1, LOW);
-                delayMicroseconds(1);
-                chiffre(0);
-                delay(6);
-
-                chiffre(-1);
-                digitalWrite(pinDigitA1, HIGH);           // digit 3
-                digitalWrite(pinDigitA0, LOW);
-                delayMicroseconds(1);
-                digitalWrite(pinSegmentA, LOW);
-                digitalWrite(pinSegmentB, HIGH);
-                digitalWrite(pinSegmentC, HIGH);
-                digitalWrite(pinSegmentD, LOW);
-                digitalWrite(pinSegmentE, HIGH);
-                digitalWrite(pinSegmentF, HIGH);
-                digitalWrite(pinSegmentG, HIGH);
-                delay(6);
-                chiffre(-1);
-              }
-              codeValide = 1;
-            
+              codeValide = 1;              
         }else{
                 valeur7segment[0] = 0;
                 valeur7segment[1] = 0;
                 valeur7segment[2] = 0;
                 valeur7segment[3] = 0;
+                codeValide = -1;
+
                 // chiffre(-1);
                 // delay(10000);
                 // delay(1000);
@@ -416,14 +394,14 @@ void init7Segment(){
 void initBouton(){
 
   //------- Pins bouttons
- pinMode(pinBtnDigitSuivant,INPUT);
- pinMode(pinBtnIncrementerChiffre,INPUT);
+ pinMode(pinLedVert,OUTPUT);
+ pinMode(pinLedRouge,OUTPUT);
  pinMode(pinBtnValiderMdp,INPUT);
- attachInterrupt(pinBtnIncrementerChiffre,incrementerChiffre,RISING);
+ pinMode(pinBtnDigitSuivant,INPUT);
+ pinMode(pinBtnIncrementerChiffre,INPUT); 
  attachInterrupt(pinBtnDigitSuivant,nextDigit,RISING);
  attachInterrupt(pinBtnValiderMdp,verificationMdp,RISING);       
- pinMode(pinLedRouge,OUTPUT);
- pinMode(pinLedVert,OUTPUT);
+ attachInterrupt(pinBtnIncrementerChiffre,incrementerChiffre,RISING);
 }
 
 
@@ -441,70 +419,127 @@ void setup() {
 void loop() {
  
   if (!mqttClient.connected()){
-        etat = 0;etatMqtt = "KO";
+        etat = 0;
+        etatMqtt = "KO";
         }                                               // si le client mqtt est déconnecté
   else{
-        etat = 1;etatMqtt = "OK";
+        etat = 1;
+        etatMqtt = "OK";
         }
   if (WiFi.status() != WL_CONNECTED){etatWifi = "KO";}
   else{etatWifi = "OK";}
   
 
   switch (etat)
-  {
-    case 0:               // si état=0, client mqtt est déconnecté
-    
-      if (WiFi.status() != WL_CONNECTED){         // Contrôle status connection Wifi, reconnection si déconnecté
-        WiFi.reconnect();
-      }
-      GestionIHM("");
-      initMqtt();                                 // tentative de (re)connection du client mqtt au brooker
+    {
+        case 0:               // si état=0, client mqtt est déconnecté
+                if (WiFi.status() != WL_CONNECTED){         // Contrôle status connection Wifi, reconnection si déconnecté
+                WiFi.reconnect();
+                }
+                GestionIHM("");
+                initMqtt();                                 // tentative de (re)connection du client mqtt au brooker
+        break;
 
-      
+        case 1:
+                chiffre(-1);
+                digitalWrite(pinDigitA1, LOW);
+                digitalWrite(pinDigitA0, LOW);
+                delayMicroseconds(1);
+                chiffre(valeur7segment[0]);
+                delay(5);
 
-    break;
+                chiffre(-1);
+                digitalWrite(pinDigitA0, HIGH);
+                digitalWrite(pinDigitA1, LOW);
+                delayMicroseconds(1);
+                chiffre(valeur7segment[1]);
+                delay(5);
 
-  case 1:
-  
-   chiffre(-1);
-   digitalWrite(pinDigitA1, LOW);
-   digitalWrite(pinDigitA0, LOW);
-   delayMicroseconds(1);
-   chiffre(valeur7segment[0]);
-   delay(6);
+                chiffre(-1);
+                digitalWrite(pinDigitA1, HIGH);
+                digitalWrite(pinDigitA0, LOW);
+                delayMicroseconds(1);
+                chiffre(valeur7segment[2]);
+                delay(5);
 
-   chiffre(-1);
-   digitalWrite(pinDigitA0, HIGH);
-   digitalWrite(pinDigitA1, LOW);
-   delayMicroseconds(1);
-   chiffre(valeur7segment[1]);
-   delay(6);
+                chiffre(-1);
+                digitalWrite(pinDigitA0, HIGH);
+                digitalWrite(pinDigitA1, HIGH);
+                delayMicroseconds(1);
+                chiffre(valeur7segment[3]);
+                delay(5);
 
-   chiffre(-1);
-   digitalWrite(pinDigitA1, HIGH);
-   digitalWrite(pinDigitA0, LOW);
-   delayMicroseconds(1);
-   chiffre(valeur7segment[2]);
-   delay(6);
+                if (codeValide == 1)
+                {
+                        codeValide = 0;
+                        digitalWrite(pinLedVert,HIGH);
+                        for(int i=0;i<400;i++){
+                                chiffre(-1);
+                                digitalWrite(pinDigitA0, HIGH);          // digit 2
+                                digitalWrite(pinDigitA1, LOW);
+                                delayMicroseconds(1);
+                                chiffre(0);
+                                delay(6);
 
-   chiffre(-1);
-   digitalWrite(pinDigitA0, HIGH);
-   digitalWrite(pinDigitA1, HIGH);
-   delayMicroseconds(1);
-   chiffre(valeur7segment[3]);
-   delay(7);
+                                chiffre(-1);
+                                digitalWrite(pinDigitA1, HIGH);           // digit 3
+                                digitalWrite(pinDigitA0, LOW);
+                                delayMicroseconds(1);
+                                digitalWrite(pinSegmentA, LOW);
+                                digitalWrite(pinSegmentB, HIGH);
+                                digitalWrite(pinSegmentC, HIGH);
+                                digitalWrite(pinSegmentD, LOW);
+                                digitalWrite(pinSegmentE, HIGH);
+                                digitalWrite(pinSegmentF, HIGH);
+                                digitalWrite(pinSegmentG, HIGH);
+                                delay(6);
+                                chiffre(-1);
+                        }
+                        for(int i=0;i<2;i++){                                   // envoi ordre d'ouverture
+                                mqttClient.publish("home/living_room/actuator_entry_door/state", "1");
+                                }   
+                        digitalWrite(pinLedVert, LOW);
+                        
+                }
+                if (codeValide == -1)
+                {
+                        codeValide = 0;
+                        digitalWrite(pinLedRouge, HIGH);
+                        for (int i=0;i<30;i++)
+                        {       
+                                delay(50);
+                                chiffre(-1);
+                                digitalWrite(pinDigitA0, LOW); // digit 2
+                                digitalWrite(pinDigitA1, LOW);
+                                delayMicroseconds(1);
+                                chiffre(0);
+                                delay(6);
+                                chiffre(-1);
+                                digitalWrite(pinDigitA0, HIGH); // digit 2
+                                digitalWrite(pinDigitA1, LOW);
+                                delayMicroseconds(1);
+                                chiffre(0);
+                                delay(6);
+                                chiffre(-1);
+                                digitalWrite(pinDigitA0, LOW); // digit 2
+                                digitalWrite(pinDigitA1, HIGH);
+                                delayMicroseconds(1);
+                                chiffre(0);
+                                delay(6);
+                                chiffre(-1);
+                                digitalWrite(pinDigitA0, HIGH); // digit 2
+                                digitalWrite(pinDigitA1, HIGH);
+                                delayMicroseconds(1);
+                                chiffre(0);
+                                
+                        }
+                        digitalWrite(pinLedRouge, LOW);
+                }
+        break;
 
-   if (codeValide == 1)
-   {
-        codeValide = 0;
-        mqttClient.publish("home/living_room/actuator_entry_door/state", "1");
+        default:
+        break;
    }
-   break;
-
-  default:  
-    break;
-  }
- 
 }
 
 /*
