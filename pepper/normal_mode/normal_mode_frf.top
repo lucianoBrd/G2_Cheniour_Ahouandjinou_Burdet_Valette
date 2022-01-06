@@ -1,0 +1,4 @@
+topic: ~normal_mode()
+language: frf
+
+u:(["Mode normal" e:NormalMode]) Début du mode normal $onStopped=1

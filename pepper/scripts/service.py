@@ -44,7 +44,7 @@ class APIModule:
         if mode != None and "label" in mode :
             return mode["label"]
 
-        return 'Inconnu'
+        return 'Normal'
 
     def get_temperature(self):
         try:

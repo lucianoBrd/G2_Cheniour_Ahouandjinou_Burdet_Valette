@@ -1,0 +1,4 @@
+topic: ~goto_fete_mode()
+language: frf
+
+u:(["Mode fete" e:GotoFeteMode]) Début du mode fête $onStopped=1
