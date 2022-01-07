@@ -97,6 +97,7 @@ D'autre part de façon contrôlée, c'est à dire gérer via la voix, ou de mani
 - home/living_room/sensor_humidity/humidity
 - home/living_room/sensor_luminosity/luminosity
 - home/living_room/sensor_entry_door_authentification_face/authentification
+- home/living_room/sensor_entry_door_authentification_mdp/authentification
 - home/living_room/actuator_vmc/state
 - home/living_room/actuator_lum/state
 - home/living_room/actuator_entry_door/state
