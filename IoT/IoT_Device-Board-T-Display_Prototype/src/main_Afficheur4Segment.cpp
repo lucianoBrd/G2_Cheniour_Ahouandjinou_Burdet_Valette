@@ -27,14 +27,14 @@
 #define pinLedRouge 21
 
 ///_____
-const char *ssid = "Redmi Note 7";                //"SFR_DDA8"; //"Domotique";// identifiant réseau//"SFR_DDA8";
-const char *password = "dallez94";            //"3vsk72pjpz5fkd69umkz";   // mot de passe réseau
-const char* mqttServer = "192.168.43.222";      // addresse IP du brooker Mqtt
+const char *ssid = "Domotique";              //"SFR_DDA8"; //"Domotique";// identifiant réseau//"SFR_DDA8";
+const char *password = "Domotique";          //"3vsk72pjpz5fkd69umkz";   // mot de passe réseau
+const char* mqttServer = "192.168.210.222";      // addresse IP du brooker Mqtt
 const int mqttPort = 1883;                       // port de connection mqtt
 const char* mqttUser = "";
 const char* mqttPassword = "";
 const char* idCapteur = "Digicode";              // identifiant du module 
-const int mdpPorte = 1234;                       // mot de passe de la porte
+const int mdpPorte = 2234;                       // mot de passe de la porte
 
 int etat = -1;                                   // variable representant l'etat du capteur : (-1) --> Wifi deconnecté 
 volatile int digitActuel = 1;                             // variable correspondant au digit à allumer, on demarre positionné sur le digit 1
@@ -318,26 +318,14 @@ void verificationMdp(){
               valeur7segment[3] = 0;
               codeValide = 1;              
         }else{
-                valeur7segment[0] = 0;
-                valeur7segment[1] = 0;
-                valeur7segment[2] = 0;
-                valeur7segment[3] = 0;
-                codeValide = -1;
-
-                // chiffre(-1);
-                // delay(10000);
-                // delay(1000);
-                // chiffre(10);
-                // delay(1000);
-                // chiffre(-1);
-                // delay(1000);
-                // chiffre(10);
-                // delay(1000);
-                // chiffre(-1);
-                // delay(1000);
-                // chiffre(10);
-                // delay(1000);
-             //  
+               // if (codeValide != 1){
+                        valeur7segment[0] = 0;
+                        valeur7segment[1] = 0;
+                        valeur7segment[2] = 0;
+                        valeur7segment[3] = 0;
+                        codeValide = -1;     
+             //   }
+                
         }
      
 }
@@ -414,10 +402,13 @@ void setup() {
   initWifiConnection();
   init7Segment();
   initBouton();
+  mqttClient.publish("test", "1");
+  mqttClient.publish("test", "1");
+  mqttClient.publish("test", "1");
  }
 
 void loop() {
- 
+   
   if (!mqttClient.connected()){
         etat = 0;
         etatMqtt = "KO";
@@ -425,6 +416,7 @@ void loop() {
   else{
         etat = 1;
         etatMqtt = "OK";
+        mqttClient.loop();
         }
   if (WiFi.status() != WL_CONNECTED){etatWifi = "KO";}
   else{etatWifi = "OK";}
@@ -494,9 +486,10 @@ void loop() {
                                 digitalWrite(pinSegmentG, HIGH);
                                 delay(6);
                                 chiffre(-1);
+                                
                         }
-                        for(int i=0;i<2;i++){                                   // envoi ordre d'ouverture
-                                mqttClient.publish("home/living_room/actuator_entry_door/state", "1");
+                        for(int i=0;i<4;i++){                                   // envoi ordre d'ouverture
+                                mqttClient.publish("home/living_room/sensor_entry_door_authentification_mdp/authentification", "authorized");
                                 }   
                         digitalWrite(pinLedVert, LOW);
                         
@@ -534,6 +527,7 @@ void loop() {
                                 
                         }
                         digitalWrite(pinLedRouge, LOW);
+                        
                 }
         break;
 
