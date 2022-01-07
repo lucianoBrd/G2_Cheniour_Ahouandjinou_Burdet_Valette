@@ -12,7 +12,7 @@
 ///_____
 const char* ssid = "Domotique";
 const char* password = "Domotique";
-const char* mqttServer = "192.168.12.222";
+const char* mqttServer = "192.168.210.222";
 const int mqttPort = 1883;
 const char* mqttUser = "";
 const char* mqttPassword = "";
@@ -22,7 +22,7 @@ char* etatWifi = "";
 char* etatMqtt = "";
 //Config PWM
 int pwmChannel = 0;  // channel de O-15
-int pwmFreq = 1000; 
+int pwmFreq = 50; 
 int pwmResolution = 8;  // résolution de la largeur d’impulsion entre 1 et 16 bits
 int pwmPin = 12;
 void initPWM(){
@@ -36,12 +36,13 @@ void initPWM(){
 
    // Assigne le canal PWM au pin 36
   ledcAttachPin(pwmPin, pwmChannel);
+  
 }
 void motorGestion(int state){
 
   if (state == 1){
   // Créer la tension en sortie choisi
-    ledcWrite(pwmChannel, 25); //1.65 V
+    ledcWrite(pwmChannel, 10); //1.65 V
   }
   else if (state == 0){
     ledcWrite(pwmChannel, 0); //0 V
