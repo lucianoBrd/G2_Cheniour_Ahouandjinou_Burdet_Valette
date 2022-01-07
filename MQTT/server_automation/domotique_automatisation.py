@@ -7,7 +7,7 @@ from Api import Api
 from decouple import config
 from clint.textui import colored, puts, indent
 
-BROKER_ADDRESS = '192.168.223.222'
+BROKER_ADDRESS = '192.168.210.222'
 TOPIC_DICT = {}
 home = Home()
 PASSWORD_MEMORY = ''
@@ -47,6 +47,7 @@ def init_my_home(mqtt_client, api_obj):
     sensor_humidity_living_room = Element('sensor_humidity_living_room', 'sensor', {"humidity":0}) #percentage of humidity
     sensor_luminosity_living_room = Element('sensor_luminosity_living_room', 'sensor', {"luminosity":0}) #percentage of humidity
     sensor_entry_door_authentification_face_living_room = Element('sensor_entry_door_authentification_face_living_room', 'sensor', {'authentification': ''})
+    sensor_entry_door_authentification_mdp_living_room = Element('sensor_entry_door_authentification_mdp_living_room', 'sensor', {'authentification': ''})
         #actuator
     actuator_vmc_living_room = Element('actuator_vmc_living_room', 'actuator', {"state": "OFF"}) #state OFF or ON
     actuator_entry_door_living_room = Element('actuator_entry_door_living_room', 'actuator', {"state": "OPEN"}) #state OPEN or CLOSE
@@ -55,7 +56,7 @@ def init_my_home(mqtt_client, api_obj):
     actuator_lum_living_room = Element('actuator_lum_living_room', 'actuator', {"state": "OFF"}) #state OFF or ON
 
 
-    living_room_elements_list = [sensor_temperature_living_room, sensor_humidity_living_room, sensor_luminosity_living_room, sensor_entry_door_authentification_face_living_room, actuator_vmc_living_room,
+    living_room_elements_list = [sensor_temperature_living_room, sensor_humidity_living_room, sensor_luminosity_living_room, sensor_entry_door_authentification_mdp_living_room, sensor_entry_door_authentification_face_living_room, actuator_vmc_living_room,
     actuator_entry_door_living_room, actuator_shutter_living_room, actuator_heating_living_room, actuator_lum_living_room]
     #bed room 1
         #sensor
@@ -87,7 +88,7 @@ def init_my_home(mqtt_client, api_obj):
             
             if element.type == "sensor":
                 home.mqtt_client.subscribe(element.topic)
-    
+
     return home
 
 def check_and_format_actions_api (api_obj):
@@ -142,10 +143,11 @@ def get_element_obj(home_obj, room_name, element_name):
     return home_obj.rooms[room_name].elements[element_name]
 
 if __name__ == "__main__":
-    print(colored.blue("Lancement du server domotique..."))
+    print(colored.blue("Lancement du server domotique...\n"))
+
     print(colored.cyan(f"Initialisation du server MQTT"))
     mqtt_client = init_mqtt_connection()
-    print(colored.green("Connexion au server MQTT réussi"))
+    print(colored.green("Connexion au server MQTT réussi\n"))
     web_api = Api()
     print(colored.cyan(f"Initialisation de la maison"))
     home = init_my_home(mqtt_client, web_api)
@@ -160,6 +162,8 @@ if __name__ == "__main__":
     sensor_humidity = get_element_obj(home, 'living_room', 'sensor_humidity_living_room')
     sensor_luminosity = get_element_obj(home, 'living_room', 'sensor_luminosity_living_room')
     sensor_entry_door_authentification_face = get_element_obj(home, 'living_room', 'sensor_entry_door_authentification_face_living_room')
+    sensor_entry_door_authentification_mdp = get_element_obj(home, 'living_room', 'sensor_entry_door_authentification_mdp_living_room')
+
 
     while True:
 
@@ -284,6 +288,14 @@ if __name__ == "__main__":
                 web_api.create_action("ON", entry_door.name)
                 web_api.create_action("OFF", entry_door.name)
             sensor_entry_door_authentification_face.data["authentification"] = ""
+        
+        if sensor_entry_door_authentification_mdp.data["authentification"] == "authorized":
+            print("go2")
+            if entry_door.data['state'] != "ON" :
+                print("go3")
+                web_api.create_action("ON", entry_door.name)
+                web_api.create_action("OFF", entry_door.name)
+            sensor_entry_door_authentification_mdp.data["authentification"] = ""
 
         # envoi du new password s'il est modifié en BDD: 
         #PASSWORD_MAMORY = check_password_change(web_api, PASSWORD_MEMORY)
@@ -295,9 +307,6 @@ if __name__ == "__main__":
             
             if vmc_living_room.data['state'] != "OFF" :
                 web_api.create_action("OFF", vmc_living_room.name)
-            
-            if heating_living_room.data['state'] != "OFF" :
-                web_api.create_action("OFF", humidity_living_room.name)
             
             if entry_door.data['state'] != "OFF" :
                 web_api.create_action("OFF", entry_door.name)
