@@ -34,6 +34,7 @@ D'autre part de façon contrôlée, c'est à dire gérer via la voix, ou de mani
 
 - Mode préprogrammé (ambiance de la maison, mode chill, mode surveillance, mode absence, etc….)
 	- Surveillance : détecte les mouvements dans la maison et effectue une notification
+	- Fête : met de la musique et les lumières de la pièce clignotent.
 - Application Android de gestion
 - DashBoard de visualisation
 - Intégration Google Home 
