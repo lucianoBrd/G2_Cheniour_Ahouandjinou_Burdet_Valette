@@ -105,7 +105,7 @@ class Action
 
     /**
      * @ORM\OneToOne(targetEntity=Element::class)
-     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @ORM\JoinColumn(name="one_element_id", nullable=true, onDelete="SET NULL")
      * @Groups({"action:read", "action:write"})
      */
     private $elem = null;
