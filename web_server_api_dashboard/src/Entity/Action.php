@@ -103,13 +103,6 @@ class Action
      */
     private $element;
 
-    /**
-     * @ORM\OneToOne(targetEntity=Element::class)
-     * @ORM\JoinColumn(name="one_element_id", nullable=true, onDelete="SET NULL")
-     * @Groups({"action:read", "action:write"})
-     */
-    private $elem = null;
-
     public function __construct()
     {
         $this->datetime = new \DateTime('now');

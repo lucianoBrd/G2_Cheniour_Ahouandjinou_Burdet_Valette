@@ -97,12 +97,14 @@ class Element
 
     /**
      * @ORM\OneToOne(targetEntity=Action::class)
+     * @ORM\JoinColumn(name="one_action_id", nullable=true, onDelete="SET NULL")
      * @Groups({"element", "home:read"})
      */
     private $action = null;
 
     /**
      * @ORM\OneToOne(targetEntity=Value::class)
+     * @ORM\JoinColumn(name="one_value_id", nullable=true, onDelete="SET NULL")
      * @Groups({"element", "home:read"})
      */
     private $elementValue = null;
