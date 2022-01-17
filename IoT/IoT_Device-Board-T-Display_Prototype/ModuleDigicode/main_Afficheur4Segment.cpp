@@ -29,7 +29,7 @@
 ///_____
 const char *ssid = "Domotique";              //"SFR_DDA8"; //"Domotique";// identifiant réseau//"SFR_DDA8";
 const char *password = "Domotique";          //"3vsk72pjpz5fkd69umkz";   // mot de passe réseau
-const char* mqttServer = "192.168.210.222";      // addresse IP du brooker Mqtt
+const char* mqttServer = "192.168.43.222";      // addresse IP du brooker Mqtt
 const int mqttPort = 1883;                       // port de connection mqtt
 const char* mqttUser = "";
 const char* mqttPassword = "";
