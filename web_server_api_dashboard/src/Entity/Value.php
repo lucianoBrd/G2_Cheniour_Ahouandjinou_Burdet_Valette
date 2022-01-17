@@ -69,6 +69,13 @@ class Value
      */
     private $element;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Element::class)
+     * @ORM\JoinColumn(nullable=true, onDelete="SET NULL")
+     * @Groups({"value:read", "value:write"})
+     */
+    private $elem = null;
+
     public function __construct() 
     {
         $this->datetime = new \DateTime('now');
