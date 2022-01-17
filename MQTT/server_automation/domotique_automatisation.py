@@ -7,7 +7,7 @@ from Api import Api
 from decouple import config
 from clint.textui import colored, puts, indent
 
-BROKER_ADDRESS = '192.168.210.222'
+BROKER_ADDRESS = '192.168.43.222'
 TOPIC_DICT = {}
 home = Home()
 PASSWORD_MEMORY = ''
@@ -41,6 +41,9 @@ def init_mqtt_connection():
 
 def init_my_home(mqtt_client, api_obj):
     
+    api_obj.create_type("sensor")
+    api_obj.create_type("actuator")
+
     #living room
         #sensor
     sensor_temperature_living_room = Element('sensor_temperature_living_room', 'sensor', {"temperature":0}) #temperature in degrès Celcius
@@ -49,11 +52,11 @@ def init_my_home(mqtt_client, api_obj):
     sensor_entry_door_authentification_face_living_room = Element('sensor_entry_door_authentification_face_living_room', 'sensor', {'authentification': ''})
     sensor_entry_door_authentification_mdp_living_room = Element('sensor_entry_door_authentification_mdp_living_room', 'sensor', {'authentification': ''})
         #actuator
-    actuator_vmc_living_room = Element('actuator_vmc_living_room', 'actuator', {"state": "OFF"}) #state OFF or ON
-    actuator_entry_door_living_room = Element('actuator_entry_door_living_room', 'actuator', {"state": "OPEN"}) #state OPEN or CLOSE
-    actuator_shutter_living_room = Element('actuator_shutter_living_room', 'actuator', {"state": "OPEN"}) #state OPEN or CLOSE
-    actuator_heating_living_room = Element('actuator_heating_living_room', 'actuator', {"state": "OFF"}) #state OFF or ON
-    actuator_lum_living_room = Element('actuator_lum_living_room', 'actuator', {"state": "OFF"}) #state OFF or ON
+    actuator_vmc_living_room = Element('actuator_vmc_living_room', 'actuator', {"state": ""}) #state OFF or ON
+    actuator_entry_door_living_room = Element('actuator_entry_door_living_room', 'actuator', {"state": ""}) #state OPEN or CLOSE
+    actuator_shutter_living_room = Element('actuator_shutter_living_room', 'actuator', {"state": ""}) #state OPEN or CLOSE
+    actuator_heating_living_room = Element('actuator_heating_living_room', 'actuator', {"state": ""}) #state OFF or ON
+    actuator_lum_living_room = Element('actuator_lum_living_room', 'actuator', {"state": ""}) #state OFF or ON
 
 
     living_room_elements_list = [sensor_temperature_living_room, sensor_humidity_living_room, sensor_luminosity_living_room, sensor_entry_door_authentification_mdp_living_room, sensor_entry_door_authentification_face_living_room, actuator_vmc_living_room,
@@ -175,7 +178,7 @@ if __name__ == "__main__":
         web_api.create_value(humidity_living_room, sensor_humidity.name)
 
         luminosity_living_room = float(sensor_luminosity.data['luminosity'])
-        web_api.create_value(humidity_living_room, sensor_humidity.name)
+        web_api.create_value(luminosity_living_room, sensor_luminosity.name)
 
         try :
             MODE = web_api.get_active_mode(home.name)["label"]
@@ -208,6 +211,8 @@ if __name__ == "__main__":
 
                                 web_api.update_element(web_api.get_element_id_by_name(element.name), element_name = element.name,state = state_to_boolean(element.data["state"]))
                                 web_api.update_action(action["action_id"], value = action["value"], state = True)
+                        elif element.data["state"] == action["value"]:
+                            web_api.update_action(action["action_id"], value = action["value"], state = True)
 
                     elif element.type == "sensor":
                         if list(element.data.keys())[0] == "temperature":
@@ -231,7 +236,7 @@ if __name__ == "__main__":
 
                                 # switch off the heating))
                                 if heating_living_room.data['state'] != "OFF" :
-                                    web_api.create_action("OFF", humidity_living_room.name)
+                                    web_api.create_action("OFF", heating_living_room.name)
 
                             elif temperature_living_room < temperature_to_reach - 0.5:
                                 # switch offthe VMC
@@ -282,17 +287,13 @@ if __name__ == "__main__":
                     web_api.update_action(action["action_id"], state = True)
             
         if sensor_entry_door_authentification_face.data["authentification"] == "authorized":
-            print("go2")
             if entry_door.data['state'] != "ON" :
-                print("go3")
                 web_api.create_action("ON", entry_door.name)
                 web_api.create_action("OFF", entry_door.name)
             sensor_entry_door_authentification_face.data["authentification"] = ""
         
         if sensor_entry_door_authentification_mdp.data["authentification"] == "authorized":
-            print("go2")
             if entry_door.data['state'] != "ON" :
-                print("go3")
                 web_api.create_action("ON", entry_door.name)
                 web_api.create_action("OFF", entry_door.name)
             sensor_entry_door_authentification_mdp.data["authentification"] = ""
