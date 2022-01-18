@@ -93,7 +93,7 @@ D'autre part de façon contrôlée, c'est à dire gérer via la voix, ou de mani
 - Prise
 - Luminosité
 
-# Liste des topic mqtt
+# Liste des topic mqtt mis en place
 - home/living_room/sensor_temperature/temperature
 - home/living_room/sensor_humidity/humidity
 - home/living_room/sensor_luminosity/luminosity
@@ -102,6 +102,9 @@ D'autre part de façon contrôlée, c'est à dire gérer via la voix, ou de mani
 - home/living_room/actuator_vmc/state
 - home/living_room/actuator_lum/state
 - home/living_room/actuator_entry_door/state
-- home/living_room/actuator_shutter/state
 - home/living_room/actuator_heating/state
 - home/security/entry_code
+
+# Liste des topic mqtt à mettre en place dans les évolutions futures
+- home/living_room/actuator_shutter/state
+
