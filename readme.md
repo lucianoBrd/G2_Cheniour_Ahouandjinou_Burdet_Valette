@@ -104,14 +104,46 @@ D'autre part de façon contrôlée, c'est à dire gérer via la voix, ou de mani
 
 ## 2.1. Serveur WEB
 
+Pour la partie WEB nous avons développé une application en PHP - Symfony.
+Symfony est un framework MVC libre écrit en PHP.
+
+Notre application propose une API permettant de gérer des les éléments de la base de données.
+De plus, l'application propose un dashboard afin d'administrer aisément depuis n'importe quel appareil.
+
+Le lien de l'application WEB (API + Dashboard) est le suivant : https://work.lucien-brd.com/
+
+Voici le lien du readme permettant de mettre en place le serveur WEB : ```web_server_api_dashboard/readme.md```
+
 ### 2.1.1. Base de données
+
+La base de données est en MySQL. Voici son schema :
 
 ![Schema BDD](schema/database/schema_database.png)
 
 ### 2.1.2. Dashboard
 
+Voici des captures d'écran du dashboard.
+Celui-ci permet d'ajouter, éditer ainsi que supprimer les différents composant de la base de données.
+
+![dashboard](schema/web_server_api_dashboard/dashboard.png)
+![home](schema/web_server_api_dashboard/home.png)
+![action](schema/web_server_api_dashboard/action.png)
+![element](schema/web_server_api_dashboard/element.png)
+![create_element](schema/web_server_api_dashboard/create_element.png)
+![mode](schema/web_server_api_dashboard/mode.png)
+![edit_mode](schema/web_server_api_dashboard/edit_mode.png)
+![room](schema/web_server_api_dashboard/room.png)
+![type](schema/web_server_api_dashboard/type.png)
+![value](schema/web_server_api_dashboard/value.png)
+![delete_value](schema/web_server_api_dashboard/delete_value.png)
+
 ### 2.1.3. API
 
+Vous pouvez retrouver la documentation de l'API à cette adresse : https://work.lucien-brd.com/api
+
+Voici les différentes routes de l'API :
+
+![API](schema/api.png)
 
 
 ## 2.2. Robot Pepper
@@ -124,6 +156,7 @@ D'autre part de façon contrôlée, c'est à dire gérer via la voix, ou de mani
 ## 2.3. Serveur Global
 	- Supervision globale **Python**
 	- MQTT
+
 ### 2.3.1. Liste des topic mqtt mis en place
 - home/living_room/sensor_temperature/temperature
 - home/living_room/sensor_humidity/humidity
