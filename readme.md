@@ -11,7 +11,7 @@ Voici le lien de nottre application WEB (API + Dashboard) :
 
 # Schéma global
 
-![Schema](schema.png)
+![Schema](schema/schema.png)
 
 # Résultats attendus
 
@@ -51,7 +51,6 @@ D'autre part de façon contrôlée, c'est à dire gérer via la voix, ou de mani
 - led 
 - serveur 
 
-
 ## Langage et technologie
 
 - Python/C
@@ -82,7 +81,7 @@ D'autre part de façon contrôlée, c'est à dire gérer via la voix, ou de mani
 	
 ## Schéma Base de données
 
-![Schema BDD](schema_database.png)
+![Schema BDD](schema/database/schema_database.png)
 
 ## Liste des éléments de base de la pièce
 - VMC
