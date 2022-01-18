@@ -17,7 +17,7 @@ def init_mqtt_connection():
     return client
 print("Connexion au broker MQTT")
 
-TOPIC = "home/entry_door/detection"
+TOPIC = "home/living_room/sensor_entry_door_authentification_face/authentification"
 mqtt_client = init_mqtt_connection()
 
 if not os.path.exists(directory):
