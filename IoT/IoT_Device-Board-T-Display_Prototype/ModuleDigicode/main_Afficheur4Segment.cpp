@@ -4,14 +4,15 @@
 #include <PubSubClient.h>
 #include <Wire.h>
 #include <SPI.h>
-#include <BluetoothSerial.h>
+#include <BLEDevice.h>
+
 
 #define CONNECTION_TIMEOUT 10
 // Pins utilisés sur la carte
 #define pinDigitA0 33           // selection digit ( A0A1 : 00 --> Digit1, 10 --> Digit2, 01 --> Digit3, 11 --> Digit4 ) 
 #define pinDigitA1 32
 
-#define pinSegmentA 27          // segment à allumer, actif à l'état haut
+#define pinSegmentA 27          // segments à allumer, actif à l'état haut
 #define pinSegmentB 15  
 #define pinSegmentC 2   
 #define pinSegmentD 12
@@ -44,13 +45,26 @@ int codeValide = 0;
 char* etatWifi = "";                             // paramètre permettant de récuperer l'état de connection Wifi
 char* etatMqtt = "";                             // paramètre permettant de récuperer l'état de connection MQTT
 
+static BLEUUID serviceUUID("4fafc201-1fb5-459e-8fcc-c5c9c331914b");
+static BLEUUID charUUID("beb5483e-36e1-4688-b7f5-ea07361b26a8");
+
+
+static boolean doConnect = false;
+static boolean connected = false;
+static boolean doScan = false;
+static BLEAdvertisedDevice *myDevice;
+static BLERemoteCharacteristic *pRemoteCharacteristic;
+
 ///____ Appel classes
 TFT_eSPI tft = TFT_eSPI();                       // Invoke library, pins defined in User_Setup_Select.h
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
-BluetoothSerial SerialBT;
+
+//BLECharacteristic *pCharacteristic;
+BLEScan *pBLEScan = BLEDevice::getScan();
 ///____
-//Demarre l'ecran 
+// Demarre l'ecran
+
 void initScreen()
 {
   tft.begin();
@@ -392,20 +406,122 @@ void initBouton(){
  attachInterrupt(pinBtnIncrementerChiffre,incrementerChiffre,RISING);
 }
 
+static void notifyCallback(
+    BLERemoteCharacteristic *pBLERemoteCharacteristic,
+    uint8_t *pData,
+    size_t length,
+    bool isNotify)
+{
+        Serial.print("Notify callback for characteristic ");
+        Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
+        Serial.print(" of data length ");
+        Serial.println(length);
+        Serial.print("data: ");
+        Serial.println((char *)pData);
+}
 
-void setup() {
-  // Init peripheriques
-  Serial.begin(115200);
-  delay(1000);
-  initScreen();
-  GestionIHM("");
-  initWifiConnection();
-  init7Segment();
-  initBouton();
-  mqttClient.publish("test", "1");
-  mqttClient.publish("test", "1");
-  mqttClient.publish("test", "1");
- }
+class MyClientCallback : public BLEClientCallbacks {
+        void onConnect(BLEClient* pclient)
+        {
+        }
+        void onDisconnect(BLEClient *pclient)
+        {
+        }
+} ;
+
+bool connectToServer()
+{
+        Serial.print("Forming a connection to ");
+        Serial.println(myDevice->getAddress().toString().c_str());
+
+        BLEClient *pClient = BLEDevice::createClient();
+        Serial.println(" - Created client");
+
+        pClient->setClientCallbacks(new MyClientCallback());
+
+        // Connect to the remove BLE Server.
+        pClient->connect(myDevice); // if you pass BLEAdvertisedDevice instead of address, it will be recognized type of peer device address (public or private)
+        Serial.println(" - Connected to server");
+
+        // Obtain a reference to the service we are after in the remote BLE server.
+        BLERemoteService *pRemoteService = pClient->getService(serviceUUID);
+        if (pRemoteService == nullptr)
+        {
+                Serial.print("Failed to find our service UUID: ");
+                Serial.println(serviceUUID.toString().c_str());
+                pClient->disconnect();
+                return false;
+        }
+        Serial.println(" - Found our service");
+
+        // Obtain a reference to the characteristic in the service of the remote BLE server.
+        pRemoteCharacteristic = pRemoteService->getCharacteristic(charUUID);
+        if (pRemoteCharacteristic == nullptr)
+        {
+                Serial.print("Failed to find our characteristic UUID: ");
+                Serial.println(charUUID.toString().c_str());
+                pClient->disconnect();
+                return false;
+        }
+        Serial.println(" - Found our characteristic");
+
+        // Read the value of the characteristic.
+        if (pRemoteCharacteristic->canRead())
+        {
+                std::string value = pRemoteCharacteristic->readValue();
+                Serial.print("The characteristic value was: ");
+                Serial.println(value.c_str());
+        }
+
+        if (pRemoteCharacteristic->canNotify())
+                pRemoteCharacteristic->registerForNotify(notifyCallback);
+
+        connected = true;
+}
+
+class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks
+{
+        /**
+         * Called for each advertising BLE server.
+         */
+        void onResult(BLEAdvertisedDevice advertisedDevice)
+        {
+                
+                Serial.println(advertisedDevice.toString().c_str());
+
+                // We have found a device, let us now see if it contains the service we are looking for.
+                if (advertisedDevice.haveServiceUUID() && advertisedDevice.isAdvertisingService(serviceUUID))
+                {
+                        GestionIHM("BLE");
+                        BLEDevice::getScan()->stop();
+                        myDevice = new BLEAdvertisedDevice(advertisedDevice);
+                        doConnect = true;
+                        doScan = true;
+                        
+
+                } // Found our server
+        }         // onResult
+};                // MyAdvertisedDeviceCallbacks
+
+void setup()
+{
+        // Init peripheriques
+        Serial.begin(115200);
+        delay(1000);
+        initScreen();
+        GestionIHM("");
+        initWifiConnection();
+        init7Segment();
+        initBouton();
+
+        BLEDevice::init("ModuleVerrou");
+
+        BLEScan* pBLEScan = BLEDevice::getScan();
+        pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
+        pBLEScan->setInterval(1400);
+        pBLEScan->setWindow(500);
+        pBLEScan->setActiveScan(true);
+}
 
 void loop() {
    
@@ -420,6 +536,10 @@ void loop() {
         }
   if (WiFi.status() != WL_CONNECTED){etatWifi = "KO";}
   else{etatWifi = "OK";}
+
+  if(etatMqtt == "KO"){
+          etat=2;
+  }
   
 
   switch (etat)
@@ -490,9 +610,9 @@ void loop() {
                         }
                         for(int i=0;i<4;i++){                                   // envoi ordre d'ouverture
                                 mqttClient.publish("home/living_room/sensor_entry_door_authentification_mdp/authentification", "authorized");
-                                }   
+                        }   
                         digitalWrite(pinLedVert, LOW);
-                        
+                    
                 }
                 if (codeValide == -1)
                 {
@@ -529,25 +649,35 @@ void loop() {
                         digitalWrite(pinLedRouge, LOW);
                         
                 }
+
+  //      pCharacteristic->notify();
+        break;
+
+        case 2:
+                pBLEScan->start(5, false);
+                if (doConnect == true){
+                        if (connectToServer()){
+                                GestionIHM("ble ok");
+                        }
+                        else{
+                                Serial.println("We have failed to connect to the server; there is nothin more we will do.");
+                        }
+                        doConnect = false;
+                }
+
+                if (connected){
+                        String newValue = "OK";
+
+                        // Set the characteristic's value to be the array of bytes that is actually a string.
+                        pRemoteCharacteristic->writeValue(newValue.c_str(), newValue.length());
+                }
+                else if (doScan){
+                        BLEDevice::getScan()->start(0); // this is just eample to start scan after disconnect, most likely there is better way to do it in arduino
+                }
+                delay(1000);
         break;
 
         default:
         break;
    }
 }
-
-/*
-
-Pins utilisés par l'écran
-
-#define TFT_MOSI            19
-#define TFT_SCLK            18
-#define TFT_CS              5
-#define TFT_DC              16
-#define TFT_RST             23
-#define TFT_BL              4 
-
-PWM : all pins sauf les pins GPIO36, GPIO39, GPIO34, GPIO35
-12 --> led
-
-*/
