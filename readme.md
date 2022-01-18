@@ -147,11 +147,53 @@ Voici les différentes routes de l'API :
 
 
 ## 2.2. Robot Pepper
-	- Serveur Robot **Python**
-		- Accès à l’API 
-	- Interagir avec utilisateur **Python**
-	- Dashboard **HTML/CSS/JS**
-		- Afficher information / dashboard de l’API 
+
+Voici le lien du readme permettant de mettre en place le robot Pepper : ```pepper/readme.md```
+
+### 2.2.1. Serveur
+
+Le serveur est codé en Python à l'aide de la librairie NAOQI. 
+Celui-ci permmet de requetter l'API du serveur WEB et de lancer un service visible par le Pepper. 
+En somme, le serveur permet donc au Pepper d'avoir accès à l'API.
+
+Le serveur doit donc être lancé sur une machine disposant d'un accès à internet.
+
+Voici les liens entre le l'API et le serveur :
+
+![serveur](schema/pepper/serveurrobot.png)
+
+### 2.2.2. Pepper
+
+Le Pepper a été développé à l'aide du logiciel Choregraphe.
+
+Voici comment s'articule les fonctionnalités :
+
+![pepper](schema/pepper/pepper.png)
+![pepper_init](schema/pepper/pepper_init.png)
+![pepper_homelist](schema/pepper/pepper_homelist.png)
+![pepper_home1](schema/pepper/pepper_home1.png)
+![pepper_home2](schema/pepper/pepper_home2.png)
+![absencemode](schema/pepper/pepper_absencemode.png)
+![pepper_fetemode](schema/pepper/pepper_fetemode.png)
+
+Vous pouvez également trouver des captures d'écran de notre solution du logiciel Choregraphe dans le dossier suivant ```schema/pepper/screen/```
+
+### 2.2.3. Dashboard
+
+Le dashboard est développé en HTML/CSS/JS. 
+Il permet d'afficher le flux de la caméra lorsque qu'un Home est choisi.
+De plus, il permet de choisir un Home, monitorer celui-ci et également choisir le mode.
+
+Voici des captures d'écran du dashboard.
+
+![init](schema/pepper/dashboard/init.png)
+![homelist](schema/pepper/dashboard/homelist.png)
+![home1](schema/pepper/dashboard/home1.png)
+![home2](schema/pepper/dashboard/home2.png)
+![home3](schema/pepper/dashboard/home3.png)
+![home4](schema/pepper/dashboard/home4.png)
+![modefete](schema/pepper/dashboard/modefete.png)
+![modeabsence](schema/pepper/dashboard/modeabsence.png)
 
 ## 2.3. Serveur Global
 	- Supervision globale **Python**
