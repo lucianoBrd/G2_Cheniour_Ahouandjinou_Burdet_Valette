@@ -170,6 +170,12 @@ if __name__ == "__main__":
 
     while True:
 
+        # Reading actual mode
+        try :
+            MODE = web_api.get_active_mode(home.name)["label"]
+        except:
+            MODE = "normal"
+
         #region check temperature in living room
         temperature_living_room = float(sensor_temperature.data['temperature'])
         web_api.create_value(temperature_living_room, sensor_temperature.name)
@@ -180,10 +186,6 @@ if __name__ == "__main__":
         luminosity_living_room = float(sensor_luminosity.data['luminosity'])
         web_api.create_value(luminosity_living_room, sensor_luminosity.name)
 
-        try :
-            MODE = web_api.get_active_mode(home.name)["label"]
-        except:
-            MODE = "normal"
 
         #uniquement en mode manuel ??
         unresolved_actions = check_and_format_actions_api(web_api)
