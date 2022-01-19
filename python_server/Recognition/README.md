@@ -9,19 +9,20 @@
 
 - Création d'un environnement virtuel : il est fortement recommandé d'utiliser un environnement virtuel pour exécuter en sécurité le projet, pour cela exécuter la commande suivante dans la racine du projet `virtualenv venv`
 
-- Activer le venv : `./venv/Scripts/activate.ps1`
+- Activer le venv : `./venv/Scripts/activate`
 
 - Installez les dépendances : `pip install -r .\requirements.txt`
 
 ### Exécution du script
 
-Pour exécuter le script lancer la commande suivante : `py domotique_automatisation.py`.
+Avant de lancer le script modifier les adresse dans le script: `CAMERA_ADDRESS` et `BROKER_ADDRESS`
+Pour exécuter le script lancer la commande suivante : `pythnon3 reco.py`.
 
 ## Descriptif du script
 
-Ce script permet de gérer les différente entité de la maison (via un server MQTT) et de paramétrer des scénario entre elles. Par exemple, lorsque la température (capteur de température) descend en dessous d'un seuil on active le chauffage. 
+Le script enregistre un visage autorisé puis le compare au visage detecté sur la caméra placéé à l'entrée .Si un visage familier est detecté une autorisation est envoyée par le MQTT.
 
-**Remarque** : Vous pouvez retrouver plus d'informations sur les différentes via la documention HTML suivante : [documentation des classes](https://work.lucien-brd.com/doc/index.html)
+
 
 
 
