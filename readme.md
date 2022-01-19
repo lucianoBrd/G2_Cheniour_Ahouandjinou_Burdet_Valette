@@ -210,7 +210,7 @@ Voici l'algoritmhe qui résume le fonctionnement global du serveur :
 - ![diagram_server_domotique](schema/server_global/diagram_server_domotique.drawio.png)
 
 Voici l'exemple du CLI du serveur lorsque le projet tourne : 
-- ![diagram_server_domotique](schema/server_global/capture_sheel_server_global.PNG)
+- ![cli_server](schema/server_global/capture_sheel_server_global.PNG)
 
 ### 2.3.1. Liste des topic mqtt mis en place
 
