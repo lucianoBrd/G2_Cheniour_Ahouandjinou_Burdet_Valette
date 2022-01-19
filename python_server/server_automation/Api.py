@@ -157,20 +157,6 @@ class Api:
         """
         return requests.get(self.url + "/modes", headers = self.header).json()
     
-    def get_mode_by_name(self, home_name = '', mode_name = ''):
-        """
-        Get one mode with it name 
-
-        :param home_name: The name of the home of the mode
-        :type home_name: str
-
-        :param mode_name: The name of the mode
-        :type mode_name: str
-
-        :returns: json -- The json of the mode data
-        """
-        return requests.get(self.url + "/mode/" + home_name + "/" + mode_name, headers = self.header).json()
-
     def get_active_mode(self, home_name):
         """
         Get the active mode
@@ -474,7 +460,7 @@ class Api:
 
         return request.status_code
 
-    def create_mode(self, mode_name = '', parent_home_name = ''):
+    def create_mode(self, parent_home_name = '', mode_name = ''):
         """
         Create a mode
 
@@ -490,12 +476,12 @@ class Api:
         parent_home_id = self.get_home_id_by_name(parent_home_name)
 
         payload = json.dumps({
-        "home" : parent_home_id,
+        "home" : '/api/homes/' + str(parent_home_id),
         "label": mode_name,
             })
         
-        request = requests.post(self.url + "/moedes", data=payload, headers = self.header)
-
+        request = requests.post(self.url + "/modes", data=payload, headers = self.header)
+        
         return request.status_code
 
     def create_element(self, element_name = '', parent_room_name = '', type_name = ''):
