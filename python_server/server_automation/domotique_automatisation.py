@@ -121,6 +121,7 @@ def check_password_change(api_obj, password_memory):
     password = api_obj.get_home_by_name(home.name)['password']
 
     if password != password_memory:
+        print("new password", password)
         home.mqtt_client.publish("home/security/entry_code", password)
         return password
     else :
@@ -296,7 +297,7 @@ if __name__ == "__main__":
 
         # envoi du new password s'il est modifié en BDD: 
         try:
-            PASSWORD_MAMORY = check_password_change(web_api, PASSWORD_MEMORY)
+            PASSWORD_MEMORY = check_password_change(web_api, PASSWORD_MEMORY)
         except:
             pass
 
