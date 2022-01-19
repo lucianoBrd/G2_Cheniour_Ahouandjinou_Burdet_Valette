@@ -241,10 +241,26 @@ Quand un visage est reconnu une authorisation est envoyée via le MQTT.
 Diagramme reconnaissance faciale :
 ![Reconnaissance faciale Diagram](schema/IOT/Reconnaissance%20faciale%20Diagram.PNG)
 
+### 2.4.2. Module chauffage
+Le module de chauffage est composer d'un ESP32, une led et une résistance qui simule le chauffage.
 
-- Gestion Capteurs 
-	- température
-	- humidité 
-- Gestion des moteurs
-- Gestion simulation Prise (LED)
-- Connexion MQTT
+Shéma électrique du module: 
+![Module Chauffage](schema/IOT/Module%20Chauffage.PNG)
+
+### 2.4.3. Module Lumière
+Le module de chauffage est composer d'un ESP32, 6 led de couleur différente et 3 résistance pour réguler l'intesité.
+
+Shéma électrique du module: 
+![Module Luminausité](schema/IOT/Module%20Luminausité.PNG)
+
+### 2.4.4. Module VMC
+Le Module VMC est composé d'un ESP32 et un servo moteur commandé en vitesse.
+
+Shéma électrique du module: 
+![Module VMC](schema/IOT/Module%20VMC.PNG)
+### 2.4.5. Module Vérrou
+Le Module VMC est composé d'un ESP32 et un servo moteur commandé en position.
+
+Shéma électrique du module: 
+![Module Vérrou](schema/IOT/Module%20Vérrou.PNG)
+### 2.4.6. Capteur "A completer"
