@@ -7,7 +7,7 @@ from Api import Api
 from decouple import config
 from clint.textui import colored, puts, indent
 
-BROKER_ADDRESS = '192.168.43.222'
+BROKER_ADDRESS = '192.168.175.222'
 TOPIC_DICT = {}
 home = Home()
 PASSWORD_MEMORY = ''
