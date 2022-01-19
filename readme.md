@@ -224,13 +224,22 @@ Voici des captures d'écran du dashboard.
 
 ## 2.4. IOT
 
-### 2.4.1. Reconnaissance facial 
+### 2.4.1. Reconnaissance faciale
+Shéma global de la reconnaissance faciale :
+![Reconnaissance facial Shéma](schema/IOT/Reconnaissance facial Shéma.png)
 
 #### 2.4.1.1. ESP32Cam
+L'ESP32 Cam déploie un serveur http sur lequqel nous pouvons acceder au flux d'images.
 
 Vidéo de mise en place de ESP32Cam : https://youtu.be/iwUzKX_GJJs
 
 #### 2.4.1.2. Serveur reconaissance faciale
+Le serveur de reconnaissance faciale accèdes au flux d'image pour les comparer avec des visages enregistrés.
+De plus, il est possible d'enregistrer des visages a votre guise.
+Quand un visage est reconnu une authorisation est envoyée via le MQTT.
+
+Diagramme reconnaissance faciale :
+![Reconnaissance faciale Diagram](schema/IOT/Reconnaissance faciale Diagram.png)
 
 
 - Gestion Capteurs 
