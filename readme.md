@@ -64,7 +64,7 @@ D'autre part de façon contrôlée, c'est-à-dire gérer via la voix, ou de mani
 
 ## 1.5. Évolutions possibles
 
-- Mode préprogrammé (ambiance de la maison, mode chill, mode surveillance, mode absence, etc….) 
+- Mode préprogrammé 
 	- Surveillance : détecte les mouvements dans la maison et effectue une notification **Jalon 2**
 	- Fête : met de la musique et les lumières de la pièce clignotent. **Jalon 2**
 - Application Android de gestion **Évolution Future**
