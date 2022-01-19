@@ -6,8 +6,8 @@ import time
 import paho.mqtt.client as mqtt
 
 directory = 'Faces'
-CAMERA_ADDRESS = "192.168.12.1"
-BROKER_ADDRESS = "192.168.12.222"
+CAMERA_ADDRESS = "192.168.175.28"
+BROKER_ADDRESS = "192.168.175.222"
 
 def init_mqtt_connection():
     # Init MQTT Client
