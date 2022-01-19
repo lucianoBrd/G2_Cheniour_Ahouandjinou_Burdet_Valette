@@ -6,8 +6,8 @@ import time
 import paho.mqtt.client as mqtt
 
 directory = 'Faces'
-CAMERA_ADDRESS = "192.168.175.28"
-BROKER_ADDRESS = "192.168.175.222"
+CAMERA_ADDRESS = "192.168.43.28"
+BROKER_ADDRESS = "192.168.43.222"
 
 def init_mqtt_connection():
     # Init MQTT Client
@@ -17,7 +17,7 @@ def init_mqtt_connection():
     return client
 print("Connexion au broker MQTT")
 
-TOPIC = "home/entry_door/detection"
+TOPIC = "home/living_room/sensor_entry_door_authentification_face/authentification"
 mqtt_client = init_mqtt_connection()
 
 if not os.path.exists(directory):
