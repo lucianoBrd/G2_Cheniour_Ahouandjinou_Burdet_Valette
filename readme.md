@@ -224,7 +224,15 @@ Voici des captures d'écran du dashboard.
 
 ## 2.4. IOT
 
-- Reconnaissance facial 
+### 2.4.1. Reconnaissance facial 
+
+#### 2.4.1.1. ESP32Cam
+
+Vidéo de mise en place de ESP32Cam : https://youtu.be/iwUzKX_GJJs
+
+#### 2.4.1.2. Serveur reconaissance faciale
+
+
 - Gestion Capteurs 
 	- température
 	- humidité 
