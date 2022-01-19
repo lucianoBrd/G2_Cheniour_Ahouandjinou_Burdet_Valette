@@ -1,11 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# ssh nao@pepper01
-# export PYTHONPATH=${PYTHONPATH}:/softwares/INFO/Pepper/pynaoqi-python2.7-2.5.5.5-linux64/lib/python2.7/site-packages
-# run with python2 scripts/service.py
-# http://134.214.50.49/apps/domotique/
+# ssh nao@pepper02
+# ifconfig
 # qicli call ALTabletService._openSettings
+
+# export PYTHONPATH=${PYTHONPATH}:/softwares/INFO/Pepper/pynaoqi-python2.7-2.5.5.5-linux64/lib/python2.7/site-packages
+
+# run with python2 scripts/service.py
+
+# http://134.214.51.43/apps/domotique/
+
 
 import qi
 import json
