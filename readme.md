@@ -26,6 +26,7 @@ Lien du Dashboard Power BI:
 	2. Robot Pepper
 	3. Serveur Global
 	4. IOT
+	5. Power BI
 
 # 1. Introduction
 
@@ -272,3 +273,24 @@ Le Module VMC est composé d'un ESP32 et un servo moteur commandé en position.
 Shéma électrique du module: 
 ![Module Vérrou](schema/IOT/Module%20Vérrou.PNG)
 ### 2.4.6. Capteur "A completer"
+
+## 2.5. Power BI 
+
+Power BI est un outils qui permet la récupération, traitement et affichage des données, Nous avons utilisés les point d'entrés suivant de l'API : 
+- https://work.lucien-brd.com/api/homes
+- https://work.lucien-brd.com/api/values
+
+Celat nous a permit d'avoir les données sous la forme suivante : 
+
+![PowerBI_Data_structure](schema/PowerBI/PowerBI_Data_structure.PNG)
+
+Page1 Permet d'avoir les dernières valeurs des actuators et sensors:
+
+![Page1_PowerBI](schema/PowerBI/Page1_PowerBI.PNG)
+
+Page2 Permet d'avoir les courbes en fonction du temps des valeurs de sensors:
+
+![Page2_PowerBI](schema/PowerBI/Page2_PowerBI.PNG)
+
+
+
