@@ -114,6 +114,8 @@ Le lien de l'application WEB (API + Dashboard) est le suivant : https://work.luc
 
 Voici le lien du readme permettant de mettre en place le serveur WEB : ```web_server_api_dashboard/readme.md```
 
+Vidéo de mise en place du serveur WEB : https://youtu.be/J7XK7m5FHh4
+
 ### 2.1.1. Base de données
 
 La base de données est en MySQL. Voici son schéma :
@@ -149,6 +151,8 @@ Voici les différentes routes de l'API :
 ## 2.2. Robot Pepper
 
 Voici le lien du readme permettant de mettre en place le robot Pepper : ```pepper/readme.md```
+
+Vidéo de mise en place du Pepper : https://youtu.be/w5FxUbHlQkk
 
 ### 2.2.1. Serveur
 

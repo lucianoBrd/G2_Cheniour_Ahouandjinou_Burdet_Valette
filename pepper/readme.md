@@ -1,3 +1,5 @@
+Vidéo de mise en place du Pepper : https://youtu.be/w5FxUbHlQkk
+
 Vous devez vous trouver dans le dossier ```pepper``` :
 ```
 cd pepper/
