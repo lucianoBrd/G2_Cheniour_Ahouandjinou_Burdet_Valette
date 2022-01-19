@@ -10,6 +10,8 @@ Lien de la vidéo de démonstration du jalon 1
 Voici le lien de notre application WEB (API + Dashboard) :
 - https://work.lucien-brd.com/
 
+Lien du Dashboard Power BI:
+- https://app.powerbi.com/groups/me/reports/f1663c79-8891-434a-b447-44981bdea118/ReportSection
 
 1. Introduction
 	1. Schéma global
