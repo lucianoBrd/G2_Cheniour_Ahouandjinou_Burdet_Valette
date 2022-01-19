@@ -284,11 +284,11 @@ Celat nous a permit d'avoir les données sous la forme suivante :
 
 ![PowerBI_Data_structure](schema/PowerBI/PowerBI_Data_structure.PNG)
 
-Page1:
+Page1 Permet d'avoir les dernières valeurs des actuators et sensors:
 
 ![Page1_PowerBI](schema/PowerBI/Page1_PowerBI.PNG)
 
-Page2:
+Page2 Permet d'avoir les courbes en fonction du temps des valeurs de sensors:
 
 ![Page2_PowerBI](schema/PowerBI/Page2_PowerBI.PNG)
 
