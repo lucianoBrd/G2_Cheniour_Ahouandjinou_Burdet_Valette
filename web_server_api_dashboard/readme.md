@@ -15,6 +15,7 @@ composer install
 ```
 
 Mettre en place la base de données :
+Modifier l'URL de la base de données dans le fichier ```.env``` : DATABASE_URL.
 ```
 php bin/console doctrine:database:create
 php bin/console doctrine:schema:update --force
