@@ -125,17 +125,17 @@ La base de données est en MySQL. Voici son schema :
 Voici des captures d'écran du dashboard.
 Celui-ci permet d'ajouter, éditer ainsi que supprimer les différents composant de la base de données.
 
-![dashboard](schema/web_server_api_dashboard/dashboard.png)
-![home](schema/web_server_api_dashboard/home.png)
-![action](schema/web_server_api_dashboard/action.png)
-![element](schema/web_server_api_dashboard/element.png)
-![create_element](schema/web_server_api_dashboard/create_element.png)
-![mode](schema/web_server_api_dashboard/mode.png)
-![edit_mode](schema/web_server_api_dashboard/edit_mode.png)
-![room](schema/web_server_api_dashboard/room.png)
-![type](schema/web_server_api_dashboard/type.png)
-![value](schema/web_server_api_dashboard/value.png)
-![delete_value](schema/web_server_api_dashboard/delete_value.png)
+- dashboard ![dashboard](schema/web_server_api_dashboard/dashboard.png)
+- home ![home](schema/web_server_api_dashboard/home.png)
+- action ![action](schema/web_server_api_dashboard/action.png)
+- element ![element](schema/web_server_api_dashboard/element.png)
+- create_element ![create_element](schema/web_server_api_dashboard/create_element.png)
+- mode ![mode](schema/web_server_api_dashboard/mode.png)
+- edit_mode ![edit_mode](schema/web_server_api_dashboard/edit_mode.png)
+- room ![room](schema/web_server_api_dashboard/room.png)
+- type ![type](schema/web_server_api_dashboard/type.png)
+- value ![value](schema/web_server_api_dashboard/value.png)
+- delete_value ![delete_value](schema/web_server_api_dashboard/delete_value.png)
 
 ### 2.1.3. API
 
@@ -168,13 +168,14 @@ Le Pepper a été développé à l'aide du logiciel Choregraphe.
 
 Voici comment s'articule les fonctionnalités :
 
-![pepper](schema/pepper/pepper.png)
-![pepper_init](schema/pepper/pepper_init.png)
-![pepper_homelist](schema/pepper/pepper_homelist.png)
-![pepper_home1](schema/pepper/pepper_home1.png)
-![pepper_home2](schema/pepper/pepper_home2.png)
-![absencemode](schema/pepper/pepper_absencemode.png)
-![pepper_fetemode](schema/pepper/pepper_fetemode.png)
+- pepper ![pepper](schema/pepper/pepper.png)
+- pepper_init ![pepper_init](schema/pepper/pepper_init.png)
+- pepper_homelist ![pepper_homelist](schema/pepper/pepper_homelist.png)
+- pepper_home 
+	![pepper_home1](schema/pepper/pepper_home1.png)
+	![pepper_home2](schema/pepper/pepper_home2.png)
+- pepper_absencemode ![pepper_absencemode](schema/pepper/pepper_absencemode.png)
+- pepper_fetemode ![pepper_fetemode](schema/pepper/pepper_fetemode.png)
 
 Vous pouvez également trouver des captures d'écran de notre solution du logiciel Choregraphe dans le dossier suivant ```schema/pepper/screen/```
 
@@ -186,14 +187,15 @@ De plus, il permet de choisir un Home, monitorer celui-ci et également choisir 
 
 Voici des captures d'écran du dashboard.
 
-![init](schema/pepper/dashboard/init.png)
-![homelist](schema/pepper/dashboard/homelist.png)
-![home1](schema/pepper/dashboard/home1.png)
-![home2](schema/pepper/dashboard/home2.png)
-![home3](schema/pepper/dashboard/home3.png)
-![home4](schema/pepper/dashboard/home4.png)
-![modefete](schema/pepper/dashboard/modefete.png)
-![modeabsence](schema/pepper/dashboard/modeabsence.png)
+- init ![init](schema/pepper/dashboard/init.png)
+- homelist ![homelist](schema/pepper/dashboard/homelist.png)
+- home 
+	![home1](schema/pepper/dashboard/home1.png)
+	![home2](schema/pepper/dashboard/home2.png)
+	![home3](schema/pepper/dashboard/home3.png)
+	![home4](schema/pepper/dashboard/home4.png)
+- modefete ![modefete](schema/pepper/dashboard/modefete.png)
+- modeabsence ![modeabsence](schema/pepper/dashboard/modeabsence.png)
 
 ## 2.3. Serveur Global
 	- Supervision globale **Python**
