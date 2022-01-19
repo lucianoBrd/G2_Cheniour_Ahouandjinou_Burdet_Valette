@@ -207,7 +207,7 @@ Voici des captures d'écran du dashboard.
 Le serveur global permet de mettre en relation les données de la base de données à l'aide de l'API et les données des éléments IOT via le server MQTT. Ainsi, il va mettre en base de données les valeurs récolté par les éléments IOT, traiter les actions à réaliser sur les éléments IOT (par exemple : ouvrir la porte, éteindre la lumière ou encore atteindre une certaine température) et jouer des scénarios/modes (par exemple : le mode fête ou encore le mode absent).
 
 Voici l'algoritmhe qui résume le fonctionnement global du serveur :
-![diagram_server_domotique](schema/diagram_server_domotique.drawio.png)
+- ![diagram_server_domotique](schema/diagram_server_domotique.drawio.png)
 
 ### 2.3.1. Liste des topic mqtt mis en place
 
