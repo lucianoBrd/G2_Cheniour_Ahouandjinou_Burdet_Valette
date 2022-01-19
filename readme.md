@@ -245,7 +245,6 @@ Quand un visage est reconnu une authorisation est envoyée via le MQTT.
 
 Diagramme reconnaissance faciale :
 ![Reconnaissance faciale Diagram](schema/IOT/Reconnaissance%20faciale%20Diagram.PNG)
->>>>>>> master
 
 ### 2.4.2. Module chauffage
 Le module de chauffage est composer d'un ESP32, une led et une résistance qui simule le chauffage.
