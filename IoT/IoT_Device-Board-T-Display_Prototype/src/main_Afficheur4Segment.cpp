@@ -35,14 +35,15 @@ const int mqttPort = 1883;                       // port de connection mqtt
 const char* mqttUser = "";
 const char* mqttPassword = "";
 const char* idCapteur = "Digicode";              // identifiant du module 
-const int mdpPorte = 2234;                       // mot de passe de la porte
+int mdpPorte[] = {2,3,4,5};                       // mot de passe de la porte
 
 int etat = -1;                                   // variable representant l'etat du capteur : (-1) --> Wifi deconnecté 
 volatile int digitActuel = 1;                             // variable correspondant au digit à allumer, on demarre positionné sur le digit 1
 volatile int valeur7segment[] = {1,2,3,4};                // valeur affiché sur le 7Segment
 int codeValide = 0;
+int cptTentativeRecoMqtt = 0;
 
-char* etatWifi = "";                             // paramètre permettant de récuperer l'état de connection Wifi
+char *etatWifi = "";                         // paramètre permettant de récuperer l'état de connection Wifi
 char* etatMqtt = "";                             // paramètre permettant de récuperer l'état de connection MQTT
 
 static BLEUUID serviceUUID("4fafc201-1fb5-459e-8fcc-c5c9c331914b");
@@ -60,7 +61,7 @@ TFT_eSPI tft = TFT_eSPI();                       // Invoke library, pins defined
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 
-//BLECharacteristic *pCharacteristic;
+BLECharacteristic *pCharacteristic;
 BLEScan *pBLEScan = BLEDevice::getScan();
 ///____
 // Demarre l'ecran
@@ -140,21 +141,37 @@ void initWifiConnection(){
     WiFi.begin(ssid, password);
 }
 // fonction Callback pour publication sur le topic mdp
-void mqttCallback(char* valeur, uint8_t* var, unsigned int nb){
-
+void mqttCallback(char *topic, uint8_t *payload, unsigned int length)
+{
+        
+        if (length == 4){
+             //   mdpPorte = (char)payload[0] * 1000 + (char)payload[1] * 100 + (char)payload[2] * 10 + (char)payload[3];
+        }
+        
 }
 
 void initMqtt(){ 
   mqttClient.setServer(mqttServer, mqttPort);
-  while (!mqttClient.connected()) {
-      
-    if (mqttClient.connect(idCapteur, mqttUser, mqttPassword )) {
-      etatMqtt = "OK";  
-      } else {  
-      etatMqtt = "KO";
-      delay(2000);
-      }
-    mqttClient.setCallback(mqttCallback);
+  cptTentativeRecoMqtt = 0;
+  while (!mqttClient.connected())
+  {
+
+          if (mqttClient.connect(idCapteur, mqttUser, mqttPassword))
+          {
+                etatMqtt = "OK";
+          }
+          else
+          {
+                etatMqtt = "KO";
+                delay(2000);
+          }
+          mqttClient.setCallback(mqttCallback);
+          cptTentativeRecoMqtt = cptTentativeRecoMqtt + 1;
+          if (cptTentativeRecoMqtt == 3)
+          {
+                cptTentativeRecoMqtt = 0;
+                break;
+          }
   }
   bool var = false;
   while (!var)
@@ -325,22 +342,23 @@ void chiffre(int chiffre){
 }
 
 void verificationMdp(){
-        if ((1000*valeur7segment[0]+100*valeur7segment[1]+10*valeur7segment[2]+valeur7segment[3])==mdpPorte){
-              valeur7segment[0] = 0;
-              valeur7segment[1] = 0;
-              valeur7segment[2] = 0;
-              valeur7segment[3] = 0;
+        if (valeur7segment[0]==mdpPorte[0] && valeur7segment[1]==mdpPorte[1] && valeur7segment[2]==mdpPorte[2] &&valeur7segment[3]==mdpPorte[3]) {
+        //       valeur7segment[0] = 0;
+        //       valeur7segment[1] = 0;
+        //       valeur7segment[2] = 0;
+        //       valeur7segment[3] = 0;
               codeValide = 1;              
         }else{
                // if (codeValide != 1){
-                        valeur7segment[0] = 0;
-                        valeur7segment[1] = 0;
-                        valeur7segment[2] = 0;
-                        valeur7segment[3] = 0;
+                        // valeur7segment[0] = 0;
+                        // valeur7segment[1] = 0;
+                        // valeur7segment[2] = 0;
+                        // valeur7segment[3] = 0;
                         codeValide = -1;     
              //   }
                 
         }
+       // delay(100);
      
 }
 
@@ -350,19 +368,26 @@ void incrementerChiffre(){
 
  case 1:
         valeur7segment[0] = valeur7segment[0] + 1;
-        if (valeur7segment[0] > 9 ) {valeur7segment[0] = 0;}
+        if (valeur7segment[0] > 9 ) {valeur7segment[0] = 0;
+        }
         break;
  case 2:
         valeur7segment[1] = valeur7segment[1] + 1;
-        if (valeur7segment[1] > 9 ) {valeur7segment[1] = 0;}
+        if (valeur7segment[1] > 9 ) {
+                valeur7segment[1] = 0; 
+        }
         break;
  case 3:
         valeur7segment[2] = valeur7segment[2] + 1;
-        if (valeur7segment[2] > 9 ) {valeur7segment[2] = 0;}
+        if (valeur7segment[2] > 9 ) {
+                valeur7segment[2] = 0;
+        }
         break;
  case 4:
         valeur7segment[3] = valeur7segment[3] + 1;
-        if (valeur7segment[3] > 9 ) {valeur7segment[3] = 0;}
+        if (valeur7segment[3] > 9 ) {
+                valeur7segment[3] = 0;
+        }
         break;
  
  default:
@@ -406,11 +431,7 @@ void initBouton(){
  attachInterrupt(pinBtnIncrementerChiffre,incrementerChiffre,RISING);
 }
 
-static void notifyCallback(
-    BLERemoteCharacteristic *pBLERemoteCharacteristic,
-    uint8_t *pData,
-    size_t length,
-    bool isNotify)
+static void notifyCallback(BLERemoteCharacteristic *pBLERemoteCharacteristic,uint8_t *pData,size_t length,bool isNotify)
 {
         Serial.print("Notify callback for characteristic ");
         Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
@@ -422,11 +443,9 @@ static void notifyCallback(
 
 class MyClientCallback : public BLEClientCallbacks {
         void onConnect(BLEClient* pclient)
-        {
-        }
+        {}
         void onDisconnect(BLEClient *pclient)
-        {
-        }
+        {}
 } ;
 
 bool connectToServer()
@@ -537,10 +556,10 @@ void loop() {
   if (WiFi.status() != WL_CONNECTED){etatWifi = "KO";}
   else{etatWifi = "OK";}
 
-  if(etatMqtt == "KO"){
-          etat=2;
+  if (etatMqtt == "KO")
+  {
+         // etat = 2;
   }
-  
 
   switch (etat)
     {
@@ -612,8 +631,12 @@ void loop() {
                                 mqttClient.publish("home/living_room/sensor_entry_door_authentification_mdp/authentification", "authorized");
                         }   
                         digitalWrite(pinLedVert, LOW);
-                    
-                }
+                        valeur7segment[0] = 0;
+                        valeur7segment[1] = 0;
+                        valeur7segment[2] = 0;
+                        valeur7segment[3] = 0;
+                        codeValide = 0;
+                                }
                 if (codeValide == -1)
                 {
                         codeValide = 0;
@@ -647,13 +670,20 @@ void loop() {
                                 
                         }
                         digitalWrite(pinLedRouge, LOW);
-                        
+                        valeur7segment[0] = 0;
+                        valeur7segment[1] = 0;
+                        valeur7segment[2] = 0;
+                        valeur7segment[3] = 0;
+                        codeValide = 0;
                 }
 
   //      pCharacteristic->notify();
         break;
 
         case 2:
+                GestionIHM("ble");
+                delay(2000);
+
                 pBLEScan->start(5, false);
                 if (doConnect == true){
                         if (connectToServer()){
@@ -680,4 +710,6 @@ void loop() {
         default:
         break;
    }
+
+
 }

@@ -16,26 +16,27 @@
     // Pins utilisés sur la carte
 
     ///_____
-const char *ssid = "SFR_DDA8"; //"Domotique";// identifiant réseau//"SFR_DDA8";
-const char *password = "3vsk72pjpz5fkd69umkz"; //"3vsk72pjpz5fkd69umkz";   // mot de passe réseau
-const char *mqttServer = "192.168.1.89"; // addresse IP du brooker Mqtt
-const int mqttPort = 1883;                 // port de connection mqtt
-const char *mqttUser = "";
-const char *mqttPassword = "";
-const char *idCapteur = "Server"; // identifiant du module
-const int mdpPorte = 2234;          // mot de passe de la porte
+    const char *ssid = "Domotique";                //"Domotique";// identifiant réseau//"SFR_DDA8";
+    const char *password = "Domotique";            //"3vsk72pjpz5fkd69umkz";   // mot de passe réseau
+    const char *mqttServer = "192.168.175.222";       // addresse IP du brooker Mqtt
+    const int mqttPort = 1883;                     // port de connection mqtt
+    const char *mqttUser = "";
+    const char *mqttPassword = "";
+    const char *idCapteur = "Server"; // identifiant du module
+    const int mdpPorte = 2234;        // mot de passe de la porte
 
-int etat = -1;                                // variable representant l'etat du capteur : (-1) --> Wifi deconnecté
-volatile int digitActuel = 1;                 // variable correspondant au digit à allumer, on demarre positionné sur le digit 1
-volatile int valeur7segment[] = {1, 2, 3, 4}; // valeur affiché sur le 7Segment
-int codeValide = 0;
+    int etat = -1;                                // variable representant l'etat du capteur : (-1) --> Wifi deconnecté
+    volatile int digitActuel = 1;                 // variable correspondant au digit à allumer, on demarre positionné sur le digit 1
+    volatile int valeur7segment[] = {1, 2, 3, 4}; // valeur affiché sur le 7Segment
+    int codeValide = 0;
+    int cptTentativeRecoMqtt = 0;
 
-char *etatWifi = ""; // paramètre permettant de récuperer l'état de connection Wifi
-char *etatMqtt = ""; // paramètre permettant de récuperer l'état de connection MQTT
-char *characteristiqueValeur ;
+        char *etatWifi = ""; // paramètre permettant de récuperer l'état de connection Wifi
+    char *etatMqtt = ""; // paramètre permettant de récuperer l'état de connection MQTT
+    char *characteristiqueValeur;
 
-const char *var = "";
-std::string var1;
+    const char *var = "";
+    std::string var1;
 
     ///____ Appel classes
     TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup_Select.h
@@ -158,6 +159,7 @@ void mqttCallback(char *valeur, uint8_t *var, unsigned int nb)
 void initMqtt()
 {
         mqttClient.setServer(mqttServer, mqttPort);
+        cptTentativeRecoMqtt=0;
         while (!mqttClient.connected())
         {
 
@@ -171,6 +173,11 @@ void initMqtt()
                         delay(2000);
                 }
                 mqttClient.setCallback(mqttCallback);
+                if (cptTentativeRecoMqtt == 3)
+                {
+                        cptTentativeRecoMqtt = 0;
+                        break;
+                }
         }
         bool var = false;
         while (!var)
@@ -277,11 +284,6 @@ void loop()
                         codeValide = 0;
                       
                 }
-                
-              //  var = pCharacteristic->getValue().c_str();
-              //  var1 = var;
-              //  GestionIHM(var);
-           //   Serial.println(pCha)
 
         default:
                 break;

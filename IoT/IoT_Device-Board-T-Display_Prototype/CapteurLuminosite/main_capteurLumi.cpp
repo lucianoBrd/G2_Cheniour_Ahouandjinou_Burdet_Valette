@@ -197,11 +197,13 @@ void loop() {
     break;
 
   case 1:
-    GestionIHM(intensiteLum *  100 / 500);
+    intensiteLum = intensiteLum * 100 / 500;
+     GestionIHM(intensiteLum);
     // mqttClient.publish("esp/test", "Hello from ESP32");
+    if (intensiteLum > 100){intensiteLum = 100;}
     if (intensiteLum)
     {
-      mqtt_publish_float("home/living_room/sensor_luminosity/luminosity", intensiteLum * 100 / 500);
+      mqtt_publish_float("home/living_room/sensor_luminosity/luminosity", intensiteLum);
    } 
     
     if (pwmFreq!=0.1){
