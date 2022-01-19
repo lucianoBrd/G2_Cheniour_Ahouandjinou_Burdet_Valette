@@ -170,12 +170,6 @@ if __name__ == "__main__":
 
     while True:
 
-        # Reading actual mode
-        try :
-            MODE = web_api.get_active_mode(home.name)["label"]
-        except:
-            MODE = "normal"
-
         #region check temperature in living room
         temperature_living_room = float(sensor_temperature.data['temperature'])
         web_api.create_value(temperature_living_room, sensor_temperature.name)
@@ -301,7 +295,15 @@ if __name__ == "__main__":
             sensor_entry_door_authentification_mdp.data["authentification"] = ""
 
         # envoi du new password s'il est modifié en BDD: 
-        #PASSWORD_MAMORY = check_password_change(web_api, PASSWORD_MEMORY)
+        try:
+            PASSWORD_MAMORY = check_password_change(web_api, PASSWORD_MEMORY)
+        except:
+            pass
+
+        try :
+            MODE = web_api.get_active_mode(home.name)["label"]
+        except:
+            MODE = "normal"
 
         if MODE == "ABSENT":
 
@@ -314,6 +316,10 @@ if __name__ == "__main__":
             if entry_door.data['state'] != "OFF" :
                 web_api.create_action("OFF", entry_door.name)
 
+        try :
+            MODE = web_api.get_active_mode(home.name)["label"]
+        except:
+            MODE = "normal"
         
         if MODE == "FETE":
             if lum_living_room.data['state'] != "FETE" :
