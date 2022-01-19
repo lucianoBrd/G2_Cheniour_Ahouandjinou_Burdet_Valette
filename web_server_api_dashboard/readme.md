@@ -4,6 +4,8 @@ Prérequis:
 - PHP
 - MySQL
 
+Vidéo de mise en place du serveur WEB : https://youtu.be/J7XK7m5FHh4
+
 Aller dans le dossier du serveur WEB :
 ```
 cd web_server_api_dashboard/
