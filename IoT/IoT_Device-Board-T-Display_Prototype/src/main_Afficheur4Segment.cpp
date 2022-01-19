@@ -37,6 +37,7 @@ const char* mqttPassword = "";
 const char* idCapteur = "Digicode";              // identifiant du module 
 int mdpPorte[] = {2,3,4,5};                       // mot de passe de la porte
 
+
 int etat = -1;                                   // variable representant l'etat du capteur : (-1) --> Wifi deconnecté 
 volatile int digitActuel = 1;                             // variable correspondant au digit à allumer, on demarre positionné sur le digit 1
 volatile int valeur7segment[] = {1,2,3,4};                // valeur affiché sur le 7Segment
@@ -105,6 +106,28 @@ void GestionIHM(char* info){
 
 }
 
+void GestionIHM(int info)
+{
+        tft.fillScreen(TFT_WHITE);
+        tft.setCursor(15, 20);
+        tft.println(idCapteur); // mqttClient.state());
+        tft.setCursor(5, 50);
+        tft.println("__________");
+
+        tft.setCursor(5, 100);
+        tft.println(info);
+
+        tft.setCursor(5, 190);
+        tft.println("WiFi : ");
+        tft.setCursor(100, 190);
+        tft.println(etatWifi);
+
+        tft.setCursor(5, 220);
+        tft.println("Mqtt : ");
+        tft.setCursor(100, 220);
+        tft.println(etatMqtt);
+}
+
 void wifiConnected(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
   etatWifi = "OK";
 }
@@ -143,11 +166,29 @@ void initWifiConnection(){
 // fonction Callback pour publication sur le topic mdp
 void mqttCallback(char *topic, uint8_t *payload, unsigned int length)
 {
-        
+        int payLoad[] = {0, 0, 0, 0};        
         if (length == 4){
-             //   mdpPorte = (char)payload[0] * 1000 + (char)payload[1] * 100 + (char)payload[2] * 10 + (char)payload[3];
-        }
-        
+                payLoad[0] = int((char)payload[0]) - 48;
+                payLoad[1] = int((char)payload[1]) - 48;
+                payLoad[2] = int((char)payload[2]) - 48;
+                payLoad[3] = int((char)payload[3]) - 48;
+
+                {
+                        if (int((char)payLoad[1]) >= 0 && int((char)payLoad[1]) <= 9)
+                        {
+                                if (int((char)payLoad[2]) >= 0 && int((char)payLoad[2]) <= 9)
+                                {
+                                        if (int((char)payLoad[3]) >= 0 && int((char)payLoad[3]) <= 9)
+                                        {
+                                                mdpPorte[0] = payLoad[0];
+                                                mdpPorte[1] = payLoad[1];
+                                                mdpPorte[2] = payLoad[2];
+                                                mdpPorte[3] = payLoad[3];
+                                        }
+                                }
+                        }
+                    }
+                }
 }
 
 void initMqtt(){ 
@@ -343,23 +384,10 @@ void chiffre(int chiffre){
 
 void verificationMdp(){
         if (valeur7segment[0]==mdpPorte[0] && valeur7segment[1]==mdpPorte[1] && valeur7segment[2]==mdpPorte[2] &&valeur7segment[3]==mdpPorte[3]) {
-        //       valeur7segment[0] = 0;
-        //       valeur7segment[1] = 0;
-        //       valeur7segment[2] = 0;
-        //       valeur7segment[3] = 0;
               codeValide = 1;              
         }else{
-               // if (codeValide != 1){
-                        // valeur7segment[0] = 0;
-                        // valeur7segment[1] = 0;
-                        // valeur7segment[2] = 0;
-                        // valeur7segment[3] = 0;
-                        codeValide = -1;     
-             //   }
-                
+               codeValide = -1;                     
         }
-       // delay(100);
-     
 }
 
 void incrementerChiffre(){
@@ -631,10 +659,10 @@ void loop() {
                                 mqttClient.publish("home/living_room/sensor_entry_door_authentification_mdp/authentification", "authorized");
                         }   
                         digitalWrite(pinLedVert, LOW);
-                        valeur7segment[0] = 0;
-                        valeur7segment[1] = 0;
-                        valeur7segment[2] = 0;
-                        valeur7segment[3] = 0;
+                        // valeur7segment[0] = 0;
+                        // valeur7segment[1] = 0;
+                        // valeur7segment[2] = 0;
+                        // valeur7segment[3] = 0;
                         codeValide = 0;
                                 }
                 if (codeValide == -1)
@@ -670,10 +698,10 @@ void loop() {
                                 
                         }
                         digitalWrite(pinLedRouge, LOW);
-                        valeur7segment[0] = 0;
-                        valeur7segment[1] = 0;
-                        valeur7segment[2] = 0;
-                        valeur7segment[3] = 0;
+                        // valeur7segment[0] = 0;
+                        // valeur7segment[1] = 0;
+                        // valeur7segment[2] = 0;
+                        // valeur7segment[3] = 0;
                         codeValide = 0;
                 }
 
