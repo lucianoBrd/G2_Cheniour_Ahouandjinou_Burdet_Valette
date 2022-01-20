@@ -10,6 +10,9 @@ Lien de la vidéo de démonstration du jalon 1
 Lien de la vidéo de démonstration du jalon 2
 - https://youtu.be/iFAQ2z5Xobs
 
+Lien de la vidéo de publicité attractive
+- https://youtu.be/czC0UCgZDRA
+
 Voici le lien de notre application WEB (API + Dashboard) :
 - https://work.lucien-brd.com/
 
