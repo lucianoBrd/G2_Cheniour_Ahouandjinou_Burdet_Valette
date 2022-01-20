@@ -278,7 +278,23 @@ Le Module VMC est composé d'un ESP32 et un servo moteur commandé en position.
 
 Shéma électrique du module: 
 ![Module Vérrou](schema/IOT/Module%20Vérrou.PNG)
-### 2.4.6. Capteur "A completer"
+### 2.4.6. Capteur de Température et d'humidité
+Le capteur de température et d'humidité a pour rôle de mesurer la température et l'humidité ambiante et les publie par MQTT sur le serveur central.
+
+Shéma électrique du module: 
+![Capteur de Température et d'humidité](schema/IOT/CapteurTemp-Hum.png)
+
+### 2.4.7. Capteur de luminosité
+Le capteur de luminosité mesure la luminosité ambiante et la publie par MQTT sur le serveur central.
+
+Shéma électrique du module: 
+![Capteur de luminosité](schema/IOT/CapteurLuminosite.png)
+
+### 2.4.8. Digicode
+Le digicode permet à l'utilisateur de saisir un code à 4 chiffres afin de rentrer dans la maison.
+
+Shéma électrique du module: 
+![Digicode](schema/IOT/DigicodeSchema.png)
 
 ## 2.5. Power BI 
 
