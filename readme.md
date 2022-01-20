@@ -293,8 +293,11 @@ Shéma électrique du module:
 ### 2.4.8. Digicode
 Le digicode permet à l'utilisateur de saisir un code à 4 chiffres afin de rentrer dans la maison.
 
-Shéma électrique du module: 
+Shéma électrique du digicode: 
 ![Digicode](schema/IOT/DigicodeSchema.png)
+
+Algorigramme du digicode: 
+![Digicode](schema/IOT/AlgorigrammeDigiCode.png)
 
 ## 2.5. Power BI 
 
