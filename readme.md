@@ -7,6 +7,9 @@ Notre projet permet de visualiser, faciliter et administrer différents élémen
 Lien de la vidéo de démonstration du jalon 1
 - https://youtu.be/Neju9fB2eeY
 
+Lien de la vidéo de démonstration du jalon 2
+- https://youtu.be/iFAQ2z5Xobs
+
 Voici le lien de notre application WEB (API + Dashboard) :
 - https://work.lucien-brd.com/
 
