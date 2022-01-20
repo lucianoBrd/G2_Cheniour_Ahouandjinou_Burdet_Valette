@@ -90,11 +90,11 @@ D'autre part de façon contrôlée, c'est-à-dire gérer via la voix, ou de mani
 - ESP32 : TTGO-Camera, TTGO-Display...
 	- Capteur : Température, Humidité, Luminosité (photorésistance), caméra
 	- Servo-moteur 
-	- Led 
-	- Résistance
-	- Bouton poussoir
-	- Condansateur
-	- Multiplexeur (74HC138N)
+	- Leds 
+	- Résistances(10K, 330 Ohms)
+	- Boutons poussoirs
+	- Condansateurs (150nF)
+	- Démultiplexeur (74HC138N)
 - Serveur Python
 - Serveur WEB avec base de données
 - Robot Pepper 
