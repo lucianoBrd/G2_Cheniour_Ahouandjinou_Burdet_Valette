@@ -282,13 +282,13 @@ Shéma électrique du module:
 Le capteur de température et d'humidité a pour rôle de mesurer la température et l'humidité ambiante et les publie par MQTT sur le serveur central.
 
 Shéma électrique du module: 
-![Capteur de Température et d'humidité](schema/IOT/CapteurTemp-Hum.png)
+![Capteur de Température et d'humidité](schema/IOT/CapteurTemp-HumSchema.png)
 
 ### 2.4.7. Capteur de luminosité
 Le capteur de luminosité mesure la luminosité ambiante et la publie par MQTT sur le serveur central.
 
 Shéma électrique du module: 
-![Capteur de luminosité](schema/IOT/CapteurLuminosite.png)
+![Capteur de luminosité](schema/IOT/CapteurLuminositeSchema.png)
 
 ### 2.4.8. Digicode
 Le digicode permet à l'utilisateur de saisir un code à 4 chiffres afin de rentrer dans la maison.
@@ -296,8 +296,8 @@ Le digicode permet à l'utilisateur de saisir un code à 4 chiffres afin de rent
 Shéma électrique du digicode: 
 ![Digicode](schema/IOT/DigicodeSchema.png)
 
-Algorigramme du digicode: 
-![Digicode](schema/IOT/AlgorigrammeDigiCode.png)
+Organigramme du digicode: 
+![Digicode](schema/IOT/DigicodeOrganigramme.png)
 
 ## 2.5. Power BI 
 
