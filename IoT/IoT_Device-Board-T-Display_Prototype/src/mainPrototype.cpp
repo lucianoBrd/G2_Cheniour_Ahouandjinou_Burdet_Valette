@@ -1,3 +1,5 @@
+// Prototype initial qui a permis de développer le code pour les autres modules basés les ESP32
+//
 #include <Arduino.h>
 #include <TFT_eSPI.h>
 #include <WiFi.h>
@@ -10,9 +12,9 @@
 #define DHTPIN 2         // broche DATA du capteur est reliee 
 #define DHTTYPE DHT11     // Definit le type de capteur utilise
 ///_____
-const char* ssid = "SFR_DDA8";    //"Redmi Note 7"; // 
-const char* password = "3vsk72pjpz5fkd69umkz";  // dallez94
-const char* mqttServer = "192.168.1.89";  //"broker.hivemq.com";//IPAddress my_IPAddress(192,168,43,222);
+const char* ssid = "SFR_DDA8";    
+const char* password = "3vsk72pjpz5fkd69umkz"; 
+const char* mqttServer = "192.168.1.89";  
 const int mqttPort = 1883;
 const char* mqttUser = "";
 const char* mqttPassword = "";
