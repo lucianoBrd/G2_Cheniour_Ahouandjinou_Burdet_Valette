@@ -294,7 +294,7 @@ Shéma électrique du module:
 ![Capteur de luminosité](schema/IOT/CapteurLuminositeSchema.png)
 
 Organigramme du capteur de luminosité: 
-![Digicode](schema/IOT/schema/IOT/CapteurLuminositeOrganigramme.png)
+![Digicode](schema/IOT/CapteurLumiOrganigramme.png)
 
 ### 2.4.8. Digicode
 Le digicode permet à l'utilisateur de saisir un code à 4 chiffres afin de rentrer dans la maison.
