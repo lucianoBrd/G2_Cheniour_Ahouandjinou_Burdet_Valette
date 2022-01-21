@@ -4,40 +4,36 @@
 #include <PubSubClient.h>
 #include <Wire.h>
 #include <SPI.h>
-#include <DHT.h>
+
 
 #define CONNECTION_TIMEOUT 10
-#define DHTTYPE DHT11        // Definit le type de capteur utilise
-
-#define DHTPIN 2           // pin pour la broche DATA du capteur 
-#define pinLed 12         // pin pour la LED
-#define pinBouton 27     // pin pour le boutton
+#define pinBouton 27                        // pin pour le boutton
+#define pinLed 12                           // pin pour la LED
+#define pinPhotoresistance 32               // pin pour la photoresistance
 
 ///_____
-const char* ssid = "Domotique";//"Redmi Note 7";                 //"SFR_DDA8"; // 
-const char* password = "Domotique";//"dallez94"; //"3vsk72pjpz5fkd69umkz"; 
-const char* mqttServer = "192.168.12.222";       //"broker.hivemq.com";//IPAddress my_IPAddress(192,168,43,222);
+const char *ssid = "Domotique";                  // identifiant réseau
+const char *password = "Domotique";              // mot de passe réseau
+const char *mqttServer = "192.168.43.222";       // addresse IP du brooker Mqtt
 const int mqttPort = 1883;
-const char* mqttUser = "";
+const char* mqttUser = "module_lumi01";
 const char* mqttPassword = "";
-const char* idCapteur = "Temp - Hum";
-
-int etat = -1;               //  variable representant l'etat du capteur
-int pwmChannel = 0;         // channel de O-15 disponibles
-double pwmFreq = 0;         // frequence pwm
-int pwmResolution = 16;     //8-16 bits possibles
-
-float mesure_temp = 0;
-float mesure_hum = 0;
 
 char* etatWifi = "";
 char* etatMqtt = "";
 
+char* idCapteur = "Mod Lumi";
+
+int etat = -1;              // état du système
+int pwmChannel = 0;         // channel de O-15 disponibles
+double pwmFreq = 0;         // frequence pwm
+int pwmResolution = 16;     //8-16 bits possibles
+int intensiteLum = -1;
+
 ///____ Appel classes
-TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup_Select.h
+TFT_eSPI tft = TFT_eSPI();      // appel library, pins définie dans User_Setup_Select.h
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
-DHT dht(DHTPIN, DHTTYPE);  // Declare un objet de type DHT// Il faut passer en parametre du constructeur // de l'objet la broche et le type de capteur
 
 ///____
 //Demarre l'ecran 
@@ -58,23 +54,19 @@ void initScreen()
   sleep(1);
 }
 
-void GestionIHM(float temp, float hum){
+void GestionIHM(int lum){
   tft.fillScreen(TFT_WHITE);
-  tft.setCursor(5, 20);
+  tft.setCursor(15, 20);
   tft.println(idCapteur);           //mqttClient.state());
   tft.setCursor(5, 50);
   tft.println("__________");
 
-
   tft.setCursor(5, 100);
-  tft.println("Tem : ");
+  tft.println("Lum : ");
   tft.setCursor(70, 100);
-  tft.println(mesure_temp);
-
-  tft.setCursor(5, 140);
-  tft.println("Hum : ");
-  tft.setCursor(70, 140);
-  tft.println(mesure_hum);
+  tft.println(lum);
+  tft.setCursor(100, 100);
+  tft.println("%");
 
   tft.setCursor(5, 190);
   tft.println("WiFi : ");
@@ -107,8 +99,7 @@ void wifiDisconnected(WiFiEvent_t wifi_event,WiFiEventInfo_t wifi_info){
        compteur_conn++;                         // redemarre la carte apres 30s, equivalent de 150 tentatives de connection
        if (compteur_conn >= 5*CONNECTION_TIMEOUT){
          ESP.restart();
-       }
-      
+       }    
        WiFi.begin(ssid, password); delay(100);
     }
 }
@@ -129,8 +120,7 @@ void mqttCallback(char* valeur, uint8_t* var, unsigned int nb){
 }
 
 void initMqtt(){
- // while (WiFi.status() != WL_CONNECTED){}
-  
+
   mqttClient.setServer(mqttServer, mqttPort);
   while (!mqttClient.connected()) {
       
@@ -141,14 +131,13 @@ void initMqtt(){
       delay(2000);
       }
     mqttClient.setCallback(mqttCallback);
-    GestionIHM(0,0);
+    GestionIHM(0);
     }
-    mqttClient.loop(); 
-  
+    mqttClient.loop();
 }
 
 void gestionBouton(){
-  // la pin 4 correspond à la backlight
+  // la pin 4 correspond à la backlight de l'écran TFT
   if (digitalRead(4)!=LOW){digitalWrite(4,LOW);}
   else{digitalWrite(4,HIGH);} 
 }
@@ -163,36 +152,34 @@ void mqtt_publish_float(String topic, float t){
   mqttClient.publish(top,t_char);
 }
 
-
-
 void setup() {
   // Init peripheriques
   Serial.begin(115200);
   delay(1000);
   initScreen();
-  GestionIHM(0,0);
   initWifiConnection();
 
 // Config pins
-  pinMode(12, OUTPUT);
-  pinMode(pinBouton,INPUT_PULLDOWN);
-    
+  pinMode(pinPhotoresistance,INPUT);
   ledcSetup(pwmChannel, pwmFreq, pwmResolution);  // Configuration du canal 0 avec la fréquence et la résolution choisie
   ledcAttachPin(pinLed, pwmChannel);        // assigne le canal PWM au pin 
-  dht.begin();                              // demare le capteur dht11 
+  pinMode(pinBouton,INPUT_PULLDOWN);
   attachInterrupt(pinBouton, gestionBouton, FALLING); // attache une interruption sur le bouton, front descendant, appel gestionBouton
-  }
+//   
+}
 
 void loop() {
-  
+  mqttClient.loop();
   if (!mqttClient.connected()){etat = 0;etatMqtt = "KO";}       // si le client mqtt est déconnecté
   else{etat = 1;etatMqtt = "OK";}
   if (WiFi.status() != WL_CONNECTED){etatWifi = "KO";}
   else{etatWifi = "OK";}
 
+  intensiteLum = analogRead(pinPhotoresistance);          // lecture de la valeur de la photoresistance
   switch (etat)
   {
     case 0:               // si état=0, client mqtt est déconnecté
+      
       if(pwmFreq!=5){                   // Gestion led, entre en mode "Tentative de (re)connection", cligonte rapidement
         pwmFreq = 5;
         ledcDetachPin(pinLed);
@@ -204,35 +191,29 @@ void loop() {
       if (WiFi.status() != WL_CONNECTED){         // Contrôle status connection Wifi, reconnection si déconnecté
         WiFi.reconnect();
       }
-      GestionIHM(0,0);
-      initMqtt();                                 // tentative de (re)connection du client mqtt au brooker
-
+      initMqtt();  
+      GestionIHM(0);
+                                     // tentative de (re)connection du client mqtt au brooker
     break;
 
   case 1:
-    mesure_temp = dht.readTemperature();
-    mesure_hum = dht.readHumidity();
+    intensiteLum = intensiteLum * 100 / 500;     // formattage valeur, en pourcentage
+    GestionIHM(intensiteLum);                     // affiche valeur sur l'écran
+    if (intensiteLum > 100){intensiteLum = 100;}
+    if (intensiteLum)
+    {
+      mqtt_publish_float("home/living_room/sensor_luminosity/luminosity", intensiteLum);    // publication de la valeur sur le topic correspondant
+   } 
     
-    mqttClient.publish("esp/test", "Hello from ESP32");
-    if (mesure_temp != NULL){
-    mqtt_publish_float("home/living_room/sensor_temperature/temperature",mesure_temp);       // publication de la temperature sur le topic
-    }
-    if (mesure_hum != NULL){
-    mqtt_publish_float("home/living_room/sensor_humidity/humidity",mesure_hum);
-    }
-
-    GestionIHM(mesure_temp,mesure_hum);
-
-    if (pwmFreq!=0.1){
+    if (pwmFreq!=0.1){                                                  // réglage du signal PWM en fonctionne de l'état du système 
       pwmFreq =0.1;
       ledcDetachPin(pinLed);
       ledcSetup(pwmChannel, pwmFreq, pwmResolution);
       ledcAttachPin(pinLed, pwmChannel);
-      ledcWrite(pwmChannel, 10);
-    }  
-    
-    delay(5000);
-    break;
+      ledcWrite(pwmChannel, 50);
+    }   
+    delay(2000);
+  break;
       
   default:  
     break;
@@ -240,24 +221,3 @@ void loop() {
 }
 
 
-/// note 
-/* il faudra peut-être changer l'adresse mac des cartes
-
-Def pins:
-
-#define TFT_MOSI            19
-#define TFT_SCLK            18
-#define TFT_CS              5
-#define TFT_DC              16
-#define TFT_RST             23
-#define TFT_BL              4 
-
-PWM : all pins sauf les pins GPIO36, GPIO39, GPIO34, GPIO35
-12 --> led
-
-GPIO : 
-2 --> capteur
-12 --> bouton
-
-
-*/
