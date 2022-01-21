@@ -293,7 +293,7 @@ Le capteur de luminosité mesure la luminosité ambiante et la publie par MQTT s
 Shéma électrique du module: 
 ![Capteur de luminosité](schema/IOT/CapteurLuminositeSchema.png)
 
-Organigramme du capteur de température et d'humidité: 
+Organigramme du capteur de luminosité: 
 ![Digicode](schema/IOT/schema/IOT/CapteurLuminositeOrganigramme.png)
 
 ### 2.4.8. Digicode
