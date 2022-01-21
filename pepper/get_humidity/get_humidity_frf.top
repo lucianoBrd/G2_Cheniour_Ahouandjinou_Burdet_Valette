@@ -1,0 +1,6 @@
+topic: ~get_humidity()
+language: frf
+
+concept:(humidity) [humidité fraîcheur hygrométrie "quelle humidité fait-il"]
+
+u:(~humidity) ~humidity $onStopped=1

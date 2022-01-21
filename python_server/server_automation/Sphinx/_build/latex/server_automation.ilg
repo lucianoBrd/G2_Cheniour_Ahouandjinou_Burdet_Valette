@@ -1,0 +1,7 @@
+This is makeindex, version 2.16 [MiKTeX 21.12.10].
+Scanning style file ./python.ist.......done (7 attributes redefined, 0 ignored).
+Scanning input file server_automation.idx....done (58 entries accepted, 0 rejected).
+Sorting entries....done (348 comparisons).
+Generating output file server_automation.ind....done (94 lines written, 0 warnings).
+Output written in server_automation.ind.
+Transcript written in server_automation.ilg.

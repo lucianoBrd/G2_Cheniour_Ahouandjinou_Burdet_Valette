@@ -1,0 +1,4 @@
+topic: ~choice_home()
+language: frf
+
+u:([e:ChoiceHome]) $IdHome=$ChoiceHome $onStopped=1

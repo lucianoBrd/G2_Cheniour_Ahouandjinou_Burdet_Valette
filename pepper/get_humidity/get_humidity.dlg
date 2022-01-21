@@ -1,0 +1,2 @@
+multilanguage:get_humidity
+  frf:get_humidity_frf.top

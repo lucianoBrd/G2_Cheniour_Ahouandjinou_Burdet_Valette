@@ -1,0 +1,6 @@
+topic: ~get_temperature()
+language: frf
+
+concept:(temperature) [température climat "quelle temps fait-il"]
+
+u:(~temperature) ~temperature $onStopped=1

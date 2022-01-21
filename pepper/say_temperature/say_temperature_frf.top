@@ -1,0 +1,4 @@
+topic: ~say_temperature()
+language: frf
+
+u:(e:onStart) Il fait $Temperature degré $onStopped=1

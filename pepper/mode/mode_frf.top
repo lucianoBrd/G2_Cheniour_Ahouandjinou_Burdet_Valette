@@ -1,0 +1,4 @@
+topic: ~mode()
+language: frf
+
+u:(e:onStart) $LMode=$LabelMode $onStopped=1

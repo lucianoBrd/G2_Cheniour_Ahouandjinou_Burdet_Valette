@@ -1,0 +1,4 @@
+topic: ~goto_normal_mode()
+language: frf
+
+u:([e:GotoNormalMode]) Fin du mode absence $onStopped=1

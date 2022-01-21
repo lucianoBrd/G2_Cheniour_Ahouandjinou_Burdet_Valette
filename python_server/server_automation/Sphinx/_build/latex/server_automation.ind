@@ -1,0 +1,94 @@
+\begin{sphinxtheindex}
+\let\bigletter\sphinxstyleindexlettergroup
+\let\spxpagem \sphinxstyleindexpagemain
+\let\spxentry \sphinxstyleindexentry
+\let\spxextra \sphinxstyleindexextra
+
+  \bigletter A
+  \item \spxentry{Api}
+    \subitem \spxentry{module}, \hyperpage{9}
+  \item \spxentry{Api}\spxextra{class in Api}, \hyperpage{9}
+
+  \indexspace
+  \bigletter C
+  \item \spxentry{create\_action()}\spxextra{Api.Api method}, \hyperpage{9}
+  \item \spxentry{create\_element()}\spxextra{Api.Api method}, \hyperpage{9}
+  \item \spxentry{create\_home()}\spxextra{Api.Api method}, \hyperpage{9}
+  \item \spxentry{create\_mode()}\spxextra{Api.Api method}, \hyperpage{9}
+  \item \spxentry{create\_room()}\spxextra{Api.Api method}, \hyperpage{9}
+  \item \spxentry{create\_type()}\spxextra{Api.Api method}, \hyperpage{10}
+  \item \spxentry{create\_value()}\spxextra{Api.Api method}, \hyperpage{10}
+
+  \indexspace
+  \bigletter E
+  \item \spxentry{Element}
+    \subitem \spxentry{module}, \hyperpage{7}
+  \item \spxentry{Element}\spxextra{class in Element}, \hyperpage{7}
+
+  \indexspace
+  \bigletter G
+  \item \spxentry{get\_action\_by\_id()}\spxextra{Api.Api method}, \hyperpage{10}
+  \item \spxentry{get\_actions()}\spxextra{Api.Api method}, \hyperpage{10}
+  \item \spxentry{get\_active\_mode()}\spxextra{Api.Api method}, \hyperpage{10}
+  \item \spxentry{get\_element\_by\_id()}\spxextra{Api.Api method}, \hyperpage{10}
+  \item \spxentry{get\_element\_by\_iri()}\spxextra{Api.Api method}, \hyperpage{10}
+  \item \spxentry{get\_element\_by\_name()}\spxextra{Api.Api method}, \hyperpage{10}
+  \item \spxentry{get\_element\_id\_by\_name()}\spxextra{Api.Api method}, \hyperpage{10}
+  \item \spxentry{get\_element\_name\_by\_id()}\spxextra{Api.Api method}, \hyperpage{11}
+  \item \spxentry{get\_elements()}\spxextra{Api.Api method}, \hyperpage{11}
+  \item \spxentry{get\_home\_by\_id()}\spxextra{Api.Api method}, \hyperpage{11}
+  \item \spxentry{get\_home\_by\_name()}\spxextra{Api.Api method}, \hyperpage{11}
+  \item \spxentry{get\_home\_id\_by\_name()}\spxextra{Api.Api method}, \hyperpage{11}
+  \item \spxentry{get\_home\_name\_by\_id()}\spxextra{Api.Api method}, \hyperpage{11}
+  \item \spxentry{get\_homes()}\spxextra{Api.Api method}, \hyperpage{11}
+  \item \spxentry{get\_last\_action\_by\_element\_name()}\spxextra{Api.Api method}, \hyperpage{11}
+  \item \spxentry{get\_last\_value\_by\_element\_name()}\spxextra{Api.Api method}, \hyperpage{11}
+  \item \spxentry{get\_modes()}\spxextra{Api.Api method}, \hyperpage{11}
+  \item \spxentry{get\_room\_by\_id()}\spxextra{Api.Api method}, \hyperpage{12}
+  \item \spxentry{get\_room\_by\_iri()}\spxextra{Api.Api method}, \hyperpage{12}
+  \item \spxentry{get\_room\_by\_name()}\spxextra{Api.Api method}, \hyperpage{12}
+  \item \spxentry{get\_room\_id\_by\_name()}\spxextra{Api.Api method}, \hyperpage{12}
+  \item \spxentry{get\_room\_name\_by\_id()}\spxextra{Api.Api method}, \hyperpage{12}
+  \item \spxentry{get\_rooms()}\spxextra{Api.Api method}, \hyperpage{12}
+  \item \spxentry{get\_type\_by\_id()}\spxextra{Api.Api method}, \hyperpage{12}
+  \item \spxentry{get\_type\_by\_iri()}\spxextra{Api.Api method}, \hyperpage{12}
+  \item \spxentry{get\_type\_by\_name()}\spxextra{Api.Api method}, \hyperpage{12}
+  \item \spxentry{get\_type\_id\_by\_name()}\spxextra{Api.Api method}, \hyperpage{12}
+  \item \spxentry{get\_type\_name\_by\_id()}\spxextra{Api.Api method}, \hyperpage{13}
+  \item \spxentry{get\_types()}\spxextra{Api.Api method}, \hyperpage{13}
+  \item \spxentry{get\_unresolved\_actions()}\spxextra{Api.Api method}, \hyperpage{13}
+  \item \spxentry{get\_unresolved\_actions\_by\_element\_name()}\spxextra{Api.Api method}, 
+		\hyperpage{13}
+  \item \spxentry{get\_value\_by\_id()}\spxextra{Api.Api method}, \hyperpage{13}
+  \item \spxentry{get\_values()}\spxextra{Api.Api method}, \hyperpage{13}
+
+  \indexspace
+  \bigletter H
+  \item \spxentry{Home}
+    \subitem \spxentry{module}, \hyperpage{3}
+  \item \spxentry{Home}\spxextra{class in Home}, \hyperpage{3}
+
+  \indexspace
+  \bigletter M
+  \item \spxentry{module}
+    \subitem \spxentry{Api}, \hyperpage{9}
+    \subitem \spxentry{Element}, \hyperpage{7}
+    \subitem \spxentry{Home}, \hyperpage{3}
+    \subitem \spxentry{Room}, \hyperpage{5}
+
+  \indexspace
+  \bigletter R
+  \item \spxentry{Room}
+    \subitem \spxentry{module}, \hyperpage{5}
+  \item \spxentry{Room}\spxextra{class in Room}, \hyperpage{5}
+
+  \indexspace
+  \bigletter U
+  \item \spxentry{update\_action()}\spxextra{Api.Api method}, \hyperpage{13}
+  \item \spxentry{update\_element()}\spxextra{Api.Api method}, \hyperpage{13}
+  \item \spxentry{update\_home()}\spxextra{Api.Api method}, \hyperpage{14}
+  \item \spxentry{update\_mode()}\spxextra{Api.Api method}, \hyperpage{14}
+  \item \spxentry{update\_room()}\spxextra{Api.Api method}, \hyperpage{14}
+  \item \spxentry{update\_type()}\spxextra{Api.Api method}, \hyperpage{14}
+
+\end{sphinxtheindex}
