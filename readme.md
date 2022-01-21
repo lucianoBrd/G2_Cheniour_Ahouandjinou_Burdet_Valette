@@ -284,11 +284,17 @@ Le capteur de température et d'humidité a pour rôle de mesurer la températur
 Shéma électrique du module: 
 ![Capteur de Température et d'humidité](schema/IOT/CapteurTemp-HumSchema.png)
 
+Organigramme du capteur de température et d'humidité: 
+![Digicode](schema/IOT/CapteurTemp-HumOrganigramme.png)
+
 ### 2.4.7. Capteur de luminosité
 Le capteur de luminosité mesure la luminosité ambiante et la publie par MQTT sur le serveur central.
 
 Shéma électrique du module: 
 ![Capteur de luminosité](schema/IOT/CapteurLuminositeSchema.png)
+
+Organigramme du capteur de température et d'humidité: 
+![Digicode](schema/IOT/schema/IOT/CapteurLuminositeOrganigramme.png)
 
 ### 2.4.8. Digicode
 Le digicode permet à l'utilisateur de saisir un code à 4 chiffres afin de rentrer dans la maison.
