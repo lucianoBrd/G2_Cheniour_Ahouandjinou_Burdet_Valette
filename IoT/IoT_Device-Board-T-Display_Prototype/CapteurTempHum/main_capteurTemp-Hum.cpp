@@ -14,18 +14,18 @@
 #define pinBouton 27     // pin pour le boutton
 
 ///_____
-const char* ssid = "Domotique";                   //"Redmi Note 7";                 //"SFR_DDA8"; // 
-const char* password = "Domotique";               //"dallez94"; //"3vsk72pjpz5fkd69umkz"; 
-const char* mqttServer = "192.168.43.222";       //"broker.hivemq.com";//IPAddress my_IPAddress(192,168,43,222);
+const char* ssid = "Domotique";                   
+const char* password = "Domotique";               
+const char* mqttServer = "192.168.43.222";       
 const int mqttPort = 1883;
 const char* mqttUser = "";
 const char* mqttPassword = "";
 const char* idCapteur = "Temp - Hum";
 
 int etat = -1;               //  variable representant l'etat du capteur
-int pwmChannel = 0;         // channel de O-15 disponibles
-double pwmFreq = 0;         // frequence pwm
-int pwmResolution = 16;     //8-16 bits possibles
+int pwmChannel = 0;          // channel de O-15 disponibles
+double pwmFreq = 0;          // frequence pwm
+int pwmResolution = 16;      //8-16 bits possibles
 
 float mesure_temp = 0;
 float mesure_hum = 0;
@@ -34,10 +34,10 @@ char* etatWifi = "";
 char* etatMqtt = "";
 
 ///____ Appel classes
-TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup_Select.h
+TFT_eSPI tft = TFT_eSPI();          // appel library, pins définie dans User_Setup_Select.h
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
-DHT dht(DHTPIN, DHTTYPE);  // Declare un objet de type DHT// Il faut passer en parametre du constructeur // de l'objet la broche et le type de capteur
+DHT dht(DHTPIN, DHTTYPE);           // Declare un objet de type DHT// Il faut passer en parametre du constructeur // de l'objet la broche et le type de capteur
 
 ///____
 //Demarre l'ecran 
@@ -177,9 +177,9 @@ void setup() {
   pinMode(12, OUTPUT);
   pinMode(pinBouton,INPUT_PULLDOWN);
     
-  ledcSetup(pwmChannel, pwmFreq, pwmResolution);  // Configuration du canal 0 avec la fréquence et la résolution choisie
-  ledcAttachPin(pinLed, pwmChannel);        // assigne le canal PWM au pin 
-  dht.begin();                              // demare le capteur dht11 
+  ledcSetup(pwmChannel, pwmFreq, pwmResolution);      // Configuration du canal 0 avec la fréquence et la résolution choisie
+  ledcAttachPin(pinLed, pwmChannel);                  // assigne le canal PWM au pin 
+  dht.begin();                                        // demare le capteur dht11 
   attachInterrupt(pinBouton, gestionBouton, FALLING); // attache une interruption sur le bouton, front descendant, appel gestionBouton
   }
 
@@ -192,7 +192,7 @@ void loop() {
 
   switch (etat)
   {
-    case 0:               // si état=0, client mqtt est déconnecté
+    case 0:                             // si état=0, client mqtt est déconnecté
       if(pwmFreq!=5){                   // Gestion led, entre en mode "Tentative de (re)connection", cligonte rapidement
         pwmFreq = 5;
         ledcDetachPin(pinLed);
@@ -215,15 +215,15 @@ void loop() {
     
     mqttClient.publish("esp/test", "Hello from ESP32");
     if (mesure_temp != NULL){
-    mqtt_publish_float("home/living_room/sensor_temperature/temperature",mesure_temp);       // publication de la temperature sur le topic
+    mqtt_publish_float("home/living_room/sensor_temperature/temperature",mesure_temp);       // publication de la temperature sur le topic correspondant
     }
     if (mesure_hum != NULL){
-    mqtt_publish_float("home/living_room/sensor_humidity/humidity",mesure_hum);
+      mqtt_publish_float("home/living_room/sensor_humidity/humidity", mesure_hum);          // publication de l'humidité sur le topic correspondant
     }
 
-    GestionIHM(mesure_temp,mesure_hum);
+    GestionIHM(mesure_temp,mesure_hum);                                                     // affichage des valeurs sur l'écran TFT
 
-    if (pwmFreq!=0.1){
+    if (pwmFreq!=0.1){                                                                      // gestion de la LED d'état 
       pwmFreq =0.1;
       ledcDetachPin(pinLed);
       ledcSetup(pwmChannel, pwmFreq, pwmResolution);
@@ -239,25 +239,3 @@ void loop() {
   }
 }
 
-
-/// note 
-/* il faudra peut-être changer l'adresse mac des cartes
-
-Def pins:
-
-#define TFT_MOSI            19
-#define TFT_SCLK            18
-#define TFT_CS              5
-#define TFT_DC              16
-#define TFT_RST             23
-#define TFT_BL              4 
-
-PWM : all pins sauf les pins GPIO36, GPIO39, GPIO34, GPIO35
-12 --> led
-
-GPIO : 
-2 --> capteur
-12 --> bouton
-
-
-*/

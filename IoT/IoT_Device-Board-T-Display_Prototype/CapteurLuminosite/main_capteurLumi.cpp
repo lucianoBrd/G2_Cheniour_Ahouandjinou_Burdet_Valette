@@ -12,9 +12,9 @@
 #define pinPhotoresistance 32               // pin pour la photoresistance
 
 ///_____
-const char *ssid = "Domotique";                  //" Redmi Note 7 ";     //" SFR_DDA8 ";                   // //
-const char *password = "Domotique";              //"dallez94";           //"3vsk72pjpz5fkd69umkz";  //
-const char* mqttServer = "192.168.43.222";       //"broker.hivemq.com";//IPAddress my_IPAddress(192,168,43,222);
+const char *ssid = "Domotique";                  // identifiant réseau
+const char *password = "Domotique";              // mot de passe réseau
+const char *mqttServer = "192.168.43.222";       // addresse IP du brooker Mqtt
 const int mqttPort = 1883;
 const char* mqttUser = "module_lumi01";
 const char* mqttPassword = "";
@@ -24,14 +24,14 @@ char* etatMqtt = "";
 
 char* idCapteur = "Mod Lumi";
 
-int etat = -1;
+int etat = -1;              // état du système
 int pwmChannel = 0;         // channel de O-15 disponibles
 double pwmFreq = 0;         // frequence pwm
 int pwmResolution = 16;     //8-16 bits possibles
 int intensiteLum = -1;
 
 ///____ Appel classes
-TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup_Select.h
+TFT_eSPI tft = TFT_eSPI();      // appel library, pins définie dans User_Setup_Select.h
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 
@@ -137,7 +137,7 @@ void initMqtt(){
 }
 
 void gestionBouton(){
-  // la pin 4 correspond à la backlight
+  // la pin 4 correspond à la backlight de l'écran TFT
   if (digitalRead(4)!=LOW){digitalWrite(4,LOW);}
   else{digitalWrite(4,HIGH);} 
 }
@@ -197,16 +197,15 @@ void loop() {
     break;
 
   case 1:
-    intensiteLum = intensiteLum * 100 / 500;
-     GestionIHM(intensiteLum);
-    // mqttClient.publish("esp/test", "Hello from ESP32");
+    intensiteLum = intensiteLum * 100 / 500;     // formattage valeur, en pourcentage
+    GestionIHM(intensiteLum);                     // affiche valeur sur l'écran
     if (intensiteLum > 100){intensiteLum = 100;}
     if (intensiteLum)
     {
-      mqtt_publish_float("home/living_room/sensor_luminosity/luminosity", intensiteLum);
+      mqtt_publish_float("home/living_room/sensor_luminosity/luminosity", intensiteLum);    // publication de la valeur sur le topic correspondant
    } 
     
-    if (pwmFreq!=0.1){
+    if (pwmFreq!=0.1){                                                  // réglage du signal PWM en fonctionne de l'état du système 
       pwmFreq =0.1;
       ledcDetachPin(pinLed);
       ledcSetup(pwmChannel, pwmFreq, pwmResolution);
@@ -222,24 +221,3 @@ void loop() {
 }
 
 
-/// note 
-/* il faudra peut-être changer l'adresse mac des cartes
-
-Def pins:
-
-#define TFT_MOSI            19
-#define TFT_SCLK            18
-#define TFT_CS              5
-#define TFT_DC              16
-#define TFT_RST             23
-#define TFT_BL              4 
-
-PWM : all pins sauf les pins GPIO36, GPIO39, GPIO34, GPIO35
-12 --> led
-
-GPIO : 
-2 --> capteur
-12 --> bouton
-
-
-*/

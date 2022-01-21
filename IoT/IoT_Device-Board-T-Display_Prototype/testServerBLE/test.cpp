@@ -39,7 +39,7 @@
     std::string var1;
 
     ///____ Appel classes
-    TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup_Select.h
+    TFT_eSPI tft = TFT_eSPI(); 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 

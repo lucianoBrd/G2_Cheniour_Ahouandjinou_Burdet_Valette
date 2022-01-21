@@ -37,8 +37,7 @@ const char* mqttPassword = "";
 const char* idCapteur = "Digicode";              // identifiant du module 
 int mdpPorte[] = {2,3,4,5};                      // mot de passe de la porte
 
-
-int etat = -1;                                   // variable representant l'etat du capteur : (-1) --> Wifi deconnecté 
+int etat = -1;                                   // variable representant l'etat du système : (-1) --> état initial, (0) --> MQTT KO ,(1) --> MQTT OK
 volatile int digitActuel = 1;                    // variable correspondant au digit à allumer, on demarre positionné sur le digit 1
 volatile int valeur7segment[] = {1,2,3,4};       // valeur affiché sur le 7Segment, l'affichage sur le 4*7Segments se fait digit par digit. On selectionne le premier digit et on affiche le premier chiffre de la liste, ainsi de suite 
 int codeValide = 0;                              // passe à 1 si le code entré est bon, -1 si pas bon
@@ -197,13 +196,6 @@ void initMqtt(){
     GestionIHM("");
     mqttClient.loop(); 
 }
-/*
-void gestionBouton(){
-  // la pin 4 correspond à la backlight
-  if (digitalRead(4)!=LOW){digitalWrite(4,LOW);}
-  else{digitalWrite(4,HIGH);} 
-}
-*/
 
 //Fonction pour publier un float sur un topic 
 void mqtt_publish_float(String topic, float t){
@@ -449,50 +441,32 @@ class MyClientCallback : public BLEClientCallbacks {
 
 bool connectToServer()
 {
-        Serial.print("Forming a connection to ");
-        Serial.println(myDevice->getAddress().toString().c_str());
-
         BLEClient *pClient = BLEDevice::createClient();
-        Serial.println(" - Created client");
-
         pClient->setClientCallbacks(new MyClientCallback());
-
         // Connect to the remove BLE Server.
         pClient->connect(myDevice); // if you pass BLEAdvertisedDevice instead of address, it will be recognized type of peer device address (public or private)
-        Serial.println(" - Connected to server");
 
         // Obtain a reference to the service we are after in the remote BLE server.
         BLERemoteService *pRemoteService = pClient->getService(serviceUUID);
         if (pRemoteService == nullptr)
-        {
-                Serial.print("Failed to find our service UUID: ");
-                Serial.println(serviceUUID.toString().c_str());
-                pClient->disconnect();
+        {       pClient->disconnect();
                 return false;
         }
-        Serial.println(" - Found our service");
-
         // Obtain a reference to the characteristic in the service of the remote BLE server.
         pRemoteCharacteristic = pRemoteService->getCharacteristic(charUUID);
         if (pRemoteCharacteristic == nullptr)
         {
-                Serial.print("Failed to find our characteristic UUID: ");
-                Serial.println(charUUID.toString().c_str());
                 pClient->disconnect();
                 return false;
         }
-        Serial.println(" - Found our characteristic");
-
         // Read the value of the characteristic.
         if (pRemoteCharacteristic->canRead())
         {
-                std::string value = pRemoteCharacteristic->readValue();
-                Serial.print("The characteristic value was: ");
-                Serial.println(value.c_str());
+                std::string value = pRemoteCharacteristic->readValue();        
         }
 
         if (pRemoteCharacteristic->canNotify())
-                pRemoteCharacteristic->registerForNotify(notifyCallback);
+               // pRemoteCharacteristic->registerForNotify(notifyCallback);
 
         connected = true;
 }
@@ -504,10 +478,7 @@ class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks
          */
         void onResult(BLEAdvertisedDevice advertisedDevice)
         {
-                
-                Serial.println(advertisedDevice.toString().c_str());
-
-                // We have found a device, let us now see if it contains the service we are looking for.
+               // We have found a device, let us now see if it contains the service we are looking for.
                 if (advertisedDevice.haveServiceUUID() && advertisedDevice.isAdvertisingService(serviceUUID))
                 {
                         GestionIHM("BLE");
@@ -515,11 +486,9 @@ class MyAdvertisedDeviceCallbacks : public BLEAdvertisedDeviceCallbacks
                         myDevice = new BLEAdvertisedDevice(advertisedDevice);
                         doConnect = true;
                         doScan = true;
-                        
-
-                } // Found our server
-        }         // onResult
-};                // MyAdvertisedDeviceCallbacks
+                } 
+        }         
+};                
 
 void setup()
 {
@@ -531,9 +500,8 @@ void setup()
         initWifiConnection();
         init7Segment();
         initBouton();
-
+        // Partie BLE, partiellement fonctionnelle
         BLEDevice::init("ModuleVerrou");
-
         BLEScan* pBLEScan = BLEDevice::getScan();
         pBLEScan->setAdvertisedDeviceCallbacks(new MyAdvertisedDeviceCallbacks());
         pBLEScan->setInterval(1400);
@@ -572,39 +540,39 @@ void loop() {
         break;
 
         case 1:                                              // si le MQTT et la WiFi sont connectés, on affiche les 
-                chiffre(-1);
-                digitalWrite(pinDigitA1, LOW);
+                chiffre(-1);                                 // éteint les segments   
+                digitalWrite(pinDigitA1, LOW);               // selectionne le premier digit   
                 digitalWrite(pinDigitA0, LOW);
                 delayMicroseconds(1);
-                chiffre(valeur7segment[0]);
+                chiffre(valeur7segment[0]);                  // allume les segments correspondant à la valeur en paramètre   
                 delay(5);
 
                 chiffre(-1);
-                digitalWrite(pinDigitA0, HIGH);
+                digitalWrite(pinDigitA0, HIGH);              // selectionne le deuxième digit
                 digitalWrite(pinDigitA1, LOW);
                 delayMicroseconds(1);
                 chiffre(valeur7segment[1]);
                 delay(5);
 
                 chiffre(-1);
-                digitalWrite(pinDigitA1, HIGH);
+                digitalWrite(pinDigitA1, HIGH);              // selectionne le troisième digit
                 digitalWrite(pinDigitA0, LOW);
                 delayMicroseconds(1);
                 chiffre(valeur7segment[2]);
                 delay(5);
 
                 chiffre(-1);
-                digitalWrite(pinDigitA0, HIGH);
+                digitalWrite(pinDigitA0, HIGH);               // selectionne le quatrième digit
                 digitalWrite(pinDigitA1, HIGH);
                 delayMicroseconds(1);
                 chiffre(valeur7segment[3]);
                 delay(5);
 
-                if (codeValide == 1)                                     // si l'utilisateur à validé un code correct
-                {
+                if (codeValide == 1)                                     // si l'utilisateur à validé un code correct,
+                {                                                        // une interruption est attachée au bouton de validation qui appelle une fonction qui change la valeur codeValide
                         codeValide = 0;
                         digitalWrite(pinLedVert,HIGH);
-                        for(int i=0;i<400;i++){
+                        for(int i=0;i<400;i++){                         // affiche "OK" sur le 7segments si le code entré est bon
                                 chiffre(-1);
                                 digitalWrite(pinDigitA0, HIGH);          // digit 2
                                 digitalWrite(pinDigitA1, LOW);
@@ -632,12 +600,12 @@ void loop() {
                         }   
                         digitalWrite(pinLedVert, LOW);
                         codeValide = 0;
-                                }
+                }
                 if (codeValide == -1)                                   // si l'utilisateur à validé un mauvais code
                 {
                         codeValide = 0;
                         digitalWrite(pinLedRouge, HIGH);
-                        for (int i=0;i<30;i++)
+                        for (int i=0;i<30;i++)                          // fait clignoter les digits
                         {       
                                 delay(50);
                                 chiffre(-1);
@@ -669,7 +637,6 @@ void loop() {
                         codeValide = 0;
                 }
 
-  //      pCharacteristic->notify();
         break;
 
         case 2:                                 // Partie BLE
@@ -681,15 +648,11 @@ void loop() {
                         if (connectToServer()){
                                 GestionIHM("ble ok");
                         }
-                        else{
-                                Serial.println("We have failed to connect to the server; there is nothin more we will do.");
-                        }
                         doConnect = false;
                 }
 
                 if (connected){
                         String newValue = "OK";
-
                         // Set the characteristic's value to be the array of bytes that is actually a string.
                         pRemoteCharacteristic->writeValue(newValue.c_str(), newValue.length());
                 }
@@ -702,6 +665,4 @@ void loop() {
         default:
         break;
    }
-
-
 }

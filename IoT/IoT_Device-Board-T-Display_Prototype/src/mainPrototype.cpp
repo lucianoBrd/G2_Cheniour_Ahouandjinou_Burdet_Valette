@@ -21,7 +21,7 @@ const char* mqttPassword = "";
 
 const char* temp = "";
 ///____ Appel classes
-TFT_eSPI tft = TFT_eSPI(); // Invoke library, pins defined in User_Setup_Select.h
+TFT_eSPI tft = TFT_eSPI(); 
 WiFiClient espClient;
 PubSubClient mqttClient(espClient);
 DHT dht(DHTPIN, DHTTYPE);  // Declare un objet de type DHT// Il faut passer en parametre du constructeur // de l'objet la broche et le type de capteur
